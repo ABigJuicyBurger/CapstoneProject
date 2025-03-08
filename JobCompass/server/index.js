@@ -6,7 +6,11 @@ import jobsRoutes from "./routes/jobsRoutes.js";
 const app = express();
 const { PORT, CORS_ORIGIN } = process.env;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: CORS_ORIGIN,
+  })
+);
 app.use(express.json()); // body parser
 
 app.use("/jobs", jobsRoutes);
