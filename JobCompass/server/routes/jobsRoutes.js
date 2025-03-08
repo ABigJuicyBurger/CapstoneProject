@@ -8,6 +8,7 @@ const router = express.Router();
 const knex = initKnex(configuration);
 
 router.get("/", jobsController.getJobs);
+router.get("/:id", jobsController.singleJob);
 
 // maybe add jobs
 // maybe one job

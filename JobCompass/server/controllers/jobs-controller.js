@@ -15,4 +15,17 @@ const getJobs = async (_req, res) => {
   }
 };
 
-export { getJobs };
+const singleJob = async (req, res) => {
+  try {
+    // get the id from the request of the server
+    const { id } = req.params;
+    const job = await knex("jobs").where({ id }).first();
+    res.status(200).json(job);
+  } catch (err) {
+    res.status(400).json({
+      message: `Could not fetch job, ${err.message}`,
+    });
+  }
+};
+
+export { getJobs, singleJob };

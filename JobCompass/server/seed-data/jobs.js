@@ -15,7 +15,7 @@ Work with key technical experts across AMD and with our partners and customers t
     longitude: 1,
     requirements:
       "B.Sc. or B.Eng. degree in Computer Science, Software Engineering, Electrical Engineering, Applied Mathematics, or equivalent Advanced degrees, such as M.Sc., M.Eng., Ph.D. are preferred.",
-    skills: JSON.stringify("[C, C++, Python, CUDA]"),
+    skills: JSON.stringify(["C", "C++", "Python", "CUDA"]),
   },
   {
     title: "Frontend Developer",

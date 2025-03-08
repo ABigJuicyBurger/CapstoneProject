@@ -54,3 +54,17 @@ March 04
   \_ setup route for jobs and link to jobsroutes
   \_ jobsroutes has router using express and gets a route and uses controller
   \_ the controller does stuff (like handle requests)
+
+  March 05
+
+- we got jobs: now let's start the front end
+  \_ play around with google maps
+  \_ Get api key from site (https://visgl.github.io/react-google-maps/docs/get-started)
+  \_ Map is functional and shows on page centerd in calgary with a bit of space around it to showw the job card selected
+  \*\*\*\* Need to show job markers eventually w/ basic tooltips (AI HELPED HERE)
+
+  March 06
+  \_ return data with axios request; now i need to form a job card (tomorrow me)
+
+  march 08
+  \_ start with a job card and see how it looks!
