@@ -12,7 +12,9 @@ app.use(
   })
 );
 app.use(express.json()); // body parser
+app.use(express.static("public")); // serves static files
 
+// Get all jobs or individual job
 app.use("/jobs", jobsRoutes);
 
 // basic route for home
