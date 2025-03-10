@@ -7,6 +7,8 @@ const router = express.Router();
 
 const knex = initKnex(configuration);
 
+// routing from /jobs
+
 router.get("/", jobsController.getJobs);
 router.get("/:id", jobsController.singleJob);
 

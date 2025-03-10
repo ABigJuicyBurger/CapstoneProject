@@ -68,3 +68,9 @@ March 04
 
   march 08
   \_ start with a job card and see how it looks!
+  \_ looks horrible! but all data is successfuly sent so just need to style ( :)
+
+  March 10
+  \_ do a little job card styling during learning studio
+  \_ install date-fns and use it to format date from disgusting ISP 8601
+  \_ little job card styling done! \*\*\*\ still need some logic like saving + apply, will look at once done job list
