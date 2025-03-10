@@ -71,6 +71,23 @@ March 04
   \_ looks horrible! but all data is successfuly sent so just need to style ( :)
 
   March 10
-  \_ do a little job card styling during learning studio
-  \_ install date-fns and use it to format date from disgusting ISP 8601
-  \_ little job card styling done! \*\*\*\ still need some logic like saving + apply, will look at once done job list
+
+  - do a little job card styling during learning studio
+    \_ install date-fns and use it to format date from disgusting ISP 8601
+    \_ little job card styling done! \*\*\*\ still need some logic like saving + apply, will look at once done job list
+  - job list done! for last hour of day will incorporate a bit of TS
+    \_ npm i -g typescript
+    \_ create tsconfig file w/ tsc --init
+    \_ create a type object for jobCard with its shape
+    \_ use it where needed in the state "storage", mention what im returning JSX,
+    mention what other status should return, mention what methods are returning,
+    and adjust tsconfig to return JSX.
+    - Will learn to type as i go
+    - to prevent complications let me summarize:
+      - created type deeinition modeling shape of job data
+        - defined types for properties of this job
+        - exported it
+      - imported it to jobcard and added return type to component (JSX.Element)
+      - type state hooks with generics (<JobCardType | null> and <Boolean>)
+      - added promise return type to async fnxn (: Promise<void>)
+      - : is annotate type and <> is generic type (definite type vs conditional type)
