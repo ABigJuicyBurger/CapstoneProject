@@ -1,0 +1,9 @@
+@use "../../styles/partials/fonts" as *;
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
+
+.jobCard {
+  @include flex-left;
+  @include jobCard-inner-styling;
+  border: 1px solid black;
+}
