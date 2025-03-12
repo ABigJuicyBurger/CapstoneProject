@@ -42,10 +42,10 @@
     border-radius: 0.1875rem;
     padding: 1rem;
     width: 100%;
+    flex-direction: row;
+    align-items: center;
 
     @include tablet {
-      flex-direction: row;
-      align-items: center;
       justify-content: space-between;
     }
   }
@@ -53,10 +53,18 @@
   &__card-header {
     display: flex;
     margin-bottom: 0.5rem;
-    gap: 1rem;
+    flex: 14;
+
     flex-wrap: wrap;
 
+    @include tablet {
+      gap: 0.5rem;
+      flex-direction: column;
+      margin-bottom: 0;
+    }
+
     h1 {
+      margin-right: 3rem;
       font-size: 1.5rem;
       color: #333;
     }
@@ -68,8 +76,6 @@
   }
 
   &__card-content {
-    flex: 1;
-
     h3 {
       font-size: 1.25rem;
       margin-bottom: 0.5rem;
@@ -85,6 +91,7 @@
     h5 {
       font-size: 0.9rem;
       color: #666;
+      flex: 1;
     }
   }
 }
