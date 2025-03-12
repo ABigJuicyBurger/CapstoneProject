@@ -33,25 +33,27 @@ function JobList(): JSX.Element {
 
   return (
     <div className="job-list">
-      <header>
-        <h1 className="title">List of Jobs</h1>
+      <header className="job-list__header">
+        <h1 className="job-list__title">List of Jobs</h1>
       </header>
-      {jobBoard.map((job) => (
-        <Link key={job.id} to={`/job/${job.id}`}>
-          <div className="jobCardList">
-            <section className="jobCard__header">
-              <h1>{job.title}</h1>
-              <h2>{job.company}</h2>
-              <img src="logo" alt="" />
-            </section>
-            <section className="jobCard__content">
-              <h3>Longitude: {job.longitude}</h3>
-              <h4>Latitude: {job.latitude}</h4>
-              <h5>Id: {job.id}</h5>
-            </section>
-          </div>
-        </Link>
-      ))}
+      <div className="job-list__jobs">
+        {jobBoard.map((job) => (
+          <Link key={job.id} to={`/job/${job.id}`}>
+            <div className="job-list__card">
+              <section className="job-list__card-header">
+                <h1>{job.title}</h1>
+                <h2>{job.company}</h2>
+                <img src="logo" alt="" />
+              </section>
+              <section className="job-list__card-content">
+                {/* <h3>Longitude: {job.longitude}</h3>
+                <h4>Latitude: {job.latitude}</h4> */}
+                <h5>Id: {job.id}</h5>
+              </section>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
