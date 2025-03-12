@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import axios from "axios";
 import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
@@ -16,15 +16,15 @@ function JobCard(): JSX.Element {
   const [expandedText, setExpandedText] = useState<Boolean>(false);
   const MAX_LENGTH = 150;
 
-  //   const {id} = useParams()
+  const { id } = useParams();
 
   const fetchJob = async (): Promise<void | unknown> => {
     // void means it just completes operation
     // this function is a promise that returns nothing
     try {
-      console.log("Attempting to fetch from:", `${backendURL}/jobs/1`);
+      console.log("Attempting to fetch from:", `${backendURL}/jobs/${id}`);
       // TODO: Fetch from id dynamically; not needed currently
-      const jobResponse = await axios.get(`${backendURL}/jobs/20`); // later switch 1 w/ ${id}
+      const jobResponse = await axios.get(`${backendURL}/jobs/${id}`); // later switch 1 w/ ${id}
       setJob(jobResponse.data);
     } catch (err: any) {
       setJob(null);
@@ -39,9 +39,9 @@ function JobCard(): JSX.Element {
 
   // TODO: reload automatically on new job (if user types different id)
 
-  // useEffect(() => {
-  //   fetchJob();
-  // }, [id]);
+  useEffect(() => {
+    fetchJob();
+  }, [id]);
 
   // TODO: style to save job appropriately and have it link to user faves
   const saveJob = async () => {
