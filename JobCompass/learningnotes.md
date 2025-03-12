@@ -101,3 +101,5 @@ March 12
 
 - got the okay for capstone + completed capstone proposal
 - lost .env files when switching branches! made a new one and locally saved it this time
+- Leaked the api key! went through a coaster using bfg repo-cleaner and java to remove all instances of it in github + rotated apikey to prevent someone snatching it and using it
+  \_ creater mirror cloen with a replacement txt file, ran BFG w/ Java to find+replace data in commit history, used git reflog and gc to clean up referencees

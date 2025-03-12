@@ -57,6 +57,9 @@ function JobCard(): JSX.Element {
   return (
     <div className="jobCard">
       <div className="jobCard__header">
+        <Link to={"/"}>
+          <img src="" alt="arrow" /> Go Back
+        </Link>
         <h2 className="jobCard__header__title">{job.title}</h2>
         <section className="jobCard__header__title__company">
           <h3 className="jobCard__header__company">{job.company}</h3>

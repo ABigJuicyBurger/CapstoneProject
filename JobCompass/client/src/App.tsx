@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import IndividualJob from "./pages/IndividualJob/IndividualJob.tsx";
 import JobList from "./components/JobList/JobList";
+import HomePage from "./pages/HomePage/HomePage";
 
 // I'm excited!!! npm run dev: to start on local host
 
@@ -13,8 +14,10 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<HomePage />}></Route>
           <Route path="/jobs" element={<JobList />} />
           <Route path="/job/:id" element={<IndividualJob />} />
+
           {/* <Route path="/" element={<HomePage />} />
         <Route path="/loginpage" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
