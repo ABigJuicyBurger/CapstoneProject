@@ -1,0 +1,32 @@
+@use "./variables" as *;
+
+@mixin tablet {
+  @media screen and (min-width: $tablet__min-breakpoint) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media screen and (min-width: $desktop__min-breakpoint) {
+    @content;
+  }
+}
+
+@mixin flex-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+@mixin jobCard-inner-styling {
+  padding: 1rem;
+  border-bottom: 1px solid gray;
+}
+
+@mixin section-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  color: $primary-color;
+  border-bottom: 2px solid $primary-color;
+}

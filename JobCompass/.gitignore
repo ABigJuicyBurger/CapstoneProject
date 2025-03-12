@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# project related ignores
+se-capstone-example-proposal
+.env
