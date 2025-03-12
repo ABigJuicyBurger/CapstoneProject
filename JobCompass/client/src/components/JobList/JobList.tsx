@@ -33,17 +33,16 @@ function JobList(): JSX.Element {
 
   return (
     <>
-      <div>This is the list of jobs. will connect to map ASAP</div>
       {jobBoard.map((job) => (
-        // <Link to={"/"}>
-        <div className="jobCard" key={job.id}>
-          <h1>Title: {job.title}</h1>
-          <h2>Company: {job.company}</h2>
-          <h3>Longitude: {job.longitude}</h3>
-          <h4>Latitude: {job.latitude}</h4>
-          <h5>Id: {job.id}</h5>
-        </div>
-        // </Link>
+        <Link key={job.id} to={`/job/${job.id}`}>
+          <div className="jobCard">
+            <h1>Title: {job.title}</h1>
+            <h2>Company: {job.company}</h2>
+            <h3>Longitude: {job.longitude}</h3>
+            <h4>Latitude: {job.latitude}</h4>
+            <h5>Id: {job.id}</h5>
+          </div>
+        </Link>
       ))}
     </>
   );

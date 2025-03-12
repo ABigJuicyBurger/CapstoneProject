@@ -3,8 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import "dotenv/config";
 
 import "./App.css";
-import JobCard from "./components/JobCard/JobCard";
-import IndividualJob from "./pages/IndividualJob/IndividualJob.jsx";
+import IndividualJob from "./pages/IndividualJob/IndividualJob.tsx";
 import JobList from "./components/JobList/JobList";
 
 // I'm excited!!! npm run dev: to start on local host

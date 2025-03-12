@@ -96,3 +96,8 @@ March 04
     in order for TS to find namespace JSX
     \_ and made an interface for .env so TS understands Vite
   -
+
+March 12
+
+- got the okay for capstone + completed capstone proposal
+- lost .env files when switching branches! made a new one and locally saved it this time
