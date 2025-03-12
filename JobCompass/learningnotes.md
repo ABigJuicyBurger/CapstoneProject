@@ -84,10 +84,15 @@ March 04
     and adjust tsconfig to return JSX.
     - Will learn to type as i go
     - to prevent complications let me summarize:
-      - created type deeinition modeling shape of job data
-        - defined types for properties of this job
-        - exported it
-      - imported it to jobcard and added return type to component (JSX.Element)
-      - type state hooks with generics (<JobCardType | null> and <Boolean>)
-      - added promise return type to async fnxn (: Promise<void>)
-      - : is annotate type and <> is generic type (definite type vs conditional type)
+      \_ created type definition modeling shape of job data
+      \_ defined types for properties of this job
+      \_ exported it
+      \_ imported it to jobcard and added return type to component (JSX.Element)
+      \_ type state hooks with generics (<JobCardType | null> and <Boolean>)
+      \_ added promise return type to async fnxn (: Promise<void>)
+      \_ : is annotate type and <> is generic type (definite type vs conditional type)
+  - for now let's create a job list container which can link to particular job
+    \_ practiced types in joblist too, had to import JSX + npm i types/react
+    in order for TS to find namespace JSX
+    \_ and made an interface for .env so TS understands Vite
+  -

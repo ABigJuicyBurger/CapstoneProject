@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import axios from "axios";
+import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
 
 import JobCardType from "../../../types/JobCardType";
 import "./JobCard.scss";
@@ -17,7 +18,7 @@ function JobCard(): JSX.Element {
 
   //   const {id} = useParams()
 
-  const fetchJob = async (): Promise<void> => {
+  const fetchJob = async (): Promise<void | unknown> => {
     // void means it just completes operation
     // this function is a promise that returns nothing
     try {
@@ -25,7 +26,7 @@ function JobCard(): JSX.Element {
       // TODO: Fetch from id dynamically; not needed currently
       const jobResponse = await axios.get(`${backendURL}/jobs/20`); // later switch 1 w/ ${id}
       setJob(jobResponse.data);
-    } catch (err) {
+    } catch (err: any) {
       setJob(null);
       console.log(err.message);
       return <h1>Could not fetch job!</h1>;
