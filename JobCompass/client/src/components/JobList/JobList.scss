@@ -2,8 +2,68 @@
 @use "../../styles/partials/mixins" as *;
 @use "../../styles/partials/variables" as *;
 
-.jobCard {
+.job-list {
+  @include flex-left;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
+
+  & header {
+    width: 100%;
+    margin-bottom: 1rem;
+
+    & .title {
+      @include section-title;
+      margin-bottom: 0.5rem;
+      color: #666;
+    }
+  }
+}
+
+.jobCardList {
   @include flex-left;
   @include jobCard-inner-styling;
-  border: 1px solid black;
+  border: 1px solid rgba(128, 128, 128, 0.4);
+  border-radius: 0.1875rem;
+  padding: 1rem;
+  width: 100%;
+
+  @include tablet {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__content {
+    flex: 1;
+
+    h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    h4 {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+
+    &__content {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: #777;
+    }
+  }
+}
+
+a {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
 }
