@@ -1,13 +1,16 @@
 type JobCard = {
   // create type alias
-  title: String;
-  company: String;
-  type: String;
-  salary_range: String;
-  created_at: Number;
-  skills: String[];
-  description: String;
-  requirements: String;
+  title: string;
+  company: string;
+  type: string;
+  salary_range: string;
+  created_at: number;
+  skills: string[];
+  description: string;
+  requirements: string;
+  id: string;
+  latitude: number;
+  longitude: number;
 };
 
 export default JobCard;

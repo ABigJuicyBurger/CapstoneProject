@@ -1,18 +1,23 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-function JobList() {
+import "./JobList.scss";
+import JobCardType from "../../../types/JobCardType";
+import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
+
+function JobList(): JSX.Element {
   const backendURL = import.meta.env.VITE_BACKEND_URL;
-  const [jobBoard, setJobBoard] = useState([]);
+  const [jobBoard, setJobBoard] = useState<JobCardType[] | null>([]); // expecting array of jobs similar to JobCardType
 
-  const fetchAllJobs = async () => {
+  const fetchAllJobs = async (): Promise<void | JSX.Element> => {
     try {
       const jobListResponse = await axios.get(`${backendURL}/jobs`);
       console.log(jobListResponse.data);
       setJobBoard(jobListResponse.data);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.message);
-      return <h1>Could not get jobs! Try again later</h1>;
+      setJobBoard(null);
     }
   };
 
@@ -21,6 +26,7 @@ function JobList() {
     fetchAllJobs();
   }, []);
 
+  // runtime check, doesn't need a type annotation (no type declared)
   if (!jobBoard) {
     return <h1>Loading...</h1>;
   }
@@ -29,13 +35,15 @@ function JobList() {
     <>
       <div>This is the list of jobs. will connect to map ASAP</div>
       {jobBoard.map((job) => (
-        <div key={job.id}>
+        // <Link to={"/"}>
+        <div className="jobCard" key={job.id}>
           <h1>Title: {job.title}</h1>
           <h2>Company: {job.company}</h2>
           <h3>Longitude: {job.longitude}</h3>
           <h4>Latitude: {job.latitude}</h4>
           <h5>Id: {job.id}</h5>
         </div>
+        // </Link>
       ))}
     </>
   );
