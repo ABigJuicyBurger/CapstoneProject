@@ -1,21 +1,50 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import "dotenv/config";
+import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
+import axios from "axios";
 
-import "./App.css";
 import IndividualJob from "./pages/IndividualJob/IndividualJob.tsx";
 import JobList from "./components/JobList/JobList";
 import HomePage from "./pages/HomePage/HomePage";
+import JobMap from "./pages/JobMap/JobMap";
 
-// I'm excited!!! npm run dev: to start on local host
+import JobCardType from "../../../types/JobCardType";
 
-function App() {
+import "./App.css";
+
+function App(): JSX.Element {
+  const backendURL = import.meta.env.VITE_BACKEND_URL;
+
+  const [mobile, setMobile] = useState<Boolean>(false);
+  const [jobs, setJobs] = useState<JobCardType[] | null>([]);
+
+  const fetchAllJobs = async (): Promise<void | JSX.Element> => {
+    try {
+      const jobListResponse = await axios.get(`${backendURL}/jobs`);
+      console.log(jobListResponse.data);
+      setJobs(jobListResponse.data);
+    } catch (error: any) {
+      console.log(error.message);
+      setJobs(null);
+    }
+  };
+
+  // load all jobs
+  useEffect(() => {
+    fetchAllJobs();
+  }, []);
+
   return (
     <div>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
-          <Route path="/jobs" element={<JobList />} />
+          <Route
+            path="/jobs"
+            element={
+              mobile ? <JobList jobBoard={jobs} /> : <JobMap jobs={jobs} />
+            }
+          />
           <Route path="/job/:id" element={<IndividualJob />} />
 
           {/* <Route path="/" element={<HomePage />} />

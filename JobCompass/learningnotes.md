@@ -103,3 +103,7 @@ March 12
 - lost .env files when switching branches! made a new one and locally saved it this time
 - Leaked the api key! went through a coaster using bfg repo-cleaner and java to remove all instances of it in github + rotated apikey to prevent someone snatching it and using it
   \_ creater mirror cloen with a replacement txt file, ran BFG w/ Java to find+replace data in commit history, used git reflog and gc to clean up referencees
+- Next, typed the home page and fixed API key by importing starting with VITE
+  \_ now im conditionally rendering baseed on screen size: everything after mobile shows the map/list function
+- Now i need to show the map (success) with advanced markers (of each job) with corresponding pin
+  \_ first i need to set a map id (google api requirement, represents styling and configs i have)
