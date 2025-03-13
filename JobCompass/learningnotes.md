@@ -107,3 +107,7 @@ March 12
   \_ now im conditionally rendering baseed on screen size: everything after mobile shows the map/list function
 - Now i need to show the map (success) with advanced markers (of each job) with corresponding pin
   \_ first i need to set a map id (google api requirement, represents styling and configs i have)
+
+March 13
+
+- Styled maps with maps api

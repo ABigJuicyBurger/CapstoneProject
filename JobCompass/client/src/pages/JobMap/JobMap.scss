@@ -1,3 +1,13 @@
-.map {
-  width: 50%;
+@use "../../styles/partials/fonts" as *;
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
+
+.map-section {
+  // display: flex;
+  width: 100vw;
+  height: 100vw;
+
+  @include tablet {
+    // width: 70vw;
+  }
 }

@@ -10,13 +10,14 @@ import "./JobCard.scss";
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 console.log(backendURL);
 
-function JobCard(): JSX.Element {
+function JobCard({ jobId }: { jobId?: number }): JSX.Element {
   // my fnxn will return JSX
   const [job, setJob] = useState<JobCardType | null>(null); // tells TS what data to expect
   const [expandedText, setExpandedText] = useState<Boolean>(false);
   const MAX_LENGTH = 150;
 
-  const { id } = useParams();
+  const { id: urlId } = useParams();
+  const id = jobId || urlId; // ID can be from params or from what user clicks on map
 
   const fetchJob = async (): Promise<void | unknown> => {
     // void means it just completes operation
