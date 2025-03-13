@@ -10,12 +10,14 @@ import JobCardType from "../../../types/JobCardType";
 const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
   const apiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
+  const handleMarkerClick = () => {};
+
   return (
     <APIProvider apiKey={apiKey}>
       <Map
         style={{ width: "95vw", height: "95vh" }}
         defaultCenter={{ lat: 51.0447, lng: -114.0719 }}
-        mapId={`6ca41446c199331d `}
+        mapId={`6ca41446c199331d`}
         defaultZoom={10.8}
         disableDefaultUI={true}
         mapTypeControl={true}
@@ -29,9 +31,11 @@ const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
           <AdvancedMarker
             key={job.id}
             position={{
-              lat: parseFloat(job.latitude) || 51.0447, // backup numbers to prevent map death
-              lng: parseFloat(job.longitude) || -114.0719,
+              lat: parseFloat(job.latitude), // backup numbers to prevent map death
+              lng: parseFloat(job.longitude),
             }}
+            clickable={true}
+            onClick={handleMarkerClick}
           >
             <Pin
               background={"#4285F4"}
