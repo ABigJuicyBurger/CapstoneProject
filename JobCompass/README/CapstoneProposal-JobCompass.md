@@ -81,6 +81,18 @@ List the pages of your app with brief descriptions. You can show this visually, 
 
 Provide visuals of your app's screens. You can use pictures of hand-drawn sketches, or wireframing tools like Figma.
 
+#### HomePage
+
+![](HomePage.png)
+
+### Map Page
+
+![](MapPage.png)
+
+### JobCardList Page (for Mobile)
+
+![](<ListofJobs(Mobile).png>)
+
 ### Data
 
 Describe your data and the relationships between the data points. You can show this visually using diagrams, or write it out.
