@@ -6,7 +6,7 @@ import "./JobList.scss";
 import JobCardType from "../../../types/JobCardType";
 import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
 
-function JobList({ jobBoard }): JSX.Element {
+function JobList({ jobBoard }: { jobBoard: JobCardType[] }): JSX.Element {
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
   // runtime check, doesn't need a type annotation (no type declared)
@@ -40,5 +40,4 @@ function JobList({ jobBoard }): JSX.Element {
     </div>
   );
 }
-
 export default JobList;
