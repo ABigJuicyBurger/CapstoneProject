@@ -9,8 +9,8 @@ type JobCard = {
   description: string;
   requirements: string;
   id: string;
-  latitude: number;
-  longitude: number;
+  latitude: string;
+  longitude: string;
 };
 
 export default JobCard;

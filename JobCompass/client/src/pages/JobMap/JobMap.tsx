@@ -5,7 +5,9 @@ import {
   AdvancedMarker,
 } from "@vis.gl/react-google-maps";
 
-const JobMap = ({ jobs }) => {
+import JobCardType from "../../../types/JobCardType";
+
+const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
   const apiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   return (
