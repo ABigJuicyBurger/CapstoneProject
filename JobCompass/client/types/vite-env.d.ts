@@ -5,4 +5,5 @@ interface ImportMeta {
   };
 }
 
+// this is a type declaration file
 // this import meta thing that already exists? it also has these env properties

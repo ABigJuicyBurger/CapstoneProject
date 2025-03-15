@@ -12,7 +12,7 @@ import JobCardType from "../../../types/JobCardType";
 import { useState } from "react";
 
 const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
-  const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const apiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   const handleMarkerClick = (jobUrl: string) => {
@@ -29,11 +29,16 @@ const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
               defaultCenter={{ lat: 51.0447, lng: -114.0719 }}
               mapId={`6ca41446c199331d`}
               defaultZoom={10.8}
+              // remove zoom in out
               disableDefaultUI={true}
-              mapTypeControl={true}
-              gestureHandling={"cooperative"}
+              // remove satellide mode
+              mapTypeControl={false}
+              // how user can interact
+              gestureHandling={"auto"}
+              // + / - zoom buttons
               zoomControl={false}
-              streetViewControl={false} // Disable street view
+              // Disable street view
+              streetViewControl={false}
               fullscreenControl={false}
             >
               {/*Job Markers logic*/}
@@ -41,8 +46,8 @@ const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
                 <AdvancedMarker
                   key={job.id}
                   position={{
-                    lat: parseFloat(job.latitude), // backup numbers to prevent map death
-                    lng: parseFloat(job.longitude),
+                    lat: Number(job.latitude),
+                    lng: Number(job.longitude),
                   }}
                   clickable={true}
                   onClick={() => {
