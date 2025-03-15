@@ -5,12 +5,14 @@ import axios from "axios";
 import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
 
 import JobCardType from "../../../types/JobCardType";
+import MapJobCardType from "../../../types/MapJobCardType";
+
 import "./JobCard.scss";
 
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 console.log(backendURL);
 
-function JobCard({ jobId }: { jobId?: string }): JSX.Element {
+function JobCard({ jobId, onClose }: MapJobCardType): JSX.Element {
   // my fnxn will return JSX
   const [job, setJob] = useState<JobCardType | null>(null); // tells TS what data to expect
   const [expandedText, setExpandedText] = useState<Boolean>(false);
@@ -58,14 +60,14 @@ function JobCard({ jobId }: { jobId?: string }): JSX.Element {
   return (
     <div className="jobCard">
       <div className="jobCard__header">
-        <Link to={"/"}>
-          <img src="/" alt="arrow" /> Go Back
+        <Link to={"/jobs"}>
+          <img src="/" alt="arrow" onClick={onClose} /> Go Back
         </Link>
         <h2 className="jobCard__header__title">{job.title}</h2>
         <section className="jobCard__header__title__company">
           <h3 className="jobCard__header__company">{job.company}</h3>
           <img
-            src="/"
+            src="/  "
             className="jobCard__header__logo-placeholder"
             alt="logo"
           />
