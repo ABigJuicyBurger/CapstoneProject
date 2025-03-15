@@ -19,6 +19,13 @@ const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
     setSelectedJobId(jobUrl);
   };
 
+  const calgaryBounds = {
+    north: 51.3, // Northern boundary latitude
+    south: 50.75, // Southern boundary latitude
+    west: -114.5, // Western boundary longitude
+    east: -113.65, // Eastern boundary longitude
+  };
+
   return (
     <div className="map-container">
       <div className="map-layout">
@@ -34,12 +41,19 @@ const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
               // remove satellide mode
               mapTypeControl={false}
               // how user can interact
-              gestureHandling={"auto"}
+              gestureHandling={"cooperative"}
               // + / - zoom buttons
               zoomControl={false}
               // Disable street view
               streetViewControl={false}
               fullscreenControl={false}
+              //prevent user from zooming into other cities
+              restriction={{
+                latLngBounds: calgaryBounds,
+                strictBounds: false,
+              }}
+              minZoom={8}
+              maxZoom={17}
             >
               {/*Job Markers logic*/}
               {jobs.map((job) => (
