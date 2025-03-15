@@ -1,11 +1,10 @@
 import JobCard from "../../components/JobCard/JobCard";
-const MapJobCard = ({
-  jobId,
-  onClose,
-}: {
-  jobId: number;
+type MapJobCardType = {
+  jobId: string;
   onClose: () => void;
-}) => {
+};
+
+const MapJobCard = ({ jobId, onClose }: MapJobCardType) => {
   return (
     <div className="map-job-card">
       <button className="close-button" onClick={onClose}>

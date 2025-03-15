@@ -1,5 +1,5 @@
 type JobCard = {
-  // create type alias
+  // create type that I made (alias is a weird word)
   title: string;
   company: string;
   type: string;

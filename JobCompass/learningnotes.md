@@ -111,3 +111,5 @@ March 12
 March 13
 
 - Styled maps with maps api
+- show a single card through user click on marker (which i need to style) by saving click in a state var and conditionally rendering the mapcard or an extension of jobcard which accepts a prop which changes url path (where default is just the browser search of url which uses params)
+  \_ wow that was wordy

@@ -8,15 +8,14 @@ import JobList from "./components/JobList/JobList";
 import HomePage from "./pages/HomePage/HomePage";
 import JobMap from "./pages/JobMap/JobMap";
 
-import JobCardType from "../../../types/JobCardType";
-
 import "./App.css";
+import JobCardType from "../types/JobCardType.ts";
 
 function App(): JSX.Element {
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-  const [mobile, setMobile] = useState<Boolean>(false);
-  const [jobs, setJobs] = useState<JobCardType[] | null>([]);
+  const [mobile, setMobile] = useState<boolean>(false); // capital B makes it a class instance ; lower b is the actual primitive type
+  const [jobs, setJobs] = useState<JobCardType[]>([]); // this is not gneric but you use <> to pass type into use state
 
   const fetchAllJobs = async (): Promise<void | JSX.Element> => {
     try {
@@ -25,7 +24,7 @@ function App(): JSX.Element {
       setJobs(jobListResponse.data);
     } catch (error: any) {
       console.log(error.message);
-      setJobs(null);
+      setJobs([]);
     }
   };
 
