@@ -15,13 +15,13 @@
     display: flex;
     width: 100%;
     text-align: center;
-    justify-content: space-around;
-    padding: 0 1rem 1rem;
+    justify-content: space-between;
+    padding: 1rem 1rem 1rem;
     border-bottom: 1px solid rgba(128, 128, 128, 0.4);
 
     &__signIn-cta,
     &__register-cta {
-      max-width: 30%;
+      max-width: 10%;
       margin-left: 1rem;
       border-radius: 0.25rem;
       font-weight: 500;
@@ -41,6 +41,41 @@
 
       &:hover {
         background-color: darken(#36454f, 10%);
+      }
+    }
+
+    &__logo {
+      font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
+      flex: 1;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #2557a7;
+      letter-spacing: -0.5008px;
+      margin: 0;
+      display: flex;
+      align-items: center;
+
+      a {
+        flex-direction: row;
+      }
+
+      &__image {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin-right: 0.5rem;
+      }
+
+      @include tablet {
+        font-size: 0.75rem;
+
+        &::before {
+          width: 32px;
+          height: 32px;
+        }
       }
     }
   }
