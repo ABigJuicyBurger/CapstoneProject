@@ -113,3 +113,8 @@ March 13
 - Styled maps with maps api
 - show a single card through user click on marker (which i need to style) by saving click in a state var and conditionally rendering the mapcard or an extension of jobcard which accepts a prop which changes url path (where default is just the browser search of url which uses params)
   \_ wow that was wordy
+
+March 15
+
+- Positioned Job Card within the map with absolute positioning and z index
+- added restriction bounds within the map to restrict map movement to anything outside of calgary
