@@ -3,18 +3,26 @@ import {
   Map,
   Pin,
   AdvancedMarker,
-  InfoWindow,
+  // InfoWindow, maybe needed for custom marker styling
 } from "@vis.gl/react-google-maps";
-import MapJobCard from "./MapJobCard.tsx";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
+import MapJobCard from "./MapJobCard.tsx";
 import "./JobMap.scss";
 
 import JobCardType from "../../../types/JobCardType";
-import { useState } from "react";
+import MapJobCardNoteType from "../../../types/MapJobCardType.ts";
 
-const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
+const JobMap = ({
+  updateNote,
+  jobs,
+}: {
+  jobs: JobCardType[];
+  updateNote: MapJobCardNoteType;
+}) => {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+  // TODO: Show salary on hover (originally show title and company on load)
   const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
 
   const apiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -103,6 +111,7 @@ const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
         {selectedJobId && (
           <div className="job-details-section">
             <MapJobCard
+              updateNote={updateNote}
               jobId={selectedJobId}
               onClose={() => setSelectedJobId(null)}
             />

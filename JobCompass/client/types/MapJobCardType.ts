@@ -1,6 +1,8 @@
-type MapJobCardType = {
-  jobId: string;
-  onClose: () => void;
+type MapJobCardNoteType = {
+  jobId?: string;
+  onClose?: () => void;
+  updateNote: () => void;
+  note?: string[];
 };
 
-export default MapJobCardType;
+export default MapJobCardNoteType;

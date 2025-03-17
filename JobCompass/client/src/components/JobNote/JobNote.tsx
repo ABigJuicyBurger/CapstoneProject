@@ -1,12 +1,13 @@
 import { Link, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { JSX } from "react";
 
-type JobNoteProps = {
-  updateNote: () => void;
-};
+import MapJobCardNoteType from "../../../types/MapJobCardType";
 
-function JobNote({ updateNote }: JobNoteProps): JSX.Element {
+import { NoteContext } from "../../context/NoteContext.tsx";
+
+function JobNote({}: MapJobCardNoteType): JSX.Element {
+  const { note, updateNote } = useContext(NoteContext);
   const { id } = useParams();
   console.log("Job id from url", id);
 
@@ -39,7 +40,7 @@ function JobNote({ updateNote }: JobNoteProps): JSX.Element {
         </section>
         <div className="jobCard__header__cta">
           {/* <button onClick={saveJob}> Save job </button> */}
-          <button onClick={() => addNote}> Add Note </button>
+          {/* <button onClick={() => addNote}> Add Note </button> */}
         </div>
       </div>
     </div>
