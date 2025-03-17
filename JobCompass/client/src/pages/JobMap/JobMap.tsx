@@ -5,6 +5,7 @@ import {
   AdvancedMarker,
 } from "@vis.gl/react-google-maps";
 import MapJobCard from "./MapJobCard.tsx";
+import { useParams, useNavigate } from "react-router-dom";
 
 import "./JobMap.scss";
 
@@ -15,8 +16,12 @@ const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   const apiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
+  // const { id } = useParams();
+  const navigate = useNavigate();
+
   const handleMarkerClick = (jobUrl: string) => {
     setSelectedJobId(jobUrl);
+    navigate(`/jobs/${jobUrl}`);
   };
 
   const calgaryBounds = {

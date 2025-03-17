@@ -118,3 +118,10 @@ March 15
 
 - Positioned Job Card within the map with absolute positioning and z index
 - added restriction bounds within the map to restrict map movement to anything outside of calgary
+
+March 17
+
+- Make URL show up in jobcard; this is neeede in job map (as card shows conditionally in the map)
+  by using navigate
+- Adjust type of props being passed from Map -> card -> note (which is basically an extension of jobCard)
+  \_ separate jobnote to its own component that is the "opposite" side of the card

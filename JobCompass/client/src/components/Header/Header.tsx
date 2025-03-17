@@ -13,6 +13,12 @@ function Header() {
           <h1>JobCompass</h1>
         </Link>
       </div>
+      <Link
+        className="homePage__header__register-cta"
+        to={"/user/:id/savedJobs"}
+      >
+        Saved Jobs
+      </Link>
       <Link className="homePage__header__signIn-cta" to={"/signIn"}>
         Sign In
       </Link>
