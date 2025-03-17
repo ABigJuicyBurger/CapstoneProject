@@ -3,9 +3,10 @@ import {
   Map,
   Pin,
   AdvancedMarker,
+  InfoWindow,
 } from "@vis.gl/react-google-maps";
 import MapJobCard from "./MapJobCard.tsx";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import "./JobMap.scss";
 
@@ -14,6 +15,8 @@ import { useState } from "react";
 
 const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+  const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
+
   const apiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   // const { id } = useParams();
@@ -74,15 +77,23 @@ const JobMap = ({ jobs }: { jobs: JobCardType[] }) => {
                   }}
                 >
                   <Pin
-                    background={"#4285F4"}
-                    borderColor={"#FFF"}
-                    glyphColor={"#FFF"}
+                    background={"#FFF"}
+                    borderColor={"#3535350"}
+                    glyphColor={"#000000"}
                   />
                   {/* Custom marker content */}
-                  <div className="job-marker">
+                  {/* <InfoWindow
+                    position={{
+                      lat: Number(job.latitude),
+                      lng: Number(job.longitude),
+                    }}
+                    className="info-window"
+                  > */}
+                  <div className="info-window-content">
                     <h3>{job.title}</h3>
                     <p>{job.company}</p>
                   </div>
+                  {/* </InfoWindow> */}
                 </AdvancedMarker>
               ))}
             </Map>

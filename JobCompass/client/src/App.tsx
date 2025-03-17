@@ -12,6 +12,8 @@ import JobNote from "./components/JobNote/JobNote.tsx";
 
 import "./App.css";
 import JobCardType from "../types/JobCardType.ts";
+import LoginPage from "./pages/LoginPage/LoginPage.tsx";
+import RegisterPage from "./pages/RegisterPage/RegisterPage.tsx";
 
 function App(): JSX.Element {
   const backendURL = import.meta.env.VITE_BACKEND_URL;
@@ -51,7 +53,8 @@ function App(): JSX.Element {
           </Route>
           <Route path="/jobs/:id/note" element={<JobNote />} />
           <Route path="/job/:id" element={<IndividualJob />} />
-
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           {/* <Route path="/" element={<HomePage />} />
         <Route path="/loginpage" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

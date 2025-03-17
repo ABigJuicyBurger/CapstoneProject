@@ -66,7 +66,7 @@ function JobCard({ jobId, onClose }: MapJobCardType): JSX.Element {
   return (
     <>
       {note ? (
-        <JobNote updateNote={updateNote} note={note} />
+        <JobNote updateNote={updateNote} />
       ) : (
         <div className="jobCard">
           <div className="jobCard__header">

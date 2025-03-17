@@ -4,10 +4,9 @@ import { JSX } from "react";
 
 type JobNoteProps = {
   updateNote: () => void;
-  note: boolean;
 };
 
-function JobNote({ updateNote, note }: JobNoteProps): JSX.Element {
+function JobNote({ updateNote }: JobNoteProps): JSX.Element {
   const { id } = useParams();
   console.log("Job id from url", id);
 
@@ -32,6 +31,11 @@ function JobNote({ updateNote, note }: JobNoteProps): JSX.Element {
                     className="jobCard__header__logo-placeholder"
                     alt="logo"
                   /> */}
+          {noteList.length > 0 ? (
+            noteList
+          ) : (
+            <h3>No notes yet. Want to add one?</h3>
+          )}
         </section>
         <div className="jobCard__header__cta">
           {/* <button onClick={saveJob}> Save job </button> */}
