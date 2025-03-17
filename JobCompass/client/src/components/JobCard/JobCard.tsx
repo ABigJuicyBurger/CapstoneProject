@@ -4,6 +4,8 @@ import { format } from "date-fns";
 import axios from "axios";
 import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
 
+import JobNote from "../JobNote/JobNote.tsx";
+
 import JobCardType from "../../../types/JobCardType";
 import MapJobCardType from "../../../types/MapJobCardType";
 
@@ -15,7 +17,8 @@ console.log(backendURL);
 function JobCard({ jobId, onClose }: MapJobCardType): JSX.Element {
   // my fnxn will return JSX
   const [job, setJob] = useState<JobCardType | null>(null); // tells TS what data to expect
-  const [expandedText, setExpandedText] = useState<Boolean>(false);
+  const [expandedText, setExpandedText] = useState<boolean>(false);
+  const [note, setNote] = useState<boolean>(false);
   const MAX_LENGTH = 150;
 
   const { id: urlId } = useParams();
@@ -26,8 +29,7 @@ function JobCard({ jobId, onClose }: MapJobCardType): JSX.Element {
     // this function is a promise that returns nothing
     try {
       console.log("Attempting to fetch from:", `${backendURL}/jobs/${id}`);
-      // TODO: Fetch from id dynamically; not needed currently
-      const jobResponse = await axios.get(`${backendURL}/jobs/${id}`); // later switch 1 w/ ${id}
+      const jobResponse = await axios.get(`${backendURL}/jobs/${id}`);
       setJob(jobResponse.data);
     } catch (err: any) {
       setJob(null);
@@ -51,6 +53,10 @@ function JobCard({ jobId, onClose }: MapJobCardType): JSX.Element {
     return <h1>Job saved</h1>;
   };
 
+  const updateNote = () => {
+    setNote(!note);
+  };
+
   console.log(job);
 
   if (!job) {
@@ -58,74 +64,88 @@ function JobCard({ jobId, onClose }: MapJobCardType): JSX.Element {
   }
 
   return (
-    <div className="jobCard">
-      <div className="jobCard__header">
-        <Link to={"/jobs"}>
-          <img src="/" alt="arrow" onClick={onClose} /> Go Back
-        </Link>
-        <h2 className="jobCard__header__title">{job.title}</h2>
-        <section className="jobCard__header__title__company">
-          <h3 className="jobCard__header__company">{job.company}</h3>
-          <img
-            src="/  "
-            className="jobCard__header__logo-placeholder"
-            alt="logo"
-          />
-        </section>
-        <div className="jobCard__header__cta">
-          {/* <Link to="/jobURL">Apply</Link> */}
-          <button onClick={saveJob}> Save job </button>
-        </div>
-      </div>
-      <div className="jobCard__details">
-        <h2 className="jobCard__details__heading">Job Details</h2>
-        <div className="jobCard__details__type">
-          <section className="jobCard__details__type__section">
-            <h3 className="jobCard__details__type-title">Job Type</h3>
-            <p className="jobCard__details__type-text">{job.type}</p>
-          </section>
-          <section className="jobCard__details__salary__section">
-            <h3 className="jobCard__details__salary-title">Salary</h3>
-            <p className="jobCard__details__salary-text">{job.salary_range}</p>
-          </section>
-          <section className="jobCard__details__date__section">
-            <h4 className="jobCard__details__date-title">Date</h4>
-            <p className="jobCard__details__date-text">
-              {format(new Date(job.created_at), "MMMM d, yyyy")}
+    <>
+      {note ? (
+        <JobNote updateNote={updateNote} note={note} />
+      ) : (
+        <div className="jobCard">
+          <div className="jobCard__header">
+            <Link to={"/jobs"}>
+              <img
+                className="jobCard__header__goBack"
+                src="/src/assets/Icons/arrow-right-solid.svg"
+                alt="arrow"
+                onClick={onClose}
+              />
+            </Link>
+            <h2 className="jobCard__header__title">{job.title}</h2>
+            <section className="jobCard__header__title__company">
+              <h3 className="jobCard__header__company">{job.company}</h3>
+              <img
+                src="/  "
+                className="jobCard__header__logo-placeholder"
+                alt="logo"
+              />
+            </section>
+            <div className="jobCard__header__cta">
+              <button onClick={saveJob}> Save job </button>
+              <button onClick={() => updateNote()}> View Note </button>
+            </div>
+          </div>
+          <div className="jobCard__details">
+            <h2 className="jobCard__details__heading">Job Details</h2>
+            <div className="jobCard__details__type">
+              <section className="jobCard__details__type__section">
+                <h3 className="jobCard__details__type-title">Job Type</h3>
+                <p className="jobCard__details__type-text">{job.type}</p>
+              </section>
+              <section className="jobCard__details__salary__section">
+                <h3 className="jobCard__details__salary-title">Salary</h3>
+                <p className="jobCard__details__salary-text">
+                  {job.salary_range}
+                </p>
+              </section>
+              <section className="jobCard__details__date__section">
+                <h4 className="jobCard__details__date-title">Date</h4>
+                <p className="jobCard__details__date-text">
+                  {format(new Date(job.created_at), "MMMM d, yyyy")}
+                </p>
+              </section>
+            </div>
+          </div>
+          <div className="jobCard__skills">
+            <h3 className="jobCard__skills__title">Skills</h3>
+            <div className="jobCard__skills__list">
+              <ul className="jobCard__skills__items">
+                {job.skills.map((skill, index) => (
+                  <li className="jobCard__skills__item" key={index}>
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="jobCard__description">
+            <h3 className="jobCard__description__title">Job Description</h3>
+            <p className="jobCard__description__text">
+              {expandedText
+                ? job.description
+                : `${job.description.substring(0, MAX_LENGTH)}...`}
             </p>
-          </section>
+            <button
+              className="jobCard__description__button"
+              onClick={() => setExpandedText(!expandedText)}
+            >
+              {expandedText ? "Show Less" : "Read More"}
+            </button>
+            <h3 className="jobCard__description__title">Requirements</h3>
+            <p className="jobCard__description__requirements">
+              {job.requirements}
+            </p>
+          </div>
         </div>
-      </div>
-      <div className="jobCard__skills">
-        <h3 className="jobCard__skills__title">Skills</h3>
-        <div className="jobCard__skills__list">
-          <ul className="jobCard__skills__items">
-            {job.skills.map((skill, index) => (
-              <li className="jobCard__skills__item" key={index}>
-                {skill}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      <div className="jobCard__description">
-        <h3 className="jobCard__description__title">Job Description</h3>
-        <p className="jobCard__description__text">
-          {expandedText
-            ? job.description
-            : `${job.description.substring(0, MAX_LENGTH)}...`}
-        </p>
-        <button
-          className="jobCard__description__button"
-          onClick={() => setExpandedText(!expandedText)}
-        >
-          {expandedText ? "Show Less" : "Read More"}
-        </button>
-        <h3 className="jobCard__description__title">Requirements</h3>
-        <p className="jobCard__description__requirements">{job.requirements}</p>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
-
 export default JobCard;

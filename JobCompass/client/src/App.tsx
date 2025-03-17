@@ -7,6 +7,8 @@ import IndividualJob from "./pages/IndividualJob/IndividualJob.tsx";
 import JobList from "./components/JobList/JobList";
 import HomePage from "./pages/HomePage/HomePage";
 import JobMap from "./pages/JobMap/JobMap";
+import Header from "./components/Header/Header.tsx";
+import JobNote from "./components/JobNote/JobNote.tsx";
 
 import "./App.css";
 import JobCardType from "../types/JobCardType.ts";
@@ -36,6 +38,7 @@ function App(): JSX.Element {
   return (
     <div>
       <BrowserRouter>
+        <Header />
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
           <Route
@@ -43,7 +46,10 @@ function App(): JSX.Element {
             element={
               mobile ? <JobList jobBoard={jobs} /> : <JobMap jobs={jobs} />
             }
-          />
+          >
+            <Route path=":id" element={null} />
+          </Route>
+          <Route path="/jobs/:id/note" element={<JobNote />} />
           <Route path="/job/:id" element={<IndividualJob />} />
 
           {/* <Route path="/" element={<HomePage />} />

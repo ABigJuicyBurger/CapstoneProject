@@ -47,12 +47,24 @@
   &__header {
     align-items: center;
 
+    a {
+      padding: 0;
+      width: 1rem;
+      img {
+        width: 1rem;
+      }
+    }
+
     &__title {
       &__company {
         display: flex;
         align-items: center;
         gap: 2rem;
       }
+    }
+
+    * {
+      padding-bottom: 1rem;
     }
 
     &__logo-placeholder {
@@ -64,14 +76,12 @@
     }
 
     &__cta {
+      padding: 0;
       button {
+        margin-right: 1rem;
         background-color: #2557a7;
         color: white;
       }
-    }
-
-    * {
-      padding-bottom: 1rem;
     }
   }
 
