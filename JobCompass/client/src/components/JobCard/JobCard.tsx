@@ -67,6 +67,7 @@ function JobCard({
   return (
     <>
       {noteState ? (
+        // anyitme on click maybe link or nav; later problem
         <JobNote noteState={noteState} updateNote={updateNote} />
       ) : (
         <div className="jobCard">
