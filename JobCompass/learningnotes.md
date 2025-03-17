@@ -131,3 +131,5 @@ March 17
   \_ got so stressed as passing props up causes a llot of TS issues so ihad to make sure my prop names were A correct, B being passed right and C being typed appropriately
   \_ current prop passing note flow is App.tsx -> JobMap.tsx -> MapJobCard.tsx -> JobCard.tsx &&
   App.tsx to JobNote.tsx
+  - added a "under construction" page for login and register, cleaned up styling for
+    main page, and added logic to conditionally render list or map on phone mode (tiny)
