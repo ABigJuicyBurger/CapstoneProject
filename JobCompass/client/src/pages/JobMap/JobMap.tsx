@@ -14,20 +14,13 @@ import "./JobMap.scss";
 import JobCardType from "../../../types/JobCardType";
 import MapJobCardNoteType from "../../../types/MapJobCardType.ts";
 
-const JobMap = ({
-  updateNote,
-  jobs,
-}: {
-  jobs: JobCardType[];
-  updateNote: MapJobCardNoteType;
-}) => {
+const JobMap = ({ updateNote, jobs, noteState }: MapJobCardNoteType) => {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   // TODO: Show salary on hover (originally show title and company on load)
   const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
 
   const apiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-  // const { id } = useParams();
   const navigate = useNavigate();
 
   const handleMarkerClick = (jobUrl: string) => {
@@ -72,38 +65,39 @@ const JobMap = ({
               maxZoom={17}
             >
               {/*Job Markers logic*/}
-              {jobs.map((job) => (
-                <AdvancedMarker
-                  key={job.id}
-                  position={{
-                    lat: Number(job.latitude),
-                    lng: Number(job.longitude),
-                  }}
-                  clickable={true}
-                  onClick={() => {
-                    handleMarkerClick(job.id);
-                  }}
-                >
-                  <Pin
-                    background={"#FFF"}
-                    borderColor={"#3535350"}
-                    glyphColor={"#000000"}
-                  />
-                  {/* Custom marker content */}
-                  {/* <InfoWindow
+              {jobs &&
+                jobs.map((job) => (
+                  <AdvancedMarker
+                    key={job.id}
+                    position={{
+                      lat: Number(job.latitude),
+                      lng: Number(job.longitude),
+                    }}
+                    clickable={true}
+                    onClick={() => {
+                      handleMarkerClick(job.id);
+                    }}
+                  >
+                    <Pin
+                      background={"#FFF"}
+                      borderColor={"#3535350"}
+                      glyphColor={"#000000"}
+                    />
+                    {/* Custom marker content */}
+                    {/* <InfoWindow
                     position={{
                       lat: Number(job.latitude),
                       lng: Number(job.longitude),
                     }}
                     className="info-window"
                   > */}
-                  <div className="info-window-content">
-                    <h3>{job.title}</h3>
-                    <p>{job.company}</p>
-                  </div>
-                  {/* </InfoWindow> */}
-                </AdvancedMarker>
-              ))}
+                    <div className="info-window-content">
+                      <h3>{job.title}</h3>
+                      <p>{job.company}</p>
+                    </div>
+                    {/* </InfoWindow> */}
+                  </AdvancedMarker>
+                ))}
             </Map>
           </APIProvider>
         </div>
@@ -114,6 +108,7 @@ const JobMap = ({
               updateNote={updateNote}
               jobId={selectedJobId}
               onClose={() => setSelectedJobId(null)}
+              noteState={noteState}
             />
           </div>
         )}

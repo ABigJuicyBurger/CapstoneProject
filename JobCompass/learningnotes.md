@@ -125,3 +125,9 @@ March 17
   by using navigate
 - Adjust type of props being passed from Map -> card -> note (which is basically an extension of jobCard)
   \_ separate jobnote to its own component that is the "opposite" side of the card
+  \_ typed note with map job card as they come together like a marriage
+  \_ quickyl implemented a simple login and register component
+  \*\*\* will need to clean up pages folder! as that will be my finalized product
+  \_ got so stressed as passing props up causes a llot of TS issues so ihad to make sure my prop names were A correct, B being passed right and C being typed appropriately
+  \_ current prop passing note flow is App.tsx -> JobMap.tsx -> MapJobCard.tsx -> JobCard.tsx &&
+  App.tsx to JobNote.tsx

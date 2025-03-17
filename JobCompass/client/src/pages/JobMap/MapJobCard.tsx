@@ -1,11 +1,20 @@
 import JobCard from "../../components/JobCard/JobCard";
-import MapJobCardType from "../../../types/MapJobCardType";
 import MapJobCardNoteType from "../../../types/MapJobCardType";
 
-const MapJobCard = ({ updateNote, jobId, onClose }: MapJobCardType) => {
+const MapJobCard = ({
+  noteState,
+  updateNote,
+  jobId,
+  onClose,
+}: MapJobCardNoteType) => {
   return (
     <div className="map-job-card">
-      <JobCard updateNote={updateNote} jobId={jobId} onClose={onClose} />
+      <JobCard
+        noteState={noteState}
+        updateNote={updateNote}
+        jobId={jobId}
+        onClose={onClose}
+      />
     </div>
   );
 };
