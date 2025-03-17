@@ -1,10 +1,8 @@
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import axios from "axios";
 import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
-
-import { NoteContext } from "../../context/NoteContext.tsx";
 
 import JobNote from "../JobNote/JobNote.tsx";
 
@@ -16,8 +14,15 @@ import "./JobCard.scss";
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 console.log(backendURL);
 
-function JobCard({ jobId, onClose }: MapJobCardType): JSX.Element {
-  const { note, updateNote } = useContext(NoteContext);
+function JobCard({
+  noteState,
+  updateNote,
+  jobId,
+  onClose,
+}: MapJobCardType): JSX.Element {
+  console.log("updateNote in JobCard:", typeof updateNote);
+
+  // my fnxn will return JSX
   const [job, setJob] = useState<JobCardType | null>(null); // tells TS what data to expect
   const [expandedText, setExpandedText] = useState<boolean>(false);
   const MAX_LENGTH = 150;
@@ -61,8 +66,8 @@ function JobCard({ jobId, onClose }: MapJobCardType): JSX.Element {
 
   return (
     <>
-      {note ? (
-        <JobNote updateNote={updateNote} />
+      {noteState ? (
+        <JobNote noteState={noteState} updateNote={updateNote} />
       ) : (
         <div className="jobCard">
           <div className="jobCard__header">
@@ -85,7 +90,7 @@ function JobCard({ jobId, onClose }: MapJobCardType): JSX.Element {
             </section>
             <div className="jobCard__header__cta">
               <button onClick={saveJob}> Save job </button>
-              <button onClick={() => updateNote}> View Note </button>
+              <button onClick={() => updateNote()}> View Note </button>
             </div>
           </div>
           <div className="jobCard__details">

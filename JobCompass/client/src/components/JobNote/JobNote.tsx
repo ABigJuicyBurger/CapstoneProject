@@ -1,13 +1,11 @@
 import { Link, useParams } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { JSX } from "react";
-
 import MapJobCardNoteType from "../../../types/MapJobCardType";
 
-import { NoteContext } from "../../context/NoteContext.tsx";
+import AddNote from "./AddNote.js";
 
-function JobNote({}: MapJobCardNoteType): JSX.Element {
-  const { note, updateNote } = useContext(NoteContext);
+function JobNote({ noteState, updateNote }: MapJobCardNoteType): JSX.Element {
   const { id } = useParams();
   console.log("Job id from url", id);
 
@@ -33,9 +31,15 @@ function JobNote({}: MapJobCardNoteType): JSX.Element {
                     alt="logo"
                   /> */}
           {noteList.length > 0 ? (
-            noteList
+            <div>
+              <AddNote />
+              {noteList}
+            </div>
           ) : (
-            <h3>No notes yet. Want to add one?</h3>
+            <div>
+              <h3>No notes yet. Want to add one?</h3>
+              <AddNote />
+            </div>
           )}
         </section>
         <div className="jobCard__header__cta">
