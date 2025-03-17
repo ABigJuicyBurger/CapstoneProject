@@ -5,6 +5,8 @@
 .jobCard {
   @include flex-left;
   @include jobCard-inner-styling;
+  position: relative;
+  margin-top: 57px;
   border: 1px solid black;
 
   &__description__title,

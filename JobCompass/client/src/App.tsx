@@ -10,7 +10,7 @@ import JobMap from "./pages/JobMap/JobMap";
 import Header from "./components/Header/Header.tsx";
 import JobNote from "./components/JobNote/JobNote.tsx";
 
-import "./App.css";
+import "./App.scss";
 import JobCardType from "../types/JobCardType.ts";
 import LoginPage from "./pages/LoginPage/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage/RegisterPage.tsx";
@@ -18,7 +18,6 @@ import RegisterPage from "./pages/RegisterPage/RegisterPage.tsx";
 function App(): JSX.Element {
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-  const [mobile, setMobile] = useState<boolean>(false); // capital B makes it a class instance ; lower b is the actual primitive type
   const [jobs, setJobs] = useState<JobCardType[]>([]); // this is not gneric but you use <> to pass type into use state
   const [noteState, setNoteState] = useState<boolean>(false);
 
@@ -51,15 +50,18 @@ function App(): JSX.Element {
           <Route
             path="/jobs"
             element={
-              mobile ? (
-                <JobList jobBoard={jobs} />
-              ) : (
-                <JobMap
-                  noteState={noteState}
-                  updateNote={updateNote}
-                  jobs={jobs}
-                />
-              )
+              <div className="view-container">
+                <div className="view-map">
+                  <JobMap
+                    noteState={noteState}
+                    updateNote={updateNote}
+                    jobs={jobs}
+                  />
+                </div>
+                <div className="view-list">
+                  <JobList jobBoard={jobs} />
+                </div>
+              </div>
             }
           >
             <Route path=":id" element={null} />
