@@ -1,0 +1,41 @@
+@use "./styles/partials/fonts" as *;
+@use "./styles/partials/mixins" as *;
+@use "./styles/partials/variables" as *;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: white;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.view-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.view-map {
+  // display: none;
+
+  @include tablet {
+    .view-map {
+      display: block;
+      height: 100%;
+    }
+  }
+}
+
+.view-list {
+  display: block;
+  height: 100%;
+
+  @include tablet {
+    display: none;
+  }
+}
