@@ -20,6 +20,11 @@ function App(): JSX.Element {
 
   const [mobile, setMobile] = useState<boolean>(false); // capital B makes it a class instance ; lower b is the actual primitive type
   const [jobs, setJobs] = useState<JobCardType[]>([]); // this is not gneric but you use <> to pass type into use state
+  const [note, setNote] = useState<boolean>(false);
+
+  const updateNote = () => {
+    setNote(!note);
+  };
 
   const fetchAllJobs = async (): Promise<void | JSX.Element> => {
     try {
@@ -46,14 +51,21 @@ function App(): JSX.Element {
           <Route
             path="/jobs"
             element={
-              mobile ? <JobList jobBoard={jobs} /> : <JobMap jobs={jobs} />
+              mobile ? (
+                <JobList jobBoard={jobs} />
+              ) : (
+                <JobMap updateNote={updateNote} jobs={jobs} />
+              )
             }
           >
             <Route path=":id" element={null} />
           </Route>
-          <Route path="/jobs/:id/note" element={<JobNote />} />
+          <Route
+            path="/jobs/:id/note"
+            element={<JobNote updateNote={updateNote} />}
+          />
           <Route path="/job/:id" element={<IndividualJob />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signIn" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           {/* <Route path="/" element={<HomePage />} />
         <Route path="/loginpage" element={<LoginPage />} />
