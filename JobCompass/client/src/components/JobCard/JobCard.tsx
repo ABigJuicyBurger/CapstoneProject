@@ -16,11 +16,11 @@ console.log(backendURL);
 
 function JobCard({
   noteState,
-  updateNote,
+  updateNoteVisibility,
   jobId,
   onClose,
 }: MapJobCardType): JSX.Element {
-  console.log("updateNote in JobCard:", typeof updateNote);
+  console.log("updateNoteVisibility in JobCard:", typeof updateNoteVisibility);
 
   // my fnxn will return JSX
   const [job, setJob] = useState<JobCardType | null>(null); // tells TS what data to expect
@@ -68,7 +68,10 @@ function JobCard({
     <>
       {noteState ? (
         // anyitme on click maybe link or nav; later problem
-        <JobNote noteState={noteState} updateNote={updateNote} />
+        <JobNote
+          noteState={noteState}
+          updateNoteVisibility={updateNoteVisibility}
+        />
       ) : (
         <div className="jobCard">
           <div className="jobCard__header">
@@ -91,7 +94,10 @@ function JobCard({
             </section>
             <div className="jobCard__header__cta">
               <button onClick={saveJob}> Save job </button>
-              <button onClick={() => updateNote()}> View Note </button>
+              <button onClick={() => updateNoteVisibility()}>
+                {" "}
+                View Note{" "}
+              </button>
             </div>
           </div>
           <div className="jobCard__details">

@@ -1,7 +1,23 @@
-.jobCard__header__cta {
-  button {
-    margin-right: 1rem;
-    background-color: #2557a7;
-    color: white;
+@use "../../styles/partials/fonts" as *;
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
+
+.jobCard {
+  &__header {
+    &__cta {
+      button {
+        margin-right: 1rem;
+        background-color: #2557a7;
+        color: white;
+      }
+    }
+  }
+
+  &__notepad {
+    @include flex-left;
+
+    &__form {
+      display: flex;
+    }
   }
 }
