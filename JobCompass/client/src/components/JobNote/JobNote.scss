@@ -3,19 +3,63 @@
 @use "../../styles/partials/variables" as *;
 
 .jobCard {
-  &__header {
-    &__cta {
-      button {
-        margin-right: 1rem;
-        background-color: #2557a7;
-        color: white;
+  &__content {
+    width: 100%;
+  }
+
+  &__notes {
+    width: 100%;
+
+    &__single {
+      margin: 1rem 0;
+    }
+
+    &__text {
+      margin-top: 1rem;
+      line-height: 1.5;
+    }
+
+    &__list {
+      width: 100%;
+    }
+
+    &__items {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+
+    &__item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      list-style-type: none;
+
+      &-text {
+        flex: 1;
+        margin: 0;
       }
+
+      &-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+    }
+
+    &__heading {
+      margin-bottom: 1rem;
+    }
+
+    &--empty {
+      text-align: center;
+      padding: 2rem 0;
     }
   }
 
   &__notepad {
     &__form {
-      // padding: 0;
       @include flex-left;
       gap: 0.5rem;
     }
