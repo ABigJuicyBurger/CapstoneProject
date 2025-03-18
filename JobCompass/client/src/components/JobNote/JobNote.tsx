@@ -5,6 +5,8 @@ import MapJobCardNoteType from "../../../types/MapJobCardType";
 
 import AddNote from "./NoteFunctions/AddNote.tsx";
 
+import "../JobNote/JobNote.scss";
+
 function JobNote({ updateNoteVisibility }: MapJobCardNoteType): JSX.Element {
   const { id } = useParams();
   console.log("Job id from url", id);
@@ -46,52 +48,59 @@ function JobNote({ updateNoteVisibility }: MapJobCardNoteType): JSX.Element {
           />
         </Link>
         <h2 className="jobCard__header__title">Notes</h2>
-        <section className="jobCard__header__title__company">
+        <section className="jobCard__content">
           {noteList.length > 0 ? (
-            <div className="jobCard__header__notes">
+            <div className="jobCard__notes">
               {viewOneNote && selectedNote !== null ? (
-                // single note
-                <div className="jobCard__single__note">
-                  <button onClick={() => viewAllNotes()}>
+                // single note view
+                <div className="jobCard__header__notes__single">
+                  <button
+                    className="jobCard__notes__button"
+                    onClick={() => viewAllNotes()}
+                  >
                     Back to the rest
                   </button>
-                  {noteList[selectedNote]}
+                  <p className="jobCard__notes__text">
+                    {noteList[selectedNote]}
+                  </p>
                 </div>
               ) : (
-                // all other ntoes
-                <>
+                // all notes view
+                <div className="jobCard__notes__list">
                   <AddNote addNote={addNote} />
-                  <ul>
+                  <ul className="jobCard__notes__items">
                     {noteList.map((note, index) => (
-                      <li key={index} className="note-list">
-                        {note}
-                        <button
-                          onClick={() => viewSingleNote(index)}
-                          key={index}
-                          className="note-list__cta"
-                        >
-                          View
-                        </button>
-                        <button
-                          onClick={() => deleteSingleNote(note)}
-                          className="note-list__cta"
-                        >
-                          Delete
-                        </button>
+                      <li key={index} className="jobCard__notes__item">
+                        <p className="jobCard__notes__item-text">{note}</p>
+                        <div className="jobCard__notes__item-actions">
+                          <button
+                            onClick={() => viewSingleNote(index)}
+                            className="jobCard__notes__item-button"
+                          >
+                            View
+                          </button>
+                          <button
+                            onClick={() => deleteSingleNote(note)}
+                            className="jobCard__notes__item-button"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </li>
                     ))}
                   </ul>
-                </>
+                </div>
               )}
             </div>
           ) : (
-            <div>
-              <h3>No notes yet. Want to add one?</h3>
+            <div className="jobCard__notes--empty">
+              <h3 className="jobCard__notes__heading">
+                No notes yet. Want to add one?
+              </h3>
               <AddNote addNote={addNote} />
             </div>
           )}
         </section>
-        {/* <div className="jobCard__header__cta"></div> */}
       </div>
     </div>
   );
