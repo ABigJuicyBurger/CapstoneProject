@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./JobNote.scss";
 
-function AddNote({ addNote }: { addNote: (notes: string[]) => void }) {
+function AddNote({ addNote }: { addNote: (notes: string) => void }) {
   const [notePad, setNotePad] = useState<{ note: string }>({
     note: "",
   });

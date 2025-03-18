@@ -13,9 +13,9 @@ function JobNote({
   console.log("Job id from url", id);
 
   // TODO: note state; for now keep it guest status (where user has no saveable notes)
-  const [noteList, setNoteList] = useState([]);
+  const [noteList, setNoteList] = useState<string[]>([]);
 
-  const addNote = (newNote: string[]): void => {
+  const addNote = (newNote: string): void => {
     setNoteList((oldNotes) => [...oldNotes, newNote]);
   };
 
