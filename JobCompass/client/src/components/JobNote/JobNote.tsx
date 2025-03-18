@@ -3,20 +3,34 @@ import { useState } from "react";
 import { JSX } from "react";
 import MapJobCardNoteType from "../../../types/MapJobCardType";
 
-import AddNote from "./AddNote.tsx";
+import AddNote from "./NoteFunctions/AddNote.tsx";
 
-function JobNote({
-  noteState,
-  updateNoteVisibility,
-}: MapJobCardNoteType): JSX.Element {
+function JobNote({ updateNoteVisibility }: MapJobCardNoteType): JSX.Element {
   const { id } = useParams();
   console.log("Job id from url", id);
 
   // TODO: note state; for now keep it guest status (where user has no saveable notes)
   const [noteList, setNoteList] = useState<string[]>([]);
+  const [viewOneNote, setViewOneNote] = useState<boolean>(false);
+  const [selectedNote, setSelectedNote] = useState<number>(0);
 
   const addNote = (newNote: string): void => {
     setNoteList((oldNotes) => [...oldNotes, newNote]);
+  };
+
+  const deleteSingleNote = (noteToDelete: string): void => {
+    setNoteList((prevNotes) =>
+      prevNotes.filter((note) => note !== noteToDelete)
+    );
+  };
+
+  const viewSingleNote = (index: number): void => {
+    setSelectedNote(index);
+    setViewOneNote(true);
+  };
+
+  const viewAllNotes = (): void => {
+    setViewOneNote(false);
   };
 
   console.log(noteList);
@@ -35,16 +49,40 @@ function JobNote({
         <section className="jobCard__header__title__company">
           {noteList.length > 0 ? (
             <div className="jobCard__header__notes">
-              <AddNote addNote={addNote} />
-              <ul>
-                {noteList.map((note, index) => (
-                  <li key={index} className="note-list">
-                    {note}
-                    <button className="note-list__cta">View</button>
-                    <button className="note-list__cta">Delete</button>
-                  </li>
-                ))}
-              </ul>
+              {viewOneNote && selectedNote !== null ? (
+                // single note
+                <div className="jobCard__single__note">
+                  <button onClick={() => viewAllNotes()}>
+                    Back to the rest
+                  </button>
+                  {noteList[selectedNote]}
+                </div>
+              ) : (
+                // all other ntoes
+                <>
+                  <AddNote addNote={addNote} />
+                  <ul>
+                    {noteList.map((note, index) => (
+                      <li key={index} className="note-list">
+                        {note}
+                        <button
+                          onClick={() => viewSingleNote(index)}
+                          key={index}
+                          className="note-list__cta"
+                        >
+                          View
+                        </button>
+                        <button
+                          onClick={() => deleteSingleNote(note)}
+                          className="note-list__cta"
+                        >
+                          Delete
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
             </div>
           ) : (
             <div>

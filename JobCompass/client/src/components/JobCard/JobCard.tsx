@@ -68,10 +68,7 @@ function JobCard({
     <>
       {noteState ? (
         // anyitme on click maybe link or nav; later problem
-        <JobNote
-          noteState={noteState}
-          updateNoteVisibility={updateNoteVisibility}
-        />
+        <JobNote updateNoteVisibility={updateNoteVisibility} />
       ) : (
         <div className="jobCard">
           <div className="jobCard__header">

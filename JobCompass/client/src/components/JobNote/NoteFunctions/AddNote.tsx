@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./JobNote.scss";
+import "../JobNote.scss";
 
 function AddNote({ addNote }: { addNote: (notes: string) => void }) {
   const [notePad, setNotePad] = useState<{ note: string }>({
@@ -35,7 +35,7 @@ function AddNote({ addNote }: { addNote: (notes: string) => void }) {
       {isNotepadVisible && (
         <div className="jobCard__notepad">
           <form className="jobCard__notepad__form" onSubmit={handleNoteSubmit}>
-            <label htmlFor="Note">Enter note here</label>
+            <label htmlFor="Note"></label>
             <input
               type="text"
               name="note"
@@ -45,7 +45,9 @@ function AddNote({ addNote }: { addNote: (notes: string) => void }) {
             ></input>
             <section className="jobCard__notepad__cta">
               <button>Add</button>
-              <button onClick={handleCancel}>Cancel</button>
+              <button type="button" onClick={handleCancel}>
+                Cancel
+              </button>
             </section>
           </form>
         </div>
