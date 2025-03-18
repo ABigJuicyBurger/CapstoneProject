@@ -133,3 +133,4 @@ March 17
   App.tsx to JobNote.tsx
   - added a "under construction" page for login and register, cleaned up styling for
     main page, and added logic to conditionally render list or map on phone mode (tiny)
+  - got note functionality working!

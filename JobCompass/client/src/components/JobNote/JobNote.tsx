@@ -40,6 +40,8 @@ function JobNote({
                 {noteList.map((note, index) => (
                   <li key={index} className="note-list">
                     {note}
+                    <button className="note-list__cta">View</button>
+                    <button className="note-list__cta">Delete</button>
                   </li>
                 ))}
               </ul>

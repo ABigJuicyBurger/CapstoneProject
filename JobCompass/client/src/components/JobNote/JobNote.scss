@@ -14,10 +14,10 @@
   }
 
   &__notepad {
-    @include flex-left;
-
     &__form {
-      display: flex;
+      // padding: 0;
+      @include flex-left;
+      gap: 0.5rem;
     }
   }
 }

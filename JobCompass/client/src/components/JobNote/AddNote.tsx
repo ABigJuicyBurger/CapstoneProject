@@ -17,15 +17,14 @@ function AddNote({ addNote }: { addNote: (notes: string) => void }) {
     setNotePad({ note: e.target.value });
   }
 
-  function handleCancel(e: React.ChangeEvent<Element>) {
+  function handleCancel(e: React.MouseEvent<HTMLButtonElement>) {
     setNotePad({ note: "" });
     setIsNotepadVisible(false);
   }
 
-  function handleNoteSubmit(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleNoteSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     console.log(notePad);
-    setNotePad({ note: e.target.value });
     setIsNotepadVisible(false);
     addNote(notePad.note);
   }
@@ -44,8 +43,10 @@ function AddNote({ addNote }: { addNote: (notes: string) => void }) {
               onChange={handleNoteChange}
               placeholder="Commute time maybe?"
             ></input>
-            <button>Add</button>
-            <button onClick={handleCancel}>Cancel</button>
+            <section className="jobCard__notepad__cta">
+              <button>Add</button>
+              <button onClick={handleCancel}>Cancel</button>
+            </section>
           </form>
         </div>
       )}
