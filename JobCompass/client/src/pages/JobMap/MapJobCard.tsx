@@ -3,7 +3,7 @@ import MapJobCardNoteType from "../../../types/MapJobCardType";
 
 const MapJobCard = ({
   noteState,
-  updateNote,
+  updateNoteVisibility,
   jobId,
   onClose,
 }: MapJobCardNoteType) => {
@@ -11,7 +11,7 @@ const MapJobCard = ({
     <div className="map-job-card">
       <JobCard
         noteState={noteState}
-        updateNote={updateNote}
+        updateNoteVisibility={updateNoteVisibility}
         jobId={jobId}
         onClose={onClose}
       />

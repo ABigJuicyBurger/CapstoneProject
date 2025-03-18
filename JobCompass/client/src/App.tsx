@@ -21,7 +21,7 @@ function App(): JSX.Element {
   const [jobs, setJobs] = useState<JobCardType[]>([]); // this is not gneric but you use <> to pass type into use state
   const [noteState, setNoteState] = useState<boolean>(false);
 
-  const updateNote = () => {
+  const updateNoteVisibility = () => {
     setNoteState(!noteState);
   };
 
@@ -54,7 +54,7 @@ function App(): JSX.Element {
                 <div className="view-map">
                   <JobMap
                     noteState={noteState}
-                    updateNote={updateNote}
+                    updateNoteVisibility={updateNoteVisibility}
                     jobs={jobs}
                   />
                 </div>
@@ -68,7 +68,12 @@ function App(): JSX.Element {
           </Route>
           <Route
             path="/jobs/:id/note"
-            element={<JobNote noteState={noteState} updateNote={updateNote} />}
+            element={
+              <JobNote
+                noteState={noteState}
+                updateNoteVisibility={updateNoteVisibility}
+              />
+            }
           />
           <Route path="/job/:id" element={<IndividualJob />} />
           <Route path="/signIn" element={<LoginPage />} />

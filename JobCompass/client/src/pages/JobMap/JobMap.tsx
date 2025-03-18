@@ -14,7 +14,11 @@ import "./JobMap.scss";
 import JobCardType from "../../../types/JobCardType";
 import MapJobCardNoteType from "../../../types/MapJobCardType.ts";
 
-const JobMap = ({ updateNote, jobs, noteState }: MapJobCardNoteType) => {
+const JobMap = ({
+  updateNoteVisibility,
+  jobs,
+  noteState,
+}: MapJobCardNoteType) => {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   // TODO: Show salary on hover (originally show title and company on load)
   const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
@@ -105,7 +109,7 @@ const JobMap = ({ updateNote, jobs, noteState }: MapJobCardNoteType) => {
         {selectedJobId && (
           <div className="job-details-section">
             <MapJobCard
-              updateNote={updateNote}
+              updateNoteVisibility={updateNoteVisibility}
               jobId={selectedJobId}
               onClose={() => setSelectedJobId(null)}
               noteState={noteState}
