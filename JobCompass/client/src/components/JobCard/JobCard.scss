@@ -6,8 +6,6 @@
   @include flex-left;
   @include jobCard-inner-styling;
   position: relative;
-  margin-top: 57px;
-  border: 1px solid black;
 
   &__description__title,
   &__skills__title,
@@ -34,6 +32,7 @@
       rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
     border-radius: 3px;
     margin-left: auto;
+    margin-top: 57px;
   }
 
   & > div {
