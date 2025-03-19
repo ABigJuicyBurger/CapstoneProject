@@ -91,9 +91,8 @@ function JobCard({
             </section>
             <div className="jobCard__header__cta">
               <button onClick={saveJob}> Save job </button>
-              <button onClick={() => updateNoteVisibility()}>
-                {" "}
-                View Note{" "}
+              <button onClick={() => updateNoteVisibility?.()}>
+                View Note
               </button>
             </div>
           </div>

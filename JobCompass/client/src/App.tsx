@@ -20,6 +20,21 @@ function App(): JSX.Element {
 
   const [jobs, setJobs] = useState<JobCardType[]>([]); // this is not gneric but you use <> to pass type into use state
   const [noteState, setNoteState] = useState<boolean>(false);
+  const [mobileState, setMobileState] = useState<boolean>(
+    window.innerWidth < 768
+  );
+
+  // mobile statee will not change until i refresh
+  useEffect(() => {
+    // if window  < 768 run set state to mobile
+    const handleResize = () => {
+      setMobileState(window.innerWidth < 768);
+    };
+
+    // resize is a standard browser event that fires when browser window changes size
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const updateNoteVisibility = () => {
     setNoteState(!noteState);
@@ -44,14 +59,14 @@ function App(): JSX.Element {
   return (
     <div>
       <BrowserRouter>
-        <Header />
+        <Header mobileState={mobileState} />
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
           <Route
             path="/jobs"
             element={
               <div className="view-container">
-                <div className="view-map">
+                <div className={`view-map`}>
                   <JobMap
                     noteState={noteState}
                     updateNoteVisibility={updateNoteVisibility}
@@ -78,26 +93,13 @@ function App(): JSX.Element {
           <Route path="/job/:id" element={<IndividualJob />} />
           <Route path="/signIn" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          {/* <Route path="/" element={<HomePage />} />
-        <Route path="/loginpage" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+          {/* <Route path="/" element={<HomePage />} /
         <Route path="/jobsearch" element={<JobSearchPage />} />
-        <Route path="/jobsearch/map" element={<JobMap />} /> */}
-          {/* <Route path="/job/:jobID" element={<IndividualJob />}/> */}
-        </Routes>
         {/* <Footer /> */}
+        </Routes>
       </BrowserRouter>
     </div>
   );
 }
-
-// const App = () => {
-//   return (
-//     <>
-//       {/* <JobCard /> */}
-//       <JobList />
-//     </>
-//   );
-// };
 
 export default App;

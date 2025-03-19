@@ -1,6 +1,7 @@
 @use "../../styles/partials/fonts" as *;
 @use "../../styles/partials/mixins" as *;
 @use "../../styles/partials/variables" as *;
+@use "sass:color";
 
 .homePage {
   @include flex-left;
@@ -57,7 +58,7 @@
       transition: background-color 0.2s;
 
       &:hover {
-        background-color: darken(#36454f, 10%);
+        background-color: color.adjust(#36454f, $lightness: -10%);
       }
     }
 
@@ -99,6 +100,17 @@
           width: 32px;
           height: 32px;
         }
+      }
+    }
+
+    &--cta {
+      // padding: ;
+    }
+
+    &--mobile {
+      // padding: 300rem;
+      .toggle-view-btn {
+        display: block;
       }
     }
   }
@@ -144,7 +156,7 @@
     max-width: 60%;
 
     &:hover {
-      background-color: darken(#36454f, 10%);
+      background-color: color.adjust(#36454f, $lightness: -10%);
     }
 
     @include tablet {

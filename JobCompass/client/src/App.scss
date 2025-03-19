@@ -24,10 +24,8 @@ body {
   // display: none;
 
   @include tablet {
-    .view-map {
-      display: block;
-      height: 100%;
-    }
+    display: block;
+    height: 100%;
   }
 }
 
