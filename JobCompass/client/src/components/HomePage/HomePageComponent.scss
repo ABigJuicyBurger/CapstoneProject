@@ -29,15 +29,14 @@
     &__signIn-cta,
     &__register-cta {
       display: none;
+      border-radius: 0.25rem;
+      font-weight: 500;
+      text-decoration: none;
 
       @include tablet {
         display: flex;
-        font-size: 0.75rem;
         max-width: 10%;
         margin-left: 1rem;
-        border-radius: 0.25rem;
-        font-weight: 500;
-        text-decoration: none;
         font-size: 0.75rem;
       }
 
@@ -54,7 +53,6 @@
     &__register-cta {
       background-color: #36454f;
       color: white;
-
       transition: background-color 0.2s;
 
       &:hover {
@@ -103,14 +101,16 @@
       }
     }
 
-    &--cta {
-      // padding: ;
-    }
-
     &--mobile {
-      // padding: 300rem;
-      .toggle-view-btn {
-        display: block;
+      &-toggle {
+        background-color: #36454f;
+        color: white;
+        border-radius: 0.25rem;
+        font-weight: 500;
+        text-decoration: none;
+        width: 100%;
+        max-width: 30%;
+        transition: background-color 0.2s;
       }
     }
   }

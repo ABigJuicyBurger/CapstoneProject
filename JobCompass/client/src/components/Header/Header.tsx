@@ -30,7 +30,14 @@ function Header({
           <h1>JobCompass</h1>
         </Link>
       </div>
-      {mobileState && <button className="homePage__heade">Toggle</button>}
+      {mobileState && (
+        <button
+          onClick={() => toggleMapList()}
+          className="homePage__header--mobile-toggle"
+        >
+          {mobileMapMode ? "View Jobs" : "View Map"}
+        </button>
+      )}
       <Link
         className="homePage__header__register-cta"
         to={"/user/:id/savedJobs"}

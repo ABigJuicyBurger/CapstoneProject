@@ -1,5 +1,3 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import "./JobList.scss";
@@ -7,8 +5,6 @@ import JobCardType from "../../../types/JobCardType";
 import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
 
 function JobList({ jobBoard }: { jobBoard: JobCardType[] }): JSX.Element {
-  const backendURL = import.meta.env.VITE_BACKEND_URL;
-
   // runtime check, doesn't need a type annotation (no type declared)
   if (!jobBoard) {
     return <h1>Loading...</h1>;
@@ -16,9 +12,6 @@ function JobList({ jobBoard }: { jobBoard: JobCardType[] }): JSX.Element {
 
   return (
     <div className="job-list">
-      <header className="job-list__header">
-        <h1 className="job-list__title">List of Jobs</h1>
-      </header>
       <div className="job-list__jobs">
         {jobBoard.map((job) => (
           <Link key={job.id} to={`/job/${job.id}`}>
