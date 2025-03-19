@@ -18,7 +18,7 @@ function JobCard({
   noteState,
   updateNoteVisibility,
   jobId,
-  onClose,
+  onClose = () => {},
 }: MapJobCardType): JSX.Element {
   console.log("updateNoteVisibility in JobCard:", typeof updateNoteVisibility);
 
@@ -77,7 +77,7 @@ function JobCard({
                 className="jobCard__header__goBack"
                 src="/src/assets/Icons/arrow-right-solid.svg"
                 alt="arrow"
-                onClick={onClose}
+                onClick={() => onClose()}
               />
             </Link>
             <h2 className="jobCard__header__title">{job.title}</h2>

@@ -139,3 +139,6 @@ March 17
   March 19
 
   - today i will focus on mobile styling where its eitheer map or joblist; can't do both!
+    \_ cleaned up jobcard so its on the sidee past mobile screens and at the bottom in mobile mode
+  - added logic to check mobile size with window event listener with 'resize'; if it crosses mobile size
+    then some styling changes occur including button that shows up in header to toggle between map or job

@@ -9,6 +9,7 @@
 
   &__notes {
     width: 100%;
+    @include flex-left;
 
     &__single {
       margin: 1rem 0;
@@ -53,7 +54,6 @@
     }
 
     &--empty {
-      text-align: center;
       padding: 2rem 0;
     }
   }
