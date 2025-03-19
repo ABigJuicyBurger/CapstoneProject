@@ -8,6 +8,15 @@
   position: relative;
   margin-top: 3.5625rem;
 
+  // remove margin when inside map only in mobile mode AND through joblist
+  .job-details-section & {
+    margin-top: 0;
+
+    @include tablet {
+      margin-top: 3.5625rem;
+    }
+  }
+
   &__description__title,
   &__skills__title,
   &__details__heading {
@@ -47,7 +56,7 @@
   }
 
   &__header {
-    align-items: center;
+    align-items: flex-end;
 
     a {
       padding: 0;
