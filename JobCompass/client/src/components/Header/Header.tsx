@@ -1,5 +1,19 @@
 import { Link } from "react-router-dom";
-function Header({ mobileState }: { mobileState: boolean }) {
+type HeaderMobilityTypes = {
+  mobileState: boolean;
+  mobileMapMode: boolean;
+  setMobileMapMode: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+function Header({
+  mobileState,
+  mobileMapMode,
+  setMobileMapMode,
+}: HeaderMobilityTypes) {
+  const toggleMapList = () => {
+    setMobileMapMode(!mobileMapMode);
+  };
+
   return (
     <header
       className={`homePage__header ${

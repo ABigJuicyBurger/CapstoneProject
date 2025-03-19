@@ -7,7 +7,9 @@ import AddNote from "./NoteFunctions/AddNote.tsx";
 
 import "../JobNote/JobNote.scss";
 
-function JobNote({ updateNoteVisibility }: MapJobCardNoteType): JSX.Element {
+function JobNote({
+  updateNoteVisibility = () => {},
+}: MapJobCardNoteType): JSX.Element {
   const { id } = useParams();
   console.log("Job id from url", id);
 
@@ -15,6 +17,8 @@ function JobNote({ updateNoteVisibility }: MapJobCardNoteType): JSX.Element {
   const [noteList, setNoteList] = useState<string[]>([]);
   const [viewOneNote, setViewOneNote] = useState<boolean>(false);
   const [selectedNote, setSelectedNote] = useState<number>(0);
+  const [expandedNote, setExpandedNote] = useState<boolean>(false);
+  const MAX_LENGTH = 5;
 
   const addNote = (newNote: string): void => {
     setNoteList((oldNotes) => [...oldNotes, newNote]);

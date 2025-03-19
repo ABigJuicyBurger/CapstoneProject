@@ -21,7 +21,11 @@ body {
 }
 
 .view-map {
-  // display: none;
+  &--mobile {
+    &--dontshow {
+      display: none;
+    }
+  }
 
   @include tablet {
     display: block;
@@ -30,9 +34,14 @@ body {
 }
 
 .view-list {
-  display: block;
+  // display: none;
   height: 100%;
 
+  &--mobile {
+    &--dontshow {
+      display: none;
+    }
+  }
   @include tablet {
     display: none;
   }

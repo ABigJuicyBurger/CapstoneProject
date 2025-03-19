@@ -23,6 +23,7 @@ function App(): JSX.Element {
   const [mobileState, setMobileState] = useState<boolean>(
     window.innerWidth < 768
   );
+  const [mobileMapMode, setMobileMapMode] = useState<boolean>(true);
 
   // mobile statee will not change until i refresh
   useEffect(() => {
@@ -59,21 +60,38 @@ function App(): JSX.Element {
   return (
     <div>
       <BrowserRouter>
-        <Header mobileState={mobileState} />
+        <Header
+          mobileState={mobileState}
+          setMobileMapMode={setMobileMapMode}
+          mobileMapMode={mobileMapMode}
+        />
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
           <Route
             path="/jobs"
             element={
               <div className="view-container">
-                <div className={`view-map`}>
+                <div
+                  className={`view-map${
+                    mobileState && mobileMapMode
+                      ? " view-map--mobile--show"
+                      : " view-map--mobile--dontshow"
+                  }`}
+                >
                   <JobMap
                     noteState={noteState}
                     updateNoteVisibility={updateNoteVisibility}
                     jobs={jobs}
                   />
                 </div>
-                <div className="view-list">
+
+                <div
+                  className={`view-list${
+                    mobileState && !mobileMapMode
+                      ? " view-list--mobile--show"
+                      : " view-list--mobile--dontshow"
+                  }`}
+                >
                   <JobList jobBoard={jobs} />
                 </div>
               </div>
