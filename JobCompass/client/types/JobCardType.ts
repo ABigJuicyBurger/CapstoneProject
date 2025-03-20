@@ -1,5 +1,5 @@
 type JobCard = {
-  // create type that I made (alias is a weird word)
+  // create type alias
   title: string;
   company: string;
   type: string;
@@ -9,8 +9,8 @@ type JobCard = {
   description: string;
   requirements: string;
   id: string;
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
 };
 
 export default JobCard;
