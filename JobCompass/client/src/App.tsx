@@ -3,10 +3,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
 import axios from "axios";
 
-import IndividualJob from "./pages/IndividualJob/IndividualJob.tsx";
+import IndividualJob from "./pages/IndividualJob/IndividualJobPage.tsx";
 import JobList from "./components/JobList/JobList";
 import HomePage from "./pages/HomePage/HomePage";
-import JobMap from "./pages/JobMap/JobMap";
+import JobMapPage from "./components/JobMap/JobMap.tsx";
 import Header from "./components/Header/Header.tsx";
 import JobNote from "./components/JobNote/JobNote.tsx";
 import LoginPage from "./pages/LoginPage/LoginPage.tsx";
@@ -79,7 +79,7 @@ function App(): JSX.Element {
                       : " view-map--mobile--dontshow"
                   }`}
                 >
-                  <JobMap
+                  <JobMapPage
                     noteState={noteState}
                     updateNoteVisibility={updateNoteVisibility}
                     jobs={jobs}

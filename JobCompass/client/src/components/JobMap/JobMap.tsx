@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import MapJobCard from "./MapJobCard.tsx";
 import "./JobMap.scss";
 
-import JobCardType from "../../../types/JobCardType";
 import MapJobCardNoteType from "../../../types/MapJobCardType.ts";
 
 const JobMap = ({

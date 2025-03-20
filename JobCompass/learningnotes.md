@@ -145,3 +145,13 @@ March 17
   - cleaned up pathway so that individual jobs show on mobile state as well
   - NOW i need to focus on marker API styling (on load show job; hover show company and salary)
     \*\*\* priority is computer over mobile
+
+  March 20
+
+  - today im using a state var to check if im hovering on job; if i am ill use the hovered id to match the marker selected and style it
+    \_ only fancy thing used is in job map i have to check if its hovered and if the id matches the hovered id
+  - I also crossed out anything not done yet (crudding users and the saved jobs; saved jobs may take priority now)
+  - for now ill clean up my folders and ill also start a saved jobs route: for guest mode.
+    \_ have a guest user on click immediately that gets wiped out on tab close (maybe a cookie?)
+
+  - tonight maybe try the "roulette" state where i show 10 jobs at first, and every 6-10 seconds i add a new job and every 8-12 seconds i delete a job to emulate a "live" server

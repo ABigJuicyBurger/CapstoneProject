@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import axios from "axios";
 import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
 
-import JobNote from "../../components/JobNote/JobNote.tsx";
+import JobNote from "../JobNote/JobNote.tsx";
 
 import JobCardType from "../../../types/JobCardType.ts";
 import MapJobCardType from "../../../types/MapJobCardType.ts";
