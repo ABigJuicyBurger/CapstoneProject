@@ -6,10 +6,10 @@ import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
 
 import JobNote from "../JobNote/JobNote.tsx";
 
-import JobCardType from "../../../types/JobCardType";
-import MapJobCardType from "../../../types/MapJobCardType";
+import JobCardType from "../../../types/JobCardType.ts";
+import MapJobCardType from "../../../types/MapJobCardType.ts";
 
-import "./JobCard.scss";
+import "../../components/JobCard/JobCard.scss";
 
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 console.log(backendURL);

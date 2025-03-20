@@ -1,0 +1,60 @@
+@use "./styles/partials/fonts" as *;
+@use "./styles/partials/mixins" as *;
+@use "./styles/partials/variables" as *;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: white;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.page-content {
+  padding: 6rem 1rem;
+  width: 100%;
+}
+
+.construction {
+  text-decoration: line-through;
+  opacity: 0.7;
+  // pointer-events: none;
+  cursor: not-allowed;
+}
+
+.view-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.view-map {
+  &--mobile {
+    &--dontshow {
+      display: none;
+    }
+  }
+
+  @include tablet {
+    display: block;
+    height: 100%;
+  }
+}
+
+.view-list {
+  // display: none;
+  height: 100%;
+
+  &--mobile {
+    &--dontshow {
+      display: none;
+    }
+  }
+  @include tablet {
+    display: none;
+  }
+}
