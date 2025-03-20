@@ -65,7 +65,6 @@ function App(): JSX.Element {
           mobileState={mobileState}
           setMobileMapMode={setMobileMapMode}
           mobileMapMode={mobileMapMode}
-          isHomePage={location.pathname === "/"}
         />
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
