@@ -9,11 +9,12 @@ import HomePage from "./pages/HomePage/HomePage";
 import JobMap from "./pages/JobMap/JobMap";
 import Header from "./components/Header/Header.tsx";
 import JobNote from "./components/JobNote/JobNote.tsx";
+import LoginPage from "./pages/LoginPage/LoginPage.tsx";
+import RegisterPage from "./pages/RegisterPage/RegisterPage.tsx";
+import SavedJobsPage from "./pages/JobSearchPage/SavedJobsPage/SavedJobsPage.tsx";
 
 import "./App.scss";
 import JobCardType from "../types/JobCardType.ts";
-import LoginPage from "./pages/LoginPage/LoginPage.tsx";
-import RegisterPage from "./pages/RegisterPage/RegisterPage.tsx";
 
 function App(): JSX.Element {
   const backendURL = import.meta.env.VITE_BACKEND_URL;
@@ -64,6 +65,7 @@ function App(): JSX.Element {
           mobileState={mobileState}
           setMobileMapMode={setMobileMapMode}
           mobileMapMode={mobileMapMode}
+          isHomePage={location.pathname === "/"}
         />
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
@@ -113,9 +115,8 @@ function App(): JSX.Element {
           />
           <Route path="/signIn" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          {/* <Route path="/" element={<HomePage />} /
-        <Route path="/jobsearch" element={<JobSearchPage />} />
-        {/* <Footer /> */}
+          {/* {/* <Route path="/" element={<HomePage />} / */}
+          <Route path="/user/:id/savedJobs" element={<SavedJobsPage />} />
         </Routes>
       </BrowserRouter>
     </div>

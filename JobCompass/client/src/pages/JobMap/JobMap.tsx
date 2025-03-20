@@ -64,6 +64,7 @@ const JobMap = ({
               zoomControl={false}
               // Disable street view
               streetViewControl={false}
+              draggableCursor={"default"}
               fullscreenControl={false}
               //prevent user from zooming into other cities
               restriction={{

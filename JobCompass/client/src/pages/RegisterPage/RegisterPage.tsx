@@ -1,6 +1,6 @@
 function RegisterPage() {
   return (
-    <div>
+    <div className="page-content">
       <h1>Under construction; come back later 🔨</h1>
     </div>
   );
