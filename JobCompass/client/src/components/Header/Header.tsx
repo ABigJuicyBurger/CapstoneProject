@@ -1,20 +1,24 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 type HeaderMobilityTypes = {
   mobileState: boolean;
   mobileMapMode: boolean;
   setMobileMapMode: React.Dispatch<React.SetStateAction<boolean>>;
-  isHomePage: boolean;
 };
 
 function Header({
   mobileState,
   mobileMapMode,
   setMobileMapMode,
-  isHomePage,
 }: HeaderMobilityTypes) {
+  const location = useLocation();
+  const isHomePage = location.pathname === "/"; // are you home?
+
   const toggleMapList = () => {
     setMobileMapMode(!mobileMapMode);
   };
+
+  useEffect(() => {}, [location]);
 
   return (
     <header
