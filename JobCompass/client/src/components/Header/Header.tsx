@@ -3,12 +3,14 @@ type HeaderMobilityTypes = {
   mobileState: boolean;
   mobileMapMode: boolean;
   setMobileMapMode: React.Dispatch<React.SetStateAction<boolean>>;
+  isHomePage: boolean;
 };
 
 function Header({
   mobileState,
   mobileMapMode,
   setMobileMapMode,
+  isHomePage,
 }: HeaderMobilityTypes) {
   const toggleMapList = () => {
     setMobileMapMode(!mobileMapMode);
@@ -30,7 +32,7 @@ function Header({
           <h1>JobCompass</h1>
         </Link>
       </div>
-      {mobileState && (
+      {mobileState && !isHomePage && (
         <button
           onClick={() => toggleMapList()}
           className="homePage__header--mobile-toggle"
@@ -39,15 +41,21 @@ function Header({
         </button>
       )}
       <Link
-        className="homePage__header__register-cta"
+        className="homePage__header__register-cta construction"
         to={"/user/:id/savedJobs"}
       >
         Saved Jobs
       </Link>
-      <Link className="homePage__header__signIn-cta" to={"/signIn"}>
+      <Link
+        className="homePage__header__signIn-cta construction"
+        to={"/signIn"}
+      >
         Sign In
       </Link>
-      <Link className="homePage__header__register-cta" to={"/register"}>
+      <Link
+        className="homePage__header__register-cta construction"
+        to={"/register"}
+      >
         Register
       </Link>
     </header>

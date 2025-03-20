@@ -1,4 +1,4 @@
-function LoginPage() {
+function SavedJobsPage() {
   return (
     <div className="page-content">
       <h1>Still under construction 🔨</h1>
@@ -6,4 +6,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default SavedJobsPage;

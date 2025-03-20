@@ -13,6 +13,14 @@ function HomePage(): JSX.Element {
           Try Our Page Out!
         </Link>
       </main>
+      <footer className="homePage__footer">
+        <p>
+          Made by{" "}
+          <a href="https://github.com/ABigJuicyBurger/JobCompass">
+            ABigJuicyBurger
+          </a>
+        </p>
+      </footer>
     </div>
   );
 }

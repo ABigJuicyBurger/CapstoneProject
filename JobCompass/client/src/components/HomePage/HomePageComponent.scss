@@ -114,9 +114,29 @@
       }
     }
   }
+
+  &__footer {
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+
+    p {
+      display: inline;
+    }
+
+    a {
+      display: inline;
+      color: #2557a7;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }
 
 .heroPage {
+  flex: 1;
   @include flex-left;
   align-items: center;
   padding: 6rem 1rem;
