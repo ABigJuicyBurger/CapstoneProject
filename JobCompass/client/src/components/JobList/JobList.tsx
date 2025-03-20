@@ -22,8 +22,6 @@ function JobList({ jobBoard }: { jobBoard: JobCardType[] }): JSX.Element {
                 <img src="logo" alt="" />
               </section>
               <section className="job-list__card-content">
-                {/* <h3>Longitude: {job.longitude}</h3>
-                <h4>Latitude: {job.latitude}</h4> */}
                 <h5>Id: {job.id}</h5>
               </section>
             </div>

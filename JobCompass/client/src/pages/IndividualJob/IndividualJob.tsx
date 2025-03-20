@@ -1,12 +1,11 @@
-import JobCard from "../../components/JobCard/JobCard";
+import IndividualJobCard from "../IndividualJobCard/IndividualJobCard";
 import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
 
-function IndividualJob(): JSX.Element {
+function IndividualJob({ noteState }: { noteState: boolean }): JSX.Element {
   return (
     <>
-      <JobCard />
+      <IndividualJobCard noteState={noteState} />
     </>
   );
 }
-
 export default IndividualJob;

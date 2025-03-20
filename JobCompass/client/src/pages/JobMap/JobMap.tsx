@@ -3,10 +3,11 @@ import {
   Map,
   Pin,
   AdvancedMarker,
+  AdvancedMarkerAnchorPoint,
   // InfoWindow, maybe needed for custom marker styling
 } from "@vis.gl/react-google-maps";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import MapJobCard from "./MapJobCard.tsx";
 import "./JobMap.scss";
@@ -31,6 +32,10 @@ const JobMap = ({
     setSelectedJobId(jobUrl);
     navigate(`/jobs/${jobUrl}`);
   };
+
+  useEffect(() => {
+    console.log("Hovered job id", hoveredJobId);
+  }, [hoveredJobId]);
 
   const calgaryBounds = {
     north: 51.3, // Northern boundary latitude
@@ -72,6 +77,7 @@ const JobMap = ({
               {jobs &&
                 jobs.map((job) => (
                   <AdvancedMarker
+                    anchorPoint={AdvancedMarkerAnchorPoint.LEFT}
                     key={job.id}
                     position={{
                       lat: Number(job.latitude),
@@ -81,12 +87,25 @@ const JobMap = ({
                     onClick={() => {
                       handleMarkerClick(job.id);
                     }}
+                    onMouseEnter={() => {
+                      setHoveredJobId(job.id);
+                      console.log(hoveredJobId);
+                    }}
+                    onMouseLeave={() => setHoveredJobId(null)}
+                    className={`info-window ${
+                      hoveredJobId ? "hoveredJobId" : ""
+                    }`}
                   >
-                    <Pin
+                    <div className="info-window-anchor">
+                      <div className="info-window-anchor__text">
+                        <span>{job.title}</span>
+                      </div>
+                    </div>
+                    {/* <Pin
                       background={"#FFF"}
                       borderColor={"#3535350"}
                       glyphColor={"#000000"}
-                    />
+                    /> */}
                     {/* Custom marker content */}
                     {/* <InfoWindow
                     position={{
@@ -95,10 +114,7 @@ const JobMap = ({
                     }}
                     className="info-window"
                   > */}
-                    <div className="info-window-content">
-                      <h3>{job.title}</h3>
-                      <p>{job.company}</p>
-                    </div>
+
                     {/* </InfoWindow> */}
                   </AdvancedMarker>
                 ))}
@@ -120,5 +136,4 @@ const JobMap = ({
     </div>
   );
 };
-
 export default JobMap;
