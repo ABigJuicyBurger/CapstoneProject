@@ -92,14 +92,24 @@ const JobMap = ({
                       console.log(hoveredJobId);
                     }}
                     onMouseLeave={() => setHoveredJobId(null)}
-                    className={`info-window ${
-                      hoveredJobId ? "hoveredJobId" : ""
-                    }`}
+                    className="info-window "
                   >
-                    <div className="info-window-anchor">
-                      <div className="info-window-anchor__text">
+                    <div
+                      className={`info-window-anchor ${
+                        hoveredJobId === job.id ? "hovered" : ""
+                      }`}
+                    >
+                      <div className="info-window-anchor__marker">
                         <span>{job.title}</span>
                       </div>
+                      {hoveredJobId && hoveredJobId === job.id ? (
+                        <div className="info-window-anchor hovered--text">
+                          <p>{job.company}</p>
+                          <p>{job.salary_range}</p>
+                        </div>
+                      ) : (
+                        ""
+                      )}
                     </div>
                     {/* <Pin
                       background={"#FFF"}
