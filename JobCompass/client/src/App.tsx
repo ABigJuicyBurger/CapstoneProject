@@ -84,7 +84,6 @@ function App(): JSX.Element {
                     jobs={jobs}
                   />
                 </div>
-
                 <div
                   className={`view-list${
                     mobileState && !mobileMapMode
@@ -108,7 +107,10 @@ function App(): JSX.Element {
               />
             }
           />
-          <Route path="/job/:id" element={<IndividualJob />} />
+          <Route
+            path="/job/:id"
+            element={<IndividualJob noteState={noteState} />}
+          />
           <Route path="/signIn" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           {/* <Route path="/" element={<HomePage />} /

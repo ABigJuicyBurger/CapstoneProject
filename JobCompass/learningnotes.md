@@ -142,3 +142,6 @@ March 17
     \_ cleaned up jobcard so its on the sidee past mobile screens and at the bottom in mobile mode
   - added logic to check mobile size with window event listener with 'resize'; if it crosses mobile size
     then some styling changes occur including button that shows up in header to toggle between map or job
+  - cleaned up pathway so that individual jobs show on mobile state as well
+  - NOW i need to focus on marker API styling (on load show job; hover show company and salary)
+    \*\*\* priority is computer over mobile
