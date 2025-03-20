@@ -20,6 +20,7 @@ const singleJob = async (req, res) => {
     // get the id from the request of the server
     const { id } = req.params;
     const job = await knex("jobs").where({ id }).first();
+    // const jobData = job[0];
     res.status(200).json(job);
   } catch (err) {
     res.status(400).json({

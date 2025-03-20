@@ -96,3 +96,62 @@ March 04
     in order for TS to find namespace JSX
     \_ and made an interface for .env so TS understands Vite
   -
+
+March 12
+
+- got the okay for capstone + completed capstone proposal
+- lost .env files when switching branches! made a new one and locally saved it this time
+- Leaked the api key! went through a coaster using bfg repo-cleaner and java to remove all instances of it in github + rotated apikey to prevent someone snatching it and using it
+  \_ creater mirror cloen with a replacement txt file, ran BFG w/ Java to find+replace data in commit history, used git reflog and gc to clean up referencees
+- Next, typed the home page and fixed API key by importing starting with VITE
+  \_ now im conditionally rendering baseed on screen size: everything after mobile shows the map/list function
+- Now i need to show the map (success) with advanced markers (of each job) with corresponding pin
+  \_ first i need to set a map id (google api requirement, represents styling and configs i have)
+
+March 13
+
+- Styled maps with maps api
+- show a single card through user click on marker (which i need to style) by saving click in a state var and conditionally rendering the mapcard or an extension of jobcard which accepts a prop which changes url path (where default is just the browser search of url which uses params)
+  \_ wow that was wordy
+
+March 15
+
+- Positioned Job Card within the map with absolute positioning and z index
+- added restriction bounds within the map to restrict map movement to anything outside of calgary
+
+March 17
+
+- Make URL show up in jobcard; this is neeede in job map (as card shows conditionally in the map)
+  by using navigate
+- Adjust type of props being passed from Map -> card -> note (which is basically an extension of jobCard)
+  \_ separate jobnote to its own component that is the "opposite" side of the card
+  \_ typed note with map job card as they come together like a marriage
+  \_ quickyl implemented a simple login and register component
+  \*\*\* will need to clean up pages folder! as that will be my finalized product
+  \_ got so stressed as passing props up causes a llot of TS issues so ihad to make sure my prop names were A correct, B being passed right and C being typed appropriately
+  \_ current prop passing note flow is App.tsx -> JobMap.tsx -> MapJobCard.tsx -> JobCard.tsx &&
+  App.tsx to JobNote.tsx
+
+  - added a "under construction" page for login and register, cleaned up styling for
+    main page, and added logic to conditionally render list or map on phone mode (tiny)
+  - got note functionality working!
+
+  March 19
+
+  - today i will focus on mobile styling where its eitheer map or joblist; can't do both!
+    \_ cleaned up jobcard so its on the sidee past mobile screens and at the bottom in mobile mode
+  - added logic to check mobile size with window event listener with 'resize'; if it crosses mobile size
+    then some styling changes occur including button that shows up in header to toggle between map or job
+  - cleaned up pathway so that individual jobs show on mobile state as well
+  - NOW i need to focus on marker API styling (on load show job; hover show company and salary)
+    \*\*\* priority is computer over mobile
+
+  March 20
+
+  - today im using a state var to check if im hovering on job; if i am ill use the hovered id to match the marker selected and style it
+    \_ only fancy thing used is in job map i have to check if its hovered and if the id matches the hovered id
+  - I also crossed out anything not done yet (crudding users and the saved jobs; saved jobs may take priority now)
+  - for now ill clean up my folders and ill also start a saved jobs route: for guest mode.
+    \_ have a guest user on click immediately that gets wiped out on tab close (maybe a cookie?)
+
+  - tonight maybe try the "roulette" state where i show 10 jobs at first, and every 6-10 seconds i add a new job and every 8-12 seconds i delete a job to emulate a "live" server
