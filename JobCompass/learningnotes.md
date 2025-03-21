@@ -155,3 +155,5 @@ March 17
     \_ have a guest user on click immediately that gets wiped out on tab close (maybe a cookie?)
 
   - tonight maybe try the "roulette" state where i show 10 jobs at first, and every 6-10 seconds i add a new job and every 8-12 seconds i delete a job to emulate a "live" server
+    \_ or maybe, for fun....
+    -i shouldn't "surprise" the user; they want a clean UX with consistency and not really gamify it
