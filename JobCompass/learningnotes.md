@@ -155,3 +155,36 @@ March 17
     \_ have a guest user on click immediately that gets wiped out on tab close (maybe a cookie?)
 
   - tonight maybe try the "roulette" state where i show 10 jobs at first, and every 6-10 seconds i add a new job and every 8-12 seconds i delete a job to emulate a "live" server
+    \_ or maybe, for fun....
+    -i shouldn't "surprise" the user; they want a clean UX with consistency and not really gamify it
+
+  March 21
+
+  - Today I'll focus on deployment so i Have a live app that can be accessible!
+    \_ will use AWS EC2
+    \_ create a budget
+    \_ ubuntu server
+    \_ start ~/.ssh to save key locally
+    \_ grab the Ipv4 from my instance
+
+    -log into the EC2 instance with SSH
+    \_ $ cd ~/.ssh
+    Then, execute the following command:
+    $ ssh -i <PEM_FILE_NAME> ubuntu@<SERVER_IPV4_ADDRESS>
+
+    - connected!
+
+    * curl already installed
+    * install node :
+      \_ curl -fsSL https://deb.nodesource.com/setup_23.x -o nodesource_setup.sh (setup script)
+      \_ sudo -E bash nodesource_setup.sh (run script)
+      \_ sudo apt-get install -y nodejs (install node)
+      - verify with node -v
+    * install PM2, process manager to keep node running
+      \_ $ sudo npm i -g pm2
+    * setup github ssh to transfer files over to EC2
+      \_ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+      \_ with that cat ~/.ssh/id_rsa.pub
+      \_ send it over to github and add it
+      \_ now ssh -T git@github.com to verify
+      = Connected!
