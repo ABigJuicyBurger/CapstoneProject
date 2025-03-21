@@ -188,3 +188,10 @@ March 17
       \_ send it over to github and add it
       \_ now ssh -T git@github.com to verify
       = Connected!
+    * folder on EC2 to store app files
+      \_ mkdir ~/repos
+      clone my repo from git -> npm i both client & server
+      - npm i both ends and run production version with npm run build on front end
+      - started express server w/ pm2 start index.js and pm2 save && pm2 startup to start on reboot
+    * now to create .env (need to be safe)
+      \_ nano .env
