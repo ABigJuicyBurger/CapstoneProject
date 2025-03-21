@@ -195,3 +195,237 @@ March 17
       - started express server w/ pm2 start index.js and pm2 save && pm2 startup to start on reboot
     * now to create .env (need to be safe)
       \_ nano .env
+      \_ put backend info first
+    * now to set up frotn end
+    * first use nginx so that it serves my front end appropriately and protect my backend port
+      \_ sudo apt update && sudo apt install nginx
+      \_ check if successful: systemctl status nginx
+      \_ instead of editing the default Nginx config, create a separte config file
+      = sudo nano /etc/nginx/sites-available/jobcompass
+      \_ add our config =
+      = server {
+      listen 80;
+      server_name your-ec2-ip-address;
+
+          # Serve frontend static files
+          location / {
+              root /home/ubuntu/repos/JobCompass/client/dist;
+              try_files $uri $uri/ /index.html;
+              index index.html;
+          }
+
+          # Forward API requests to Express backend
+          location /jobs {
+              proxy_pass http://localhost:8080;
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection 'upgrade';
+              proxy_set_header Host $host;
+              proxy_cache_bypass $http_upgrade;
+          }
+
+      }
+
+  - then ctrl o (save) -> enter -> ctrl x
+  - now enable my config as it's not the default!
+    \_ sudo ln -s /etc/nginx/sites-available/jobcompass /etc/nginx/sites-enabled/
+    \_ sudo rm /etc/nginx/sites-enabled/default # Remove default config
+  - now test if it works: sudo nginx -t
+  - then restart
+
+  - now set up front end .env slightly differently usign the ec2 instance
+    \_ VITE_BACKEND_URL=http://your-ec2-ip-address
+    VITE_GOOGLE_MAPS_API_KEY=your-maps-api-key
+
+  - finally run npm run build
+
+  - and launch! didnt work
+  - nginx doesnt have permission to access front end.
+    (AI HELP)
+
+    - # Make sure the dist directory exists
+      ls -la dist### First-Time Deployment:
+
+    1. **Server Prerequisites**:
+
+    - SSH into EC2: `ssh -i <PEM_FILE> ubuntu@<IP_ADDRESS>`
+    - Install Node.js:
+      ```bash
+      curl -fsSL https://deb.nodesource.com/setup_23.x | sudo -E bash -
+      sudo apt install -y nodejs
+      ```
+    - Install PM2: `sudo npm i -g pm2`
+    - Install MySQL: `sudo apt install mysql-server`
+    - Install Nginx: `sudo apt install nginx`
+
+    2. **MySQL Setup**:
+
+    - Start MySQL: `sudo systemctl start mysql`
+    - Configure MySQL:
+      ```bash
+      sudo mysql
+      CREATE DATABASE jobcompass_jobslist;
+      ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your password';
+      GRANT ALL PRIVILEGES ON jobcompass_jobslist.* TO 'root'@'localhost';
+      FLUSH PRIVILEGES;
+      EXIT;
+      ```
+
+    3. **Clone Project**:
+
+    - `mkdir ~/repos && cd ~/repos`
+    - `git clone <your-repository-url>`
+    - `cd JobCompass`
+
+    4. **Backend Setup**:
+
+    - `cd server && npm install`
+    - Create .env file:
+      ```
+      PORT=**####**
+      DB_HOST=####
+      DB_NAME=your DB name
+      DB_USER=your username
+      DB_PASSWORD=your password
+      CORS_ORIGIN=*
+      ```
+    - Set up database:
+      ```bash
+      npx knex migrate:latest
+      npx knex seed:run
+      ```
+    - Start server: `pm2 start index.js && pm2 save`
+
+    5. **Frontend Setup**:
+
+    - `cd ../client && npm install`
+    - Create .env file:
+      ```
+      VITE_BACKEND_URL=http://<your-ec2-ip>
+      VITE_GOOGLE_MAPS_API_KEY=<your-api-key>
+      ```
+    - Build: `npm run build`
+
+    6. **Nginx Configuration**:
+
+    - Create config: `sudo nano /etc/nginx/sites-available/jobcompass`
+
+      ```
+      server {
+        listen 80;
+        server_name <your-ec2-ip>;
+
+        location / {
+            root /var/www/jobcompass;
+            try_files $uri $uri/ /index.html;
+            index index.html;
+        }
+
+        location /jobs {
+            proxy_pass http://localhost:8080;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+      }
+      ```
+
+    - Enable site:
+      ```bash
+      sudo mkdir -p /var/www/jobcompass
+      sudo ln -s /etc/nginx/sites-available/jobcompass /etc/nginx/sites-enabled/
+      sudo rm /etc/nginx/sites-enabled/default
+      sudo cp -R ~/repos/JobCompass/client/dist/* /var/www/jobcompass/
+      sudo nginx -t
+      sudo systemctl restart nginx
+      ```
+
+    ````
+
+    # Updating Existing Deployment
+
+    ```markdown
+    ### When Deploying Updates:
+
+    1. **Pull Changes**:
+      ```bash
+      cd ~/repos/JobCompass
+      git pull origin main
+    ````
+
+    2. **Update Backend** (if needed):
+
+    ```bash
+    cd server
+    npm install  # Only if package.json changed
+
+    # Only if you added database migrations:
+    npx knex migrate:latest
+
+    # Only if you need to update seed data (caution: may overwrite existing data):
+    npx knex seed:run
+
+    # Restart server:
+    pm2 restart all
+    ```
+
+    3. **Update Frontend**:
+
+    ```bash
+    cd ../client
+    npm install  # Only if package.json changed
+    npm run build
+    sudo cp -R dist/* /var/www/jobcompass/
+    ```
+
+    ````
+
+    ## Troubleshooting Common Issues
+
+    ```markdown
+    ### Common Issues:
+
+    1. **"MySQL Connection Refused"**:
+      - Check if MySQL is running: `sudo systemctl status mysql`
+      - If not running: `sudo systemctl start mysql`
+      - Verify credentials in .env match what you set up
+
+    2. **Build Permission Errors**:
+      - Fix ownership: `sudo chown -R ubuntu:ubuntu ~/repos/JobCompass/client/dist`
+
+    3. **"404 Not Found" on Frontend**:
+      - Check Nginx config: `sudo nginx -t`
+      - Verify files were copied: `ls -la /var/www/jobcompass/`
+
+    4. **Missing Images/Assets**:
+      - Use relative paths in production:
+        - Import directly: `import logo from '../../assets/logo.png'`
+        - Or use public folder: `src="/assets/logo.png"` (and place in public folder)
+
+    5. **500 Server Errors**:
+      - Check PM2 logs: `pm2 logs`
+      - Verify database connection in server logs
+
+    6. **CORS Issues**:
+      - Ensure CORS_ORIGIN doesn't have trailing slashes
+      - For development, use: `CORS_ORIGIN=*`
+
+    7. **Quick Verification Steps**:
+      - Test API: `curl http://localhost:8080/jobs`
+      - Check server: `pm2 status`
+      - Check web server: `systemctl status nginx`
+    ````
+
+  - hefty but done.
+
+  - before that, http://jobcompass.duckdns.org/ sounds better than http://15.156.83.137/
+  - this is using duckdns
+
+  - now ill start a new feature: a user
+
+  March 22 (potentially final day):
+
+  - for practice ill seet up the DB with the route anyways for users
+  - for guest maybe just have a local user with their state as is?

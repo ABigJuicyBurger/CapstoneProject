@@ -1,0 +1,104 @@
+.map-container {
+  width: 100%;
+  height: 100vh;
+}
+.map-layout {
+  display: flex;
+  height: 100%;
+}
+@media screen and (min-width: 48rem) {
+  .map-layout {
+    flex-direction: column;
+  }
+}
+.map-section {
+  flex: 1;
+  height: 100%;
+}
+@media screen and (min-width: 48rem) {
+  .map-section {
+    position: relative;
+  }
+}
+
+.job-details-section {
+  animation-name: slide-in;
+  animation-duration: 0.5s;
+  position: absolute;
+  height: 40%;
+  width: 100%;
+  bottom: 0;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  background-color: white;
+}
+@media screen and (min-width: 48rem) {
+  .job-details-section {
+    width: 40%;
+    right: 0;
+    height: 100%;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    translate: 50vw 0;
+  }
+  to {
+    translate: 0;
+  }
+}
+.map-job-card {
+  position: relative;
+  height: 100%;
+}
+.map-job-card .close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.info-window-anchor {
+  max-width: 0.3125rem;
+  font-size: 0.5rem;
+  color: white;
+}
+.info-window-anchor.hovered .info-window-anchor__text {
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+.info-window-anchor.hovered--text {
+  display: flex;
+  flex-direction: row;
+}
+.info-window-anchor.hovered--text > p {
+  font-size: 0.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-left: 1.4063rem;
+  white-space: nowrap;
+}
+.info-window-anchor.hovered--text :nth-child(2) {
+  margin-left: 0.625rem;
+}
+.info-window-anchor__marker {
+  background-color: white;
+  margin-right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  cursor: default;
+}
+.info-window-anchor__marker span {
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-left: 0.9375rem;
+}/*# sourceMappingURL=JobMap.css.map */

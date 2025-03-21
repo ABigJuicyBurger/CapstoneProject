@@ -1,0 +1,143 @@
+.jobCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1rem;
+  border-bottom: 1px solid gray;
+  position: relative;
+  margin-top: 3.5625rem;
+}
+.job-details-section .jobCard {
+  margin-top: 0;
+}
+@media screen and (min-width: 48rem) {
+  .job-details-section .jobCard {
+    margin-top: 3.5625rem;
+  }
+}
+.jobCard__description__title, .jobCard__skills__title, .jobCard__details__heading {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  color: #042c4d;
+  border-bottom: 2px solid #042c4d;
+}
+.jobCard button {
+  padding: 0.05rem 1rem;
+  border-radius: 0.25rem;
+  border: none;
+  background-color: #f2f2f2;
+  color: #333;
+  font-weight: 500;
+  cursor: pointer;
+}
+@media screen and (min-width: 48rem) {
+  .jobCard {
+    border: 1px solid rgba(128, 128, 128, 0.611);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    border-radius: 3px;
+    margin-left: auto;
+    margin-top: 3.5625rem;
+  }
+}
+.jobCard > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1rem;
+  border-bottom: 1px solid gray;
+  width: 100%;
+}
+.jobCard > div:last-child {
+  border-bottom: none;
+}
+.jobCard__header {
+  align-items: flex-end;
+}
+.jobCard__header a {
+  padding: 0;
+  width: 1rem;
+}
+.jobCard__header a img {
+  width: 1rem;
+}
+.jobCard__header__title__company {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.jobCard__header * {
+  padding-bottom: 1rem;
+}
+.jobCard__header__logo-placeholder {
+  width: 50px;
+  height: 50px;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+.jobCard__header__cta {
+  padding: 0;
+}
+.jobCard__header__cta button {
+  margin-right: 1rem;
+  background-color: #2557a7;
+  color: white;
+}
+.jobCard__details * {
+  padding-bottom: 0.5rem;
+}
+.jobCard__details__type {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.jobCard__details__type section {
+  flex: 1 1 30%;
+  min-width: 9.375rem;
+}
+.jobCard__details__type-text {
+  background-color: #4caf50;
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  color: white;
+}
+.jobCard__skills {
+  gap: 0.5rem;
+}
+.jobCard__skills__list {
+  display: flex;
+  width: 100%;
+}
+.jobCard__skills__items {
+  padding: 0;
+  display: flex;
+  width: 100%;
+  list-style-type: none;
+  flex-wrap: wrap;
+  -webkit-text-decoration: gray underline;
+          text-decoration: gray underline;
+}
+.jobCard__skills__item {
+  display: inline-block;
+  background-color: #fffefe;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  border: 1px solid #e0e0e0;
+  gap: 0.25rem;
+}
+.jobCard__description__text {
+  white-space: pre-line;
+}
+.jobCard__description button {
+  background: none;
+  border: none;
+  color: #2557a7;
+  padding: 0.25rem 0;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  margin-bottom: 1rem;
+}/*# sourceMappingURL=JobCard.css.map */

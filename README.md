@@ -1,6 +1,7 @@
 # Project Title
 
 JobCompass
+![](JobCompass.png)
 
 ## Overview
 

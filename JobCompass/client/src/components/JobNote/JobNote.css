@@ -1,0 +1,52 @@
+.jobCard__content {
+  width: 100%;
+}
+.jobCard__notes {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.jobCard__notes__single {
+  margin: 1rem 0;
+}
+.jobCard__notes__text {
+  margin-top: 1rem;
+  line-height: 1.5;
+}
+.jobCard__notes__list {
+  width: 100%;
+}
+.jobCard__notes__items {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+.jobCard__notes__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  list-style-type: none;
+}
+.jobCard__notes__item-text {
+  flex: 1;
+  margin: 0;
+}
+.jobCard__notes__item-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.jobCard__notes__heading {
+  margin-bottom: 1rem;
+}
+.jobCard__notes--empty {
+  padding: 2rem 0;
+}
+.jobCard__notepad__form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}/*# sourceMappingURL=JobNote.css.map */
