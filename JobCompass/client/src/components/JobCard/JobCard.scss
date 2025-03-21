@@ -1,0 +1,169 @@
+@use "../../styles/partials/fonts" as *;
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
+
+.jobCard {
+  @include flex-left;
+  @include jobCard-inner-styling;
+  position: relative;
+  margin-top: 3.5625rem;
+
+  // remove margin when inside map only in mobile mode AND through joblist
+  .job-details-section & {
+    margin-top: 0;
+
+    @include tablet {
+      margin-top: 3.5625rem;
+    }
+  }
+
+  &__description__title,
+  &__skills__title,
+  &__details__heading {
+    @include section-title;
+  }
+
+  // general button styling
+  button {
+    padding: 0.05rem 1rem;
+    border-radius: 0.25rem;
+    border: none;
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  @include tablet {
+    // width: 40%;
+    border: 1px solid rgba(128, 128, 128, 0.611);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em,
+      rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
+      rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    border-radius: 3px;
+    margin-left: auto;
+    margin-top: 3.5625rem;
+  }
+
+  & > div {
+    @include flex-left;
+    @include jobCard-inner-styling;
+    width: 100%;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__header {
+    align-items: flex-end;
+
+    a {
+      padding: 0;
+      width: 1rem;
+      img {
+        width: 1rem;
+      }
+    }
+
+    &__title {
+      &__company {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+    }
+
+    * {
+      padding-bottom: 1rem;
+    }
+
+    &__logo-placeholder {
+      width: 50px;
+      height: 50px;
+      background-color: #f0f0f0;
+      border-radius: 50%;
+      margin-right: 1rem;
+    }
+
+    &__cta {
+      padding: 0;
+      button {
+        margin-right: 1rem;
+        background-color: #2557a7;
+        color: white;
+      }
+    }
+  }
+
+  &__details {
+    * {
+      padding-bottom: 0.5rem;
+    }
+
+    &__type {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      section {
+        flex: 1 1 30%;
+        min-width: 9.375rem;
+      }
+
+      &-text {
+        background-color: $Full-time;
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-weight: 600;
+        color: white;
+      }
+    }
+  }
+
+  &__skills {
+    gap: 0.5rem;
+
+    &__list {
+      display: flex;
+      width: 100%;
+    }
+
+    &__items {
+      padding: 0;
+      display: flex;
+      width: 100%;
+      list-style-type: none;
+      // justify-content: space-around; ONLY ABOVE MOBILE
+      flex-wrap: wrap;
+      text-decoration: gray underline;
+    }
+
+    &__item {
+      display: inline-block;
+      background-color: #fffefe;
+      border-radius: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.85rem;
+      border: 1px solid #e0e0e0;
+      gap: 0.25rem;
+    }
+  }
+
+  &__description {
+    &__text {
+      white-space: pre-line; // preserve line breaks from the source
+    }
+
+    button {
+      background: none;
+      border: none;
+      color: #2557a7;
+      padding: 0.25rem 0;
+      font-size: 0.875rem;
+      text-decoration: underline;
+      margin-bottom: 1rem;
+    }
+  }
+}
