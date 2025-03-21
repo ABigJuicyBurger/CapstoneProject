@@ -11,9 +11,14 @@ export function formatSalary(salaryRange: string) {
   }
 
   // case 2: "$10,000 - $20,000" -> "$20K"
-  const isSalary = salaryRange.includes(" - ");
+  const isSalary = salaryRange.includes(" - ") && !salaryRange.includes("/hour");
   if (isSalary) {
-    let formattedSalary = salaryRange.split("$")[1]; // 20,000
+    // Get the second part of the range (after the dash)
+    const parts = salaryRange.split(" - ");
+    const secondPart = parts[1]; // "$20,000"
+    
+    // Extract the number without commas
+    let formattedSalary = secondPart.split("$")[1]; // 20,000
     formattedSalary = formattedSalary.split(",")[0]; // 20
     formattedSalary = `$${formattedSalary}K`; // $20K
 

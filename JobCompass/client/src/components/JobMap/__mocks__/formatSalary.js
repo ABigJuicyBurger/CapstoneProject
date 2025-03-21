@@ -1,5 +1,4 @@
-module.exports = {
-  formatSalary: function(salaryRange) {
+export const formatSalary = function(salaryRange) {
     // case 1: "$10/HR" -> "$10/HR"
     const isDollarPerHr = salaryRange.includes("HR");
     if (isDollarPerHr) {
@@ -19,4 +18,4 @@ module.exports = {
 
     return `* ${salaryRange}`;
   }
-};
+
