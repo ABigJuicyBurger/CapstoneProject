@@ -47,7 +47,7 @@ function JobNote({
         <Link to={`/job/${id}`} onClick={() => updateNoteVisibility()}>
           <img
             className="jobCard__header__goBack"
-            src="/src/assets/Icons/arrow-right-solid.svg"
+            src={"../../assets/Icons/arrow-right-solid.svg"}
             alt="arrow"
           />
         </Link>
