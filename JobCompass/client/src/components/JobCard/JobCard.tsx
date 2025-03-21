@@ -75,7 +75,7 @@ function JobCard({
             <Link to={"/jobs"}>
               <img
                 className="jobCard__header__goBack"
-                src="../../assets/Icons/arrow-right-solid.svg"
+                src="/assets/Icons/arrow-right-solid.svg"
                 alt="arrow"
                 onClick={() => onClose()}
               />
