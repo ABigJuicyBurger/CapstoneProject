@@ -373,12 +373,18 @@ March 17
 
     3. **Update Frontend**:
 
-    ```bash
+    ````bash
     cd ../client
     npm install  # Only if package.json changed
     npm run build
+    sudo rm -rf /var/www/jobcompass/*
     sudo cp -R dist/* /var/www/jobcompass/
-    ```
+
+    # Set proper permissions
+    sudo chown -R www-data:www-data /var/www/jobcompass
+
+    # Restart Nginx (optional, but good practice)
+    sudo systemctl restart nginx ```
 
     ````
 
@@ -388,35 +394,42 @@ March 17
     ### Common Issues:
 
     1. **"MySQL Connection Refused"**:
-      - Check if MySQL is running: `sudo systemctl status mysql`
-      - If not running: `sudo systemctl start mysql`
-      - Verify credentials in .env match what you set up
+
+    - Check if MySQL is running: `sudo systemctl status mysql`
+    - If not running: `sudo systemctl start mysql`
+    - Verify credentials in .env match what you set up
 
     2. **Build Permission Errors**:
-      - Fix ownership: `sudo chown -R ubuntu:ubuntu ~/repos/JobCompass/client/dist`
+
+    - Fix ownership: `sudo chown -R ubuntu:ubuntu ~/repos/JobCompass/client/dist`
 
     3. **"404 Not Found" on Frontend**:
-      - Check Nginx config: `sudo nginx -t`
-      - Verify files were copied: `ls -la /var/www/jobcompass/`
+
+    - Check Nginx config: `sudo nginx -t`
+    - Verify files were copied: `ls -la /var/www/jobcompass/`
 
     4. **Missing Images/Assets**:
-      - Use relative paths in production:
-        - Import directly: `import logo from '../../assets/logo.png'`
-        - Or use public folder: `src="/assets/logo.png"` (and place in public folder)
+
+    - Use relative paths in production:
+      - Import directly: `import logo from '../../assets/logo.png'`
+      - Or use public folder: `src="/assets/logo.png"` (and place in public folder)
 
     5. **500 Server Errors**:
-      - Check PM2 logs: `pm2 logs`
-      - Verify database connection in server logs
+
+    - Check PM2 logs: `pm2 logs`
+    - Verify database connection in server logs
 
     6. **CORS Issues**:
-      - Ensure CORS_ORIGIN doesn't have trailing slashes
-      - For development, use: `CORS_ORIGIN=*`
+
+    - Ensure CORS_ORIGIN doesn't have trailing slashes
+    - For development, use: `CORS_ORIGIN=*`
 
     7. **Quick Verification Steps**:
-      - Test API: `curl http://localhost:8080/jobs`
-      - Check server: `pm2 status`
-      - Check web server: `systemctl status nginx`
-    ````
+
+    - Test API: `curl http://localhost:8080/jobs`
+    - Check server: `pm2 status`
+    - Check web server: `systemctl status nginx`
+    ```
 
   - hefty but done.
 
