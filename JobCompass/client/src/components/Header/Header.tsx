@@ -30,7 +30,7 @@ function Header({
         <Link to={"/"}>
           <img
             className="homePage__header__logo__image"
-            src="/src/assets/Logo/compassfavicon.png"
+            src="/assets/Logo/compassfavicon.png"
             alt=""
           />
           <h1>JobCompass</h1>
