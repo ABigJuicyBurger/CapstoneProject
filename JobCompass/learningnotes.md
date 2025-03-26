@@ -442,3 +442,15 @@ March 17
 
   - for practice ill seet up the DB with the route anyways for users
   - for guest maybe just have a local user with their state as is?
+
+  March 25
+
+  - set up guest user
+    \_ with a state variable, set a guest object and have it live in app
+    \_ now push it to the saved jobs page
+
+  March 26
+
+  - so guest user is set up and is routed to saved jobs
+  - Link from header takes to guest saved, or user saved and changes URL
+  - next is to route the job card save button to save the title of the job; links to the job card

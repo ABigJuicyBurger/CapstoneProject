@@ -16,6 +16,12 @@ import SavedJobsPage from "./pages/JobSearchPage/SavedJobsPage/SavedJobsPage.tsx
 import "./App.scss";
 import JobCardType from "../types/JobCardType.ts";
 
+type newGuest = {
+  name: string;
+  id: string;
+  savedJobs: any[];
+};
+
 function App(): JSX.Element {
   const backendURL = import.meta.env.VITE_BACKEND_URL;
 
@@ -25,6 +31,21 @@ function App(): JSX.Element {
     window.innerWidth < 768
   );
   const [mobileMapMode, setMobileMapMode] = useState<boolean>(true);
+  const [guestUser, setGuestUser] = useState<newGuest | null>(null);
+
+  const createGuest = () => {
+    const newGuest = {
+      name: "Guest",
+      id: `guest-${Date.now()}`,
+      savedJobs: [],
+    };
+
+    setGuestUser(newGuest);
+
+    sessionStorage.setItem("guestUser", JSON.stringify(newGuest));
+
+    return newGuest;
+  };
 
   // mobile statee will not change until i refresh
   useEffect(() => {
@@ -56,6 +77,7 @@ function App(): JSX.Element {
   // load all jobs
   useEffect(() => {
     fetchAllJobs();
+    createGuest();
   }, []);
 
   return (
@@ -65,7 +87,9 @@ function App(): JSX.Element {
           mobileState={mobileState}
           setMobileMapMode={setMobileMapMode}
           mobileMapMode={mobileMapMode}
+          guestUser={guestUser}
         />
+
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
           <Route
@@ -115,11 +139,13 @@ function App(): JSX.Element {
           <Route path="/signIn" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           {/* {/* <Route path="/" element={<HomePage />} / */}
-          <Route path="/user/:id/savedJobs" element={<SavedJobsPage />} />
+          <Route
+            path={`/:userType/:id?/savedJobs`}
+            element={<SavedJobsPage guestUser={guestUser} />}
+          />
         </Routes>
       </BrowserRouter>
     </div>
   );
 }
-
 export default App;
