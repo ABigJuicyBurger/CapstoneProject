@@ -84,7 +84,7 @@ function JobCard({
             <section className="jobCard__header__title__company">
               <h3 className="jobCard__header__company">{job.company}</h3>
               <img
-                src="/  "
+                src="/assets/Logo/genericlogo.svg"
                 className="jobCard__header__logo-placeholder"
                 alt="logo"
               />
