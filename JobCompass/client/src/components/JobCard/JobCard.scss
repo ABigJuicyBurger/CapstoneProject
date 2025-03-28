@@ -166,4 +166,19 @@
       margin-bottom: 1rem;
     }
   }
+
+  &__save {
+    &-message {
+      background-color: #2557a7;
+      display: block;
+      font-size: 0.875rem;
+      margin-top: 1rem;
+      color: white;
+      padding: 0.05rem 0.5rem;
+      border-radius: 0.25rem;
+      border: none;
+      font-family: inherit;
+      width: fit-content;
+    }
+  }
 }

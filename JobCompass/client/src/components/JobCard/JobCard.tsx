@@ -85,9 +85,6 @@ function JobCard({
         <JobNote updateNoteVisibility={updateNoteVisibility} />
       ) : (
         <div className="jobCard">
-          {saveMessage && (
-            <div className="jobCard__save-message">{saveMessage}</div>
-          )}
           <div className="jobCard__header">
             <Link to={"/jobs"}>
               <img
@@ -97,7 +94,9 @@ function JobCard({
                 onClick={() => onClose()}
               />
             </Link>
+
             <h2 className="jobCard__header__title">{job.title}</h2>
+
             <section className="jobCard__header__title__company">
               <h3 className="jobCard__header__company">{job.company}</h3>
               <img
@@ -112,9 +111,13 @@ function JobCard({
                   ? "Job Saved"
                   : "Save Job"}{" "}
               </button>
+
               <button onClick={() => updateNoteVisibility?.()}>
                 View Note
               </button>
+              {saveMessage && (
+                <div className="jobCard__save-message">{saveMessage}</div>
+              )}
             </div>
           </div>
           <div className="jobCard__details">
