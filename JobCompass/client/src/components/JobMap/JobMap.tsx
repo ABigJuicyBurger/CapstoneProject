@@ -4,10 +4,11 @@ import {
   Pin,
   AdvancedMarker,
   AdvancedMarkerAnchorPoint,
+  useMap,
   // InfoWindow, maybe needed for custom marker styling
 } from "@vis.gl/react-google-maps";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {MyMarker} from "./MyMarker.tsx";
 
 import MapJobCard from "./MapJobCard.tsx";
@@ -25,6 +26,7 @@ const JobMap = ({
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   // TODO: Show salary on hover (originally show title and company on load)
   const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
+  const [currentZoom, setCurrentZoom] = useState<number>(10.8); // Default zoom level
 
   const apiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -45,6 +47,53 @@ const JobMap = ({
     west: -114.5, // Western boundary longitude
     east: -113.65, // Eastern boundary longitude
   };
+
+  // Function to handle zoom changes
+  const handleZoomChanged = (zoom: number) => {
+    setCurrentZoom(zoom);
+  };
+
+  // Calculate which markers should show text based on zoom and density
+  const jobsWithVisibility = useMemo(() => {
+    if (!jobs) return [];
+ 
+    // If few jobs, we can show more of them with text
+    const jobCount = jobs.length;
+    const lowDensity = jobCount < 10;
+    const mediumDensity = jobCount >= 10 && jobCount < 30;
+    
+    // At high zoom levels (>13), show all markers with text
+    // At medium zoom (11-13), show some markers with text based on criteria
+    // At low zoom (<11), show mini markers only
+    
+    return jobs.map(job => {
+      // Calculate if this marker should show text based on zoom level and density
+      let showText = false;
+      
+      if (currentZoom >= 13) {
+        // Zoomed in enough to show all markers with text
+        showText = true;
+      } else if (currentZoom >= 11 && currentZoom < 13) {
+        if (lowDensity) {
+          // If there are few markers, show them all with text
+          showText = true;
+        } else if (mediumDensity) {
+          // For medium density, only show text for markers with certain properties
+          // For example, show text for markers with higher salaries
+          const salaryValue = parseInt(job.salary_range.replace(/[^0-9]/g, ''));
+          showText = salaryValue > 100000; // Show text for high-paying jobs
+        }
+        // For high density at medium zoom, keep most as mini markers
+      }
+      
+      // Always show text for hovered markers
+      if (hoveredJobId === job.id) {
+        showText = true;
+      }
+      
+      return { ...job, showText };
+    });
+  }, [jobs, currentZoom, hoveredJobId]);
 
   return (
     <div className="map-container">
@@ -75,19 +124,22 @@ const JobMap = ({
               }}
               minZoom={8}
               maxZoom={17}
+              onZoomChanged={(e) => handleZoomChanged(e.detail.zoom)}
             >
               {/*Job Markers logic*/}
-              {jobs &&
-                jobs.map((job) => {
+              {jobsWithVisibility &&
+                jobsWithVisibility.map((job) => {
                   const salary_range = formatSalary(job.salary_range);
 
                   return (
                     <MyMarker
+                      key={job.id}
                       job={job}
                       handleMarkerClick={handleMarkerClick}
                       setHoveredJobId={setHoveredJobId}
                       hoveredJobId={hoveredJobId}
                       salary_range={salary_range}
+                      miniMarker={!job.showText}
                     />
                   );
                 })}
@@ -110,4 +162,3 @@ const JobMap = ({
   );
 };
 export default JobMap;
-
