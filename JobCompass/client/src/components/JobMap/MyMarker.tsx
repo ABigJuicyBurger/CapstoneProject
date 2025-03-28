@@ -1,4 +1,3 @@
-
 import {
   AdvancedMarker,
   AdvancedMarkerAnchorPoint,
@@ -40,32 +39,8 @@ export function MyMarker({ job, handleMarkerClick, setHoveredJobId, hoveredJobId
     }`}
   >
     <div className="info-window-anchor__marker">
-      <span>{salary_range}</span>
+      {salary_range}
     </div>
-    {hoveredJobId && hoveredJobId === job.id ? (
-      <div className="info-window-anchor hovered--text">
-        <p>{job.title}</p>
-        <p>{job.company}</p>
-      </div>
-    ) : (
-      ""
-    )}
   </div>
-  {/* <Pin
-  background={"#FFF"}
-  borderColor={"#3535350"}
-  glyphColor={"#000000"}
-/> */}
-  {/* Custom marker content */}
-  {/* <InfoWindow
-position={{
-  lat: Number(job.latitude),
-  lng: Number(job.longitude),
-}}
-className="info-window"
-> */}
-
-  {/* </InfoWindow> */}
 </AdvancedMarker>
 }
-
