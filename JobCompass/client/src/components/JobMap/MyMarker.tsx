@@ -10,19 +10,18 @@ export function MyMarker({
   job, 
   handleMarkerClick, 
   setHoveredJobId, 
-  hoveredJobId, 
+  isHovered, 
   salary_range,
   miniMarker = true 
 }: {
   job: JobCardType;
   handleMarkerClick: (jobId: string) => void;
   setHoveredJobId: (jobId: string | null) => void;
-  hoveredJobId: string | null;
+  isHovered: boolean;
   salary_range: string;
   miniMarker?: boolean;
 }) {
   // Create a state to track whether this marker is hovered
-  const isHovered = hoveredJobId === job.id;
   
   // Calculate z-index - higher for hovered markers to appear on top
   const zIndex = isHovered ? 1000 : 1;
