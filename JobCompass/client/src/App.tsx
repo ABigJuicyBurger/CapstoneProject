@@ -47,7 +47,27 @@ function App(): JSX.Element {
     return newGuest;
   };
 
-  // mobile statee will not change until i refresh
+  const updateGuestSavedJobs = (jobId: string) => {
+    if (guestUser) {
+      if (!guestUser.savedJobs.includes(jobId)) {
+        const updatedGuestUser = {
+          ...guestUser,
+          savedJobs: [...guestUser.savedJobs, jobId],
+        };
+
+        setGuestUser(updatedGuestUser);
+
+        sessionStorage.setItem("guestUser", JSON.stringify(updatedGuestUser));
+      } else {
+        console.log("Job already saved!");
+        return false;
+      }
+      return true;
+    }
+    return false;
+  };
+
+  // mobile state will not change until i refresh
   useEffect(() => {
     // if window  < 768 run set state to mobile
     const handleResize = () => {
@@ -107,6 +127,8 @@ function App(): JSX.Element {
                     noteState={noteState}
                     updateNoteVisibility={updateNoteVisibility}
                     jobs={jobs}
+                    guestUser={guestUser}
+                    updateGuestUser={updateGuestSavedJobs}
                   />
                 </div>
                 <div
@@ -138,10 +160,9 @@ function App(): JSX.Element {
           />
           <Route path="/signIn" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          {/* {/* <Route path="/" element={<HomePage />} / */}
           <Route
             path={`/:userType/:id?/savedJobs`}
-            element={<SavedJobsPage guestUser={guestUser} />}
+            element={<SavedJobsPage jobs={jobs} guestUser={guestUser} />}
           />
         </Routes>
       </BrowserRouter>

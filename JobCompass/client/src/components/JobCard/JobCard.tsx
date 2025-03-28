@@ -19,12 +19,15 @@ function JobCard({
   updateNoteVisibility,
   jobId,
   onClose = () => {},
+  guestUser,
+  updateGuestUser,
 }: MapJobCardType): JSX.Element {
   console.log("updateNoteVisibility in JobCard:", typeof updateNoteVisibility);
 
   // my fnxn will return JSX
   const [job, setJob] = useState<JobCardType | null>(null); // tells TS what data to expect
   const [expandedText, setExpandedText] = useState<boolean>(false);
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const MAX_LENGTH = 150;
 
   const { id: urlId } = useParams();
@@ -55,8 +58,19 @@ function JobCard({
   }, [id]);
 
   // TODO: style to save job appropriately and have it link to user faves
-  const saveJob = async () => {
-    return <h1>Job saved</h1>;
+  const saveJob = () => {
+    if (guestUser && updateGuestUser && job) {
+      if (guestUser.savedJobs.includes(job.id)) {
+        setSaveMessage("Job already saved!");
+      } else {
+        updateGuestUser(job.id);
+        console.log(guestUser);
+        setSaveMessage("Job Saved!");
+      }
+      setTimeout(() => {
+        setSaveMessage(null);
+      }, 3000);
+    }
   };
   console.log(job);
 
@@ -71,6 +85,9 @@ function JobCard({
         <JobNote updateNoteVisibility={updateNoteVisibility} />
       ) : (
         <div className="jobCard">
+          {saveMessage && (
+            <div className="jobCard__save-message">{saveMessage}</div>
+          )}
           <div className="jobCard__header">
             <Link to={"/jobs"}>
               <img
@@ -90,7 +107,11 @@ function JobCard({
               />
             </section>
             <div className="jobCard__header__cta">
-              <button onClick={saveJob}> Save job </button>
+              <button onClick={saveJob}>
+                {guestUser?.savedJobs.includes(job.id)
+                  ? "Job Saved"
+                  : "Save Job"}{" "}
+              </button>
               <button onClick={() => updateNoteVisibility?.()}>
                 View Note
               </button>

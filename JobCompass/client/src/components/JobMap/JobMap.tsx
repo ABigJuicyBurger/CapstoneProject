@@ -7,7 +7,7 @@ import {
   // InfoWindow, maybe needed for custom marker styling
 } from "@vis.gl/react-google-maps";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 
 import MapJobCard from "./MapJobCard.tsx";
 import "./JobMap.scss";
@@ -18,7 +18,9 @@ const JobMap = ({
   updateNoteVisibility,
   jobs,
   noteState,
-}: MapJobCardNoteType) => {
+  guestUser,
+  updateGuestUser,
+}: MapJobCardNoteType): JSX.Element => {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   // TODO: Show salary on hover (originally show title and company on load)
   const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
@@ -139,6 +141,8 @@ const JobMap = ({
               jobId={selectedJobId}
               onClose={() => setSelectedJobId(null)}
               noteState={noteState}
+              guestUser={guestUser}
+              updateGuestUser={updateGuestUser}
             />
           </div>
         )}
