@@ -6,12 +6,20 @@ import {
 
 import JobCardType from "../../../types/JobCardType.ts";
 
-export function MyMarker({ job, handleMarkerClick, setHoveredJobId, hoveredJobId, salary_range }: {
+export function MyMarker({ 
+  job, 
+  handleMarkerClick, 
+  setHoveredJobId, 
+  hoveredJobId, 
+  salary_range,
+  miniMarker = true 
+}: {
   job: JobCardType;
   handleMarkerClick: (jobId: string) => void;
   setHoveredJobId: (jobId: string | null) => void;
   hoveredJobId: string | null;
   salary_range: string;
+  miniMarker?: boolean;
 }) {
   // Create a state to track whether this marker is hovered
   const isHovered = hoveredJobId === job.id;
@@ -43,10 +51,10 @@ export function MyMarker({ job, handleMarkerClick, setHoveredJobId, hoveredJobId
   <div
     className={`info-window-anchor ${
       isHovered ? "hovered" : ""
-    }`}
+    } ${miniMarker ? "mini-marker" : ""}`}
   >
     <div className="info-window-anchor__marker">
-      {salary_range}
+      {(isHovered || !miniMarker) && salary_range}
     </div>
   </div>
 </AdvancedMarker>
