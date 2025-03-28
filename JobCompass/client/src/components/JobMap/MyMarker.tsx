@@ -13,6 +13,12 @@ export function MyMarker({ job, handleMarkerClick, setHoveredJobId, hoveredJobId
   hoveredJobId: string | null;
   salary_range: string;
 }) {
+  // Create a state to track whether this marker is hovered
+  const isHovered = hoveredJobId === job.id;
+  
+  // Calculate z-index - higher for hovered markers to appear on top
+  const zIndex = isHovered ? 1000 : 1;
+
   return <AdvancedMarker
   anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
   key={job.id}
@@ -28,14 +34,15 @@ export function MyMarker({ job, handleMarkerClick, setHoveredJobId, hoveredJobId
   }}
   onMouseEnter={() => {
     setHoveredJobId(job.id);
-    console.log(hoveredJobId);
   }}
   onMouseLeave={() => setHoveredJobId(null)}
-  className="info-window "
+  className="info-window"
+  // Apply zIndex directly to the AdvancedMarker
+  zIndex={zIndex}
 >
   <div
     className={`info-window-anchor ${
-      hoveredJobId === job.id ? "hovered" : ""
+      isHovered ? "hovered" : ""
     }`}
   >
     <div className="info-window-anchor__marker">
