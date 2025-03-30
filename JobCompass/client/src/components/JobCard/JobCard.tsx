@@ -72,7 +72,6 @@ function JobCard({
       }, 3000);
     }
   };
-  console.log(job);
 
   if (!job) {
     return <h1>Loading Job...</h1>;
