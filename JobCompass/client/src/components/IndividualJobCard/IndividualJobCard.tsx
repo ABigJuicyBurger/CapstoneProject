@@ -93,7 +93,7 @@ function JobCard({
       ) : (
         <div className="jobCard">
           <div className="jobCard__header">
-            <Link to={"/jobs"}>
+            <Link to={-1 as any}>
               <img
                 className="jobCard__header__goBack"
                 src="/assets/Icons/arrow-right-solid.svg"
