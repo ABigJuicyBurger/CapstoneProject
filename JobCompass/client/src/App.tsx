@@ -156,7 +156,14 @@ function App(): JSX.Element {
           />
           <Route
             path="/job/:id"
-            element={<IndividualJob noteState={noteState} />}
+            element={
+              <IndividualJob
+                guestUser={guestUser}
+                updateGuestUser={updateGuestSavedJobs}
+                noteState={noteState}
+                updateNoteVisibility={updateNoteVisibility}
+              />
+            }
           />
           <Route path="/signIn" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
