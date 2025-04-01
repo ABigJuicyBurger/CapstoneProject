@@ -4,12 +4,14 @@ type HeaderMobilityTypes = {
   mobileState: boolean;
   mobileMapMode: boolean;
   setMobileMapMode: React.Dispatch<React.SetStateAction<boolean>>;
+  guestUser: { name: string; id: string; savedJobs: any[] } | null;
 };
 
 function Header({
   mobileState,
   mobileMapMode,
   setMobileMapMode,
+  guestUser,
 }: HeaderMobilityTypes) {
   const location = useLocation();
   const isHomePage = location.pathname === "/"; // are you home?
@@ -30,7 +32,7 @@ function Header({
         <Link to={"/"}>
           <img
             className="homePage__header__logo__image"
-            src="/src/assets/Logo/compassfavicon.png"
+            src="/assets/Logo/compassfavicon.png"
             alt=""
           />
           <h1>JobCompass</h1>
@@ -45,8 +47,8 @@ function Header({
         </button>
       )}
       <Link
-        className="homePage__header__register-cta construction"
-        to={"/user/:id/savedJobs"}
+        className="homePage__header__register-cta "
+        to={guestUser ? `guest/savedJobs` : `user/:id/savedJobs`}
       >
         Saved Jobs
       </Link>

@@ -3,6 +3,22 @@
 @use "../../styles/partials/variables" as *;
 
 .jobCard {
+  &__header {
+    .note-back-button {
+      background-color: white;
+      background-repeat: no-repeat;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: inline-flex;
+      width: 1rem;
+      height: 1.1422rem;
+      margin-bottom: 1rem;
+      position: relative;
+      background-image: url("/assets/Icons/arrow-right-solid.svg");
+    }
+  }
+
   &__content {
     width: 100%;
   }

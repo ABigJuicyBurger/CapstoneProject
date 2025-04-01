@@ -6,6 +6,8 @@ const MapJobCard = ({
   updateNoteVisibility,
   jobId,
   onClose,
+  guestUser,
+  updateGuestUser,
 }: MapJobCardNoteType) => {
   return (
     <div className="map-job-card">
@@ -14,6 +16,8 @@ const MapJobCard = ({
         updateNoteVisibility={updateNoteVisibility}
         jobId={jobId}
         onClose={onClose}
+        guestUser={guestUser}
+        updateGuestUser={updateGuestUser}
       />
     </div>
   );

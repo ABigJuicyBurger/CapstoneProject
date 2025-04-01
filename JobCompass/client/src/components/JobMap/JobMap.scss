@@ -72,46 +72,66 @@
 
 .info-window {
   &-anchor {
-    max-width: 0.3125rem;
-    font-size: 0.5rem;
-    color: white;
-
+    font-size: 0.875rem;
+    color: black;
+    transition: transform 0.2s ease;
+    
     &.hovered {
-      .info-window-anchor__text {
-        transform: scale(1.05);
-        transition: all 0.2s ease;
-      }
+      transform: scale(1.05);
+      z-index: 10;
     }
 
-    &.hovered--text {
-      display: flex;
-      flex-direction: row;
-
-      & > p {
-        font-size: 0.5rem;
-        font-weight: bold;
-        text-transform: uppercase;
-        margin-left: 1.4063rem;
-        white-space: nowrap;
+    // Mini marker styles
+    &.mini-marker {
+      .info-window-anchor__marker {
+        width: 1.25rem;
+        height: 0.75rem;
+        padding: 0;
+        border-radius: 9999px;
+        transition: all 0.3s ease;
       }
-      :nth-child(2) {
-        margin-left: 0.625rem;
+
+      &.hovered {
+        .info-window-anchor__marker {
+          width: auto;
+          height: auto;
+          padding: 0.5rem 0.75rem;
+          border-radius: 1rem;
+        }
       }
     }
 
     &__marker {
       background-color: white;
-      margin-right: 0.5rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.25rem;
-      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+      padding: 0.5rem 0.75rem;
+      border-radius: 1rem;
+      box-shadow: 0 .125rem 0.25rem rgba(0, 0, 0, 1);
       white-space: nowrap;
-      cursor: default;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      color: black;
+      transition: box-shadow 0.2s ease, width 0.3s ease, height 0.3s ease, padding 0.3s ease, border-radius 0.3s ease;
 
-      span {
+      &:hover {
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    &.hovered--text {
+      display: flex;
+      flex-direction: column;
+      margin-top: 0.5rem;
+
+      & > p {
+        font-size: 0.75rem;
         font-weight: bold;
         text-transform: uppercase;
-        margin-left: 0.9375rem;
+        white-space: nowrap;
+        margin: 0;
+        margin-bottom: 0.25rem;
       }
     }
   }
