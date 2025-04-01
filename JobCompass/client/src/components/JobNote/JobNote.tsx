@@ -66,13 +66,7 @@ function JobNote({
   return (
     <div className="jobCard">
       <div className="jobCard__header">
-        <button className="jobCard__header__goBack-button" onClick={handleBack}>
-          <img
-            className="jobCard__header__goBack"
-            src="/assets/Icons/arrow-right-solid.svg"
-            alt="arrow"
-          />
-        </button>
+        <button className="note-back-button" onClick={handleBack}></button>
         <h2 className="jobCard__header__title">Notes</h2>
         <section className="jobCard__content">
           {noteList.length > 0 ? (
