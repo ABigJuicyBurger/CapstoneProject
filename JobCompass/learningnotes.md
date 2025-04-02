@@ -454,3 +454,25 @@ March 17
   - so guest user is set up and is routed to saved jobs
   - Link from header takes to guest saved, or user saved and changes URL
   - next is to route the job card save button to save the title of the job; links to the job card
+
+POST BOOTCAMP
+March 31
+
+- used local storage and some state management to have a guest job saving feature (including notes!)
+- now will have a deployment script so i dont run the commands above in the EC2 all the time
+- finally nano'd a deployment script that prints commands to check if package json changed to reinstall it; then do all those commands and make it executable
+
+Now all I need to do is:
+**git pull origin main then**
+**~/deploy-frontend.sh**
+
+April 02
+
+- start setting up a users DB; focus on backend today
+  \_ set up proper migrations. start with a test user to make sure all is safe, then focus on registering new users
+  \_ created a proper DB structure
+  \_ installed bcrypt & jsonwebtoken
+
+- set up the seed-data
+  \_ users and user meta have the appropriate beginning strcuture and have been imported to the seed
+- ran seed and the "test" user seed is now implemented

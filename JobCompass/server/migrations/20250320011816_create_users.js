@@ -4,19 +4,26 @@
  */
 
 export function up(knex) {
-  return knex.schema.createTable("users", () => {
-    // Primary ID
-
-    // saved jobs
-
-    // private info
-
-    // timestamps
-    table.timestamp("created_at").defaultTo(knex.fn.now());
-    table
-      .timestamp("updated_at")
-      .defaultTo(knex.raw("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"));
-  });
+  return knex.schema
+    .createTable("users", (table) => {
+      table.increments("id"); // Primary key
+      table.string("username").notNullable().unique();
+      table.string("email").notNullable().unique();
+      table.string("password_hash").notNullable();
+      table.string("avatar");
+      table.timestamps(true, true); // created_at & updated_at
+    })
+    .createTable("user_meta", (table) => {
+      table.increments("id"); // Primary key
+      table.integer("user_id").unsigned().notNullable().unique();
+      table.text("bio"); // Short description of your experience
+      table.string("resume");
+      table
+        .foreign("user_id")
+        .references("id")
+        .inTable("users")
+        .onDelete("CASCADE");
+    });
 }
 
 /**
@@ -24,5 +31,5 @@ export function up(knex) {
  * @returns { Promise<void> }
  */
 export function down(knex) {
-  return knex.schema.dropTable("users");
+  return knex.schema.dropTable("users").dropTable("user_meta");
 }
