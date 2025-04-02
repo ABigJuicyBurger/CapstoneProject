@@ -476,3 +476,8 @@ April 02
 - set up the seed-data
   \_ users and user meta have the appropriate beginning strcuture and have been imported to the seed
 - ran seed and the "test" user seed is now implemented
+
+- now create auth routes, generate JWT< protect route w/ middleware, then test
+  \_ add secret key to env, install dotenv to configure, and bcrypt to salt the seed data
+  ** Create function to auth the token against my secret key **
+  \_ now in middleware folder
