@@ -58,10 +58,7 @@ function Header({
       </Link>
       {!loggedIn ? (
         <>
-          <Link
-            className="homePage__header__signIn-cta construction"
-            to={"/signIn"}
-          >
+          <Link className="homePage__header__signIn-cta" to={"/signIn"}>
             Sign In
           </Link>
           <Link
