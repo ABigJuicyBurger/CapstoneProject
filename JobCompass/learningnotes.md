@@ -483,3 +483,20 @@ April 02
   \_ now in middleware folder
 
   April 03
+  \_ finished setting up middleware to verify JWT token; user controller for login and password verify; routes for proper endpoints; and index to mount user
+
+  - now focus on frontend to ensure flow of authentication works
+    \_ useEffect to track user login throughout app browse
+
+  - complete login in the front end
+    \_ have logic to handlelogin which saves token in localstorage and change state var
+    \_ logic to handlelog out which resets all state variables
+
+  - create form to collect login info
+    \_ name matches password_hash, render conditionally
+
+  - Auth state in App
+    \_ state management for auth; store login status in state var, check existing JWT, conditionally render
+    \_ localstorage to persist auth between sessions
+    \_ let app use usenavigate by moving browser router above
+    \_ fixed types for API connection

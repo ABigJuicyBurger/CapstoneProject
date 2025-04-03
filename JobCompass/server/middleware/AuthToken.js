@@ -1,3 +1,6 @@
+import jwt from "jsonwebtoken";
+const { JWT_SECRET_KEY } = process.env;
+
 function authenticateToken(req, res, next) {
   if (!req.headers.authorization) {
     return res.status(401).json({ message: "no JWT provided" });

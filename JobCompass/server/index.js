@@ -21,7 +21,6 @@ app.use(express.json()); // body parser
 app.use(express.static("public")); // serves static files
 
 /* Custom Middleware to verify JWT Token */
-authenticateToken();
 
 // Get all jobs or individual job
 app.use("/jobs", jobsRoutes);
@@ -32,6 +31,16 @@ app.use("/user", userRoutes);
 // basic route for home
 app.get("/", (req, res) => {
   res.send("Welcome!");
+});
+
+app.get("/debug", (req, res) => {
+  res.json({
+    message: "Server is running",
+    env: {
+      hasJwtSecret: !!process.env.JWT_SECRET_KEY,
+      port: process.env.PORT,
+    },
+  });
 });
 
 app.listen(PORT, () => {

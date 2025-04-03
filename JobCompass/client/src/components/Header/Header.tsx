@@ -5,6 +5,8 @@ type HeaderMobilityTypes = {
   mobileMapMode: boolean;
   setMobileMapMode: React.Dispatch<React.SetStateAction<boolean>>;
   guestUser: { name: string; id: string; savedJobs: any[] } | null;
+  loggedIn: boolean;
+  handleLogout: () => void;
 };
 
 function Header({
@@ -12,6 +14,8 @@ function Header({
   mobileMapMode,
   setMobileMapMode,
   guestUser,
+  loggedIn,
+  handleLogout,
 }: HeaderMobilityTypes) {
   const location = useLocation();
   const isHomePage = location.pathname === "/"; // are you home?
@@ -52,18 +56,32 @@ function Header({
       >
         Saved Jobs
       </Link>
-      <Link
-        className="homePage__header__signIn-cta construction"
-        to={"/signIn"}
-      >
-        Sign In
-      </Link>
-      <Link
-        className="homePage__header__register-cta construction"
-        to={"/register"}
-      >
-        Register
-      </Link>
+      {!loggedIn ? (
+        <>
+          <Link
+            className="homePage__header__signIn-cta construction"
+            to={"/signIn"}
+          >
+            Sign In
+          </Link>
+          <Link
+            className="homePage__header__register-cta construction"
+            to={"/register"}
+          >
+            Register
+          </Link>
+        </>
+      ) : (
+        <>
+          <Link
+            className="homePage__header__register-cta"
+            onClick={handleLogout}
+            to={"/"}
+          >
+            Logout
+          </Link>
+        </>
+      )}
     </header>
   );
 }

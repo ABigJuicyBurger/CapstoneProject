@@ -1,6 +1,7 @@
 import initKnex from "knex";
 import configuration from "../knexfile.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 const knex = initKnex(configuration);
 
 const login = async (req, res) => {
@@ -8,6 +9,8 @@ const login = async (req, res) => {
   const { PORT, JWT_SECRET_KEY } = process.env;
 
   try {
+    console.log("Login attempt:", { username, password_hash });
+
     const user = await knex("users")
       .where({ username: username.toLowerCase() })
       .first();
@@ -17,8 +20,12 @@ const login = async (req, res) => {
       return res.status(401).json({ message: "Failed to authenticate" });
     }
 
+    console.log("Found user:", user);
+
     // compare hashed w/ provided password
     const match = await bcrypt.compare(password_hash, user.password_hash);
+    console.log("Password match result:", match);
+
     if (match) {
       // generate JWT token
       const token = jwt.sign(
