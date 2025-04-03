@@ -12,6 +12,9 @@ const knex = initKnex(configuration);
 /* login route */
 router.post("/login", usersController.login);
 
+/* register route */
+router.post("/register", usersController.register);
+
 /* Get meta info of user (Protected) */
 router.get("/meta", authenticateToken, usersController.getMetaInfo);
 

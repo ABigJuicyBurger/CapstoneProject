@@ -49,6 +49,72 @@ const login = async (req, res) => {
   }
 };
 
+const register = async (req, res) => {
+  const { username, email, password } = req.body;
+  
+  try {
+    console.log("Registration attempt:", { username, email });
+
+    // Input validation
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    // Check if username already exists
+    const existingUsername = await knex("users")
+      .where({ username: username.toLowerCase() })
+      .first();
+
+    if (existingUsername) {
+      return res.status(409).json({ 
+        message: "Username already taken", 
+        field: "username" 
+      });
+    }
+
+    // Check if email already exists
+    const existingEmail = await knex("users")
+      .where({ email: email.toLowerCase() })
+      .first();
+
+    if (existingEmail) {
+      return res.status(409).json({ 
+        message: "Email already registered", 
+        field: "email" 
+      });
+    }
+
+    // Hash password
+    const saltRounds = 10;
+    const password_hash = await bcrypt.hash(password, saltRounds);
+
+    // Create new user
+    const [userId] = await knex("users").insert({
+      username: username.toLowerCase(),
+      email: email.toLowerCase(),
+      password_hash,
+      avatar: "default-avatar.png" // Default avatar path
+      // created_at and updated_at are handled automatically by timestamps(true, true) in the schema
+    });
+
+    // Create user meta entry - only using fields that exist in the schema
+    await knex("user_meta").insert({
+      user_id: userId,
+      bio: "",
+      resume: "",
+      savedjobs: JSON.stringify([])
+    });
+
+    return res.status(201).json({ 
+      message: "User registered successfully",
+      userId
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const getMetaInfo = async (req, res) => {
   try {
     const userMeta = await knex("user_meta")
@@ -70,4 +136,4 @@ const getUser = async (req, res) => {
   res.json({ user: req.user });
 };
 
-export { login, getMetaInfo, getUser };
+export { login, register, getMetaInfo, getUser };
