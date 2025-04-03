@@ -1,17 +1,15 @@
-import {} from "./AuthToken";
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 
 import jobsRoutes from "./routes/jobsRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 import authenticateToken from "./middleware/AuthToken.js";
 
 const app = express();
-const { JWT_SECRET_KEY, PORT, CORS_ORIGIN } = process.env;
+const { PORT, CORS_ORIGIN } = process.env;
 dotenv.config();
 
 app.use(

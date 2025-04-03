@@ -3,6 +3,7 @@ import configuration from "../knexfile.js";
 import express from "express";
 
 import * as usersController from "../controllers/users-controller.js";
+import authenticateToken from "../middleware/AuthToken.js";
 
 const router = express.Router();
 
@@ -12,9 +13,9 @@ const knex = initKnex(configuration);
 router.post("/login", usersController.login);
 
 /* Get meta info of user (Protected) */
-router.get;
+router.get("/meta", authenticateToken, usersController.getMetaInfo);
 
 /* Protected endpoint to get user details */
-router.get();
+router.get("/userProfile", authenticateToken, usersController.getUser);
 
 export default router;

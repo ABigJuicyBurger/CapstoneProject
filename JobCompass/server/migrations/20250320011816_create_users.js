@@ -18,6 +18,7 @@ export function up(knex) {
       table.integer("user_id").unsigned().notNullable().unique();
       table.text("bio"); // Short description of your experience
       table.string("resume");
+      table.json("savedjobs");
       table
         .foreign("user_id")
         .references("id")
@@ -31,5 +32,5 @@ export function up(knex) {
  * @returns { Promise<void> }
  */
 export function down(knex) {
-  return knex.schema.dropTable("users").dropTable("user_meta");
+  return knex.schema.dropTable("user_meta").dropTable("users");
 }

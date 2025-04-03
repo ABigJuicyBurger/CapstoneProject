@@ -481,3 +481,5 @@ April 02
   \_ add secret key to env, install dotenv to configure, and bcrypt to salt the seed data
   ** Create function to auth the token against my secret key **
   \_ now in middleware folder
+
+  April 03

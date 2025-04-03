@@ -5,6 +5,7 @@ const knex = initKnex(configuration);
 
 const login = async (req, res) => {
   const { username, password_hash } = req.body;
+  const { PORT, JWT_SECRET_KEY } = process.env;
 
   try {
     const user = await knex("users")
@@ -40,3 +41,26 @@ const login = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+const getMetaInfo = async (req, res) => {
+  try {
+    const userMeta = await knex("user_meta")
+      .where({ user_id: req.user.userId })
+      .first();
+
+    if (!userMeta) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(userMeta);
+  } catch (error) {
+    console.error("Get user meta error", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getUser = async (req, res) => {
+  res.json({ user: req.user });
+};
+
+export { login, getMetaInfo, getUser };
