@@ -1,0 +1,255 @@
+@use "../../styles/partials/variables" as *;
+@use "../../styles/partials/mixins" as *;
+@use "sass:color";
+
+.profile-page {
+  padding: 2rem 1rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    
+    &-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba($primary-color, 0.3);
+      border-radius: 50%;
+      border-top-color: $primary-color;
+      animation: spin 1s ease-in-out infinite;
+      margin-bottom: 1rem;
+    }
+  }
+  
+  &__error {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.profile-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.profile-header {
+  display: flex;
+  padding: 2rem;
+  background: linear-gradient(to right, $primary-color, color.adjust($primary-color, $lightness: -15%));
+  color: white;
+  
+  @include mobile {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  &__info {
+    margin-left: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    @include mobile {
+      margin-left: 0;
+      margin-top: 1.5rem;
+    }
+  }
+  
+  &__name {
+    font-size: 2rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 700;
+  }
+  
+  &__meta {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.profile-stats {
+  display: flex;
+  margin-top: 0.5rem;
+}
+
+.profile-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  
+  &__count {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  
+  &__label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+}
+
+.profile-content {
+  padding: 1.5rem 2rem;
+}
+
+.profile-section {
+  margin-bottom: 2.5rem;
+  
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  &__title {
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 600;
+    color: $primary-color;
+    position: relative;
+    
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 40px;
+      height: 3px;
+      background-color: $primary-color;
+    }
+  }
+  
+  &__edit-button {
+    background: none;
+    border: 1px solid $primary-color;
+    color: $primary-color;
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+      background-color: $primary-color;
+      color: white;
+    }
+  }
+}
+
+.profile-bio {
+  line-height: 1.6;
+  color: $dark-color;
+  
+  &--editing {
+    margin-top: 1rem;
+  }
+  
+  &__textarea {
+    width: 100%;
+    min-height: 150px;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    resize: vertical;
+    
+    &:focus {
+      border-color: $primary-color;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+    }
+  }
+  
+  &__save-button {
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: color.adjust($primary-color, $lightness: -10%);
+    }
+  }
+}
+
+.profile-resume, .profile-saved-jobs {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  
+  &--empty {
+    text-align: center;
+    color: #757575;
+  }
+  
+  &__link, &__browse-link {
+    display: inline-block;
+    background-color: $primary-color;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: color.adjust($primary-color, $lightness: -10%);
+    }
+  }
+  
+  &__upload-button {
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.2s;
+    
+    &:hover {
+      background-color: color.adjust($primary-color, $lightness: -10%);
+    }
+  }
+}

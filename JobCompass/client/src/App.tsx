@@ -12,6 +12,8 @@ import JobNote from "./components/JobNote/JobNote.tsx";
 import LoginPage from "./pages/LoginPage/LoginPage.tsx";
 import RegisterPage from "./pages/RegisterPage/RegisterPage.tsx";
 import SavedJobsPage from "./pages/JobSearchPage/SavedJobsPage/SavedJobsPage.tsx";
+import Notification from "./components/Notification/Notification";
+import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";
 
 import "./App.scss";
 import JobCardType from "../types/JobCardType.ts";
@@ -38,6 +40,34 @@ function App(): JSX.Element {
   const [error, setError] = useState<string>("");
 
   const navigate = useNavigate();
+
+  // Notification state
+  const [notification, setNotification] = useState<{
+    show: boolean;
+    message: string;
+    type: 'success' | 'error' | 'info';
+  }>({
+    show: false,
+    message: "",
+    type: "success"
+  });
+
+  // Show notification helper function
+  const showNotification = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+    setNotification({
+      show: true,
+      message,
+      type
+    });
+  };
+
+  // Hide notification helper function
+  const hideNotification = () => {
+    setNotification(prev => ({
+      ...prev,
+      show: false
+    }));
+  };
 
   // Mount component, if JWT token set user is considered logged in
 
@@ -107,6 +137,7 @@ function App(): JSX.Element {
     localStorage.removeItem("token");
     setLoggedIn(false);
     setUser({});
+    showNotification("You have been successfully logged out", "success");
     navigate("/");
   };
 
@@ -188,6 +219,14 @@ function App(): JSX.Element {
         handleLogout={handleLogout}
       />
 
+      {/* Notification component */}
+      <Notification
+        show={notification.show}
+        message={notification.message}
+        type={notification.type}
+        onClose={hideNotification}
+      />
+
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
         <Route
@@ -253,10 +292,14 @@ function App(): JSX.Element {
             />
           }
         />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/register" element={<RegisterPage showNotification={showNotification} />} />
         <Route
           path={`/:userType/:id?/savedJobs`}
           element={<SavedJobsPage jobs={jobs} guestUser={guestUser} />}
+        />
+        <Route
+          path="/profile"
+          element={<ProfilePage user={user} loggedIn={loggedIn} />}
         />
       </Routes>
     </div>

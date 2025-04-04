@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { validateForm } from './validateForm';
 
-function RegisterPage() {
+type RegisterPageProps = {
+  showNotification?: (message: string, type: 'success' | 'error' | 'info') => void;
+};
+
+function RegisterPage({ showNotification }: RegisterPageProps) {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -38,64 +43,12 @@ function RegisterPage() {
     }
   };
 
-  const validateForm = () => {
-    let valid = true;
-    const newErrors = {
-      username: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      server: ''
-    };
-
-    // Username validation
-    if (formData.username.trim() === '') {
-      newErrors.username = 'Username is required';
-      valid = false;
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
-      valid = false;
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (formData.email.trim() === '') {
-      newErrors.email = 'Email is required';
-      valid = false;
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-      valid = false;
-    }
-
-    // Password validation
-    if (formData.password === '') {
-      newErrors.password = 'Password is required';
-      valid = false;
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
-      valid = false;
-    } else if (!/(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/.test(formData.password)) {
-      newErrors.password = 'Password must contain at least one uppercase letter, one number, and one special character';
-      valid = false;
-    }
-
-    // Confirm password validation
-    if (formData.confirmPassword === '') {
-      newErrors.confirmPassword = 'Please confirm your password';
-      valid = false;
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-      valid = false;
-    }
-
-    setErrors(newErrors);
-    return valid;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) {
+    console.log("🚀 ~ handleSubmit ~ formData:", formData,validateForm(formData, setErrors))
+    if (!validateForm(formData, setErrors)) {
       return;
     }
     
@@ -108,6 +61,11 @@ function RegisterPage() {
         email: formData.email.toLowerCase(),
         password: formData.password
       });
+      
+      // Show success notification if the function is available
+      if (showNotification) {
+        showNotification('Registration successful! You can now log in.', 'success');
+      }
       
       // Redirect to login page on success
       setLoading(false);
@@ -254,3 +212,5 @@ function RegisterPage() {
 }
 
 export default RegisterPage;
+
+

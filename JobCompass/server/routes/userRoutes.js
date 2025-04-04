@@ -21,4 +21,8 @@ router.get("/meta", authenticateToken, usersController.getMetaInfo);
 /* Protected endpoint to get user details */
 router.get("/userProfile", authenticateToken, usersController.getUser);
 
+/* Get and update user meta information (Protected) */
+router.get("/user/meta", authenticateToken, usersController.getMetaInfo);
+router.put("/user/meta", authenticateToken, usersController.updateMetaInfo);
+
 export default router;

@@ -132,8 +132,49 @@ const getMetaInfo = async (req, res) => {
   }
 };
 
+const updateMetaInfo = async (req, res) => {
+  try {
+    const { bio, resume } = req.body;
+    const userId = req.user.userId;
+
+    // Validate user exists
+    const userMeta = await knex("user_meta")
+      .where({ user_id: userId })
+      .first();
+
+    if (!userMeta) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update fields
+    const updates = {};
+    if (bio !== undefined) updates.bio = bio;
+    if (resume !== undefined) updates.resume = resume;
+
+    // Only update if there are changes
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ message: "No valid fields to update" });
+    }
+
+    // Perform update
+    await knex("user_meta")
+      .where({ user_id: userId })
+      .update(updates);
+
+    // Return updated data
+    const updatedUserMeta = await knex("user_meta")
+      .where({ user_id: userId })
+      .first();
+
+    return res.json(updatedUserMeta);
+  } catch (error) {
+    console.error("Update user meta error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const getUser = async (req, res) => {
   res.json({ user: req.user });
 };
 
-export { login, register, getMetaInfo, getUser };
+export { login, register, getMetaInfo, updateMetaInfo, getUser };
