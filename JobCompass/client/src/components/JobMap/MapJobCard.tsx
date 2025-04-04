@@ -1,5 +1,6 @@
 import JobCard from "../../components/JobCard/JobCard";
 import MapJobCardNoteType from "../../../types/MapJobCardType";
+// import "./MapJobCard.scss"; // Added for styling consistency
 
 const MapJobCard = ({
   noteState,

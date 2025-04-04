@@ -64,10 +64,64 @@ function JobCard({
   }, [id]);
 
   // TODO: style to save job appropriately and have it link to user faves
-  const saveJob = () => {
+  const saveJob = async () => {
     console.log("Save job clicked", { guestUser, updateGuestUser, job });
 
-    if (guestUser && updateGuestUser && job) {
+    if (!job) return;
+
+    // Check if we have a token (logged-in user)
+    const token = localStorage.getItem('token');
+    
+    if (token) {
+      // Logged-in user flow
+      try {
+        // Get current saved jobs
+        const response = await axios.get(`${backendURL}/user/meta`, {
+          
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        
+        if (response.data && response.data.savedjobs) {
+          let currentSavedJobs = [];
+          
+          // Parse current saved jobs, handling empty strings and invalid JSON
+          try {
+            const savedJobsData = response.data.savedjobs.trim() === '' ? '[]' : response.data.savedjobs;
+            currentSavedJobs = JSON.parse(savedJobsData);
+            if (!Array.isArray(currentSavedJobs)) currentSavedJobs = [];
+          } catch (e) {
+            console.error('Error parsing saved jobs:', e);
+            currentSavedJobs = [];
+          }
+          
+          // Check if job is already saved
+          if (currentSavedJobs.includes(job.id)) {
+            setSaveMessage("Job already saved!");
+          } else {
+            // Add job ID to saved jobs
+            const updatedSavedJobs = [...currentSavedJobs, job.id];
+            
+            // Update the server
+            await axios.put(`${backendURL}/user/meta`, {
+              savedjobs: JSON.stringify(updatedSavedJobs)
+            }, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
+            });
+            
+            setSaveMessage("Job Saved!");
+          }
+        }
+      } catch (error) {
+        console.error('Error saving job:', error);
+        setSaveMessage("Failed to save job");
+      }
+    } else if (guestUser && updateGuestUser) {
+      // Guest user flow
       if (guestUser.savedJobs.includes(job.id)) {
         setSaveMessage("Job already saved!");
       } else {
@@ -75,10 +129,11 @@ function JobCard({
         console.log(guestUser);
         setSaveMessage("Job Saved!");
       }
-      setTimeout(() => {
-        setSaveMessage(null);
-      }, 3000);
     }
+    
+    setTimeout(() => {
+      setSaveMessage(null);
+    }, 3000);
   };
 
   if (!job) {
