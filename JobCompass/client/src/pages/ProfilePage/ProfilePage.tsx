@@ -133,7 +133,7 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
           {jobCount > 0 ? (
             <div className="profile-saved-jobs">
               <p className="profile-saved-jobs__count">{jobCount} job{jobCount !== 1 ? 's' : ''} saved</p>
-              <Link to="/savedJobs" className="profile-saved-jobs__link">
+              <Link to="/user/savedJobs" className="profile-saved-jobs__link">
                 View all saved jobs
               </Link>
             </div>
