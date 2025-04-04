@@ -61,19 +61,13 @@ function Header({
           <Link className="homePage__header__signIn-cta" to={"/signIn"}>
             Sign In
           </Link>
-          <Link
-            className="homePage__header__register-cta construction"
-            to={"/register"}
-          >
+          <Link className="homePage__header__register-cta" to={"/register"}>
             Register
           </Link>
         </>
       ) : (
         <>
-          <Link
-            className="homePage__header__register-cta"
-            to={"/profile"}
-          >
+          <Link className="homePage__header__register-cta" to={"/profile"}>
             Profile
           </Link>
           <Link
