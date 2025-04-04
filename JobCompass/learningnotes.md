@@ -502,4 +502,4 @@ April 02
     \_ fixed types for API connection
 
     \_ vibe code....
-    \_ now there is a user registration adn login (using bcrypt and JWT), some tests to check if form data is valid for registering, UI to show a profile pag as well as save jobs and update bio
+    \_ now there is a user registration adn login (using bcrypt and JWT), some tests to check if form data is valid for registering, UI to show a profile page as well as save jobs and update bio
