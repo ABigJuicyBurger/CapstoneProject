@@ -13,7 +13,7 @@ type UserMetaData = {
   user_id: number;
   bio: string;
   resume: string;
-  savedjobs: string;
+  savedjobs: string | string[]; // Update the type of savedjobs to string | string[]
 };
 
 function ProfilePage({ user, loggedIn }: ProfilePageProps) {
@@ -103,21 +103,22 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
   // More robust function for counting saved jobs
   const renderJobCount = () => {
     try {
-      if (!userMeta) return 0;
-      if (!userMeta.savedjobs) return 0;
+      if (!userMeta || !userMeta.savedjobs) return 0;
       
-      let savedJobs;
-      try {
-        const savedJobsValue = userMeta.savedjobs.trim ? userMeta.savedjobs.trim() : '';
-        savedJobs = savedJobsValue === '' ? [] : JSON.parse(savedJobsValue);
-      } catch (parseError) {
-        console.error('Error parsing saved jobs:', parseError);
-        savedJobs = [];
+      // Handle both string and array formats
+      if (typeof userMeta.savedjobs === 'string') {
+        // It's a string - parse it
+        const savedJobsValue = userMeta.savedjobs.trim() === '' ? '[]' : userMeta.savedjobs;
+        const savedJobs = JSON.parse(savedJobsValue);
+        return Array.isArray(savedJobs) ? savedJobs.length : 0;
+      } else if (Array.isArray(userMeta.savedjobs)) {
+        // It's already an array
+        return userMeta.savedjobs.length;
       }
       
-      return Array.isArray(savedJobs) ? savedJobs.length : 0;
+      return 0;
     } catch (error) {
-      console.error('Unexpected error in renderJobCount:', error);
+      console.error('Error parsing saved jobs:', error);
       return 0;
     }
   };
@@ -131,14 +132,15 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
           <h2 className="profile-section__title">Saved Jobs</h2>
           {jobCount > 0 ? (
             <div className="profile-saved-jobs">
-              <Link to={`/user/${user.userId}/savedJobs`} className="profile-saved-jobs__link">
-                View all {jobCount} saved jobs
+              <p className="profile-saved-jobs__count">{jobCount} job{jobCount !== 1 ? 's' : ''} saved</p>
+              <Link to="/savedJobs" className="profile-saved-jobs__link">
+                View all saved jobs
               </Link>
             </div>
           ) : (
             <div className="profile-saved-jobs profile-saved-jobs--empty">
               <p>You haven't saved any jobs yet.</p>
-              <Link to="/jobs" className="profile-saved-jobs__browse-link">
+              <Link to="/jobs" className="profile-saved-jobs__link">
                 Browse Jobs
               </Link>
             </div>
@@ -150,11 +152,8 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
       return (
         <div className="profile-section">
           <h2 className="profile-section__title">Saved Jobs</h2>
-          <div className="profile-saved-jobs">
-            <p>Could not load saved jobs. Please refresh the page.</p>
-            <Link to="/jobs" className="profile-saved-jobs__browse-link">
-              Browse Jobs
-            </Link>
+          <div className="profile-saved-jobs profile-saved-jobs--error">
+            <p>There was an error loading your saved jobs.</p>
           </div>
         </div>
       );

@@ -28,6 +28,7 @@ function JobCard({
   const [job, setJob] = useState<JobCardType | null>(null); // tells TS what data to expect
   const [expandedText, setExpandedText] = useState<boolean>(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
+  const [userSavedJobs, setUserSavedJobs] = useState<string[]>([]);
   const MAX_LENGTH = 150;
 
   const { id: urlId } = useParams();
@@ -57,6 +58,48 @@ function JobCard({
     fetchJob();
   }, [id]);
 
+  // Check if the user has saved this job when component loads
+  useEffect(() => {
+    const checkSavedJobs = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      
+      try {
+        const response = await axios.get(`${backendURL}/user/meta`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        
+        if (response.data && response.data.savedjobs) {
+          let currentSavedJobs = [];
+          
+          // Parse current saved jobs, handling both string and array formats
+          try {
+            if (typeof response.data.savedjobs === 'string') {
+              // Handle string format (from database)
+              const savedJobsData = response.data.savedjobs.trim() === '' ? '[]' : response.data.savedjobs;
+              currentSavedJobs = JSON.parse(savedJobsData);
+            } else if (Array.isArray(response.data.savedjobs)) {
+              // Handle array format (already parsed by server)
+              currentSavedJobs = response.data.savedjobs;
+            }
+            
+            if (!Array.isArray(currentSavedJobs)) currentSavedJobs = [];
+          } catch (e) {
+            console.error('Error parsing saved jobs:', e);
+          }
+          
+          setUserSavedJobs(currentSavedJobs);
+        }
+      } catch (error) {
+        console.error('Error fetching saved jobs:', error);
+      }
+    };
+    
+    checkSavedJobs();
+  }, []);
+
   // TODO: style to save job appropriately and have it link to user faves
   const saveJob = async () => {
     if (!job) return;
@@ -67,6 +110,8 @@ function JobCard({
     if (token) {
       // Logged-in user flow
       try {
+        console.log("Saving job for logged-in user:", job.id);
+        
         // Get current saved jobs
         const response = await axios.get(`${backendURL}/user/meta`, {
           headers: {
@@ -74,13 +119,22 @@ function JobCard({
           }
         });
         
+        console.log("User meta response:", response.data);
+        
         if (response.data && response.data.savedjobs) {
           let currentSavedJobs = [];
           
-          // Parse current saved jobs, handling empty strings and invalid JSON
+          // Parse current saved jobs, handling both string and array formats
           try {
-            const savedJobsData = response.data.savedjobs.trim() === '' ? '[]' : response.data.savedjobs;
-            currentSavedJobs = JSON.parse(savedJobsData);
+            if (typeof response.data.savedjobs === 'string') {
+              // Handle string format (from database)
+              const savedJobsData = response.data.savedjobs.trim() === '' ? '[]' : response.data.savedjobs;
+              currentSavedJobs = JSON.parse(savedJobsData);
+            } else if (Array.isArray(response.data.savedjobs)) {
+              // Handle array format (already parsed by server)
+              currentSavedJobs = response.data.savedjobs;
+            }
+            
             if (!Array.isArray(currentSavedJobs)) currentSavedJobs = [];
           } catch (e) {
             console.error('Error parsing saved jobs:', e);
@@ -94,8 +148,8 @@ function JobCard({
             // Add job ID to saved jobs
             const updatedSavedJobs = [...currentSavedJobs, job.id];
             
-            // Update the server
-            await axios.put(`${backendURL}/user/meta`, {
+            console.log("Updating server with saved jobs:", updatedSavedJobs);
+            const updateResponse = await axios.put(`${backendURL}/user/meta`, {
               savedjobs: JSON.stringify(updatedSavedJobs)
             }, {
               headers: {
@@ -104,6 +158,10 @@ function JobCard({
               }
             });
             
+            console.log("Server update response:", updateResponse.data);
+            
+            // Update local state with the new saved jobs
+            setUserSavedJobs(updatedSavedJobs);
             setSaveMessage("Job Saved!");
           }
         }
@@ -161,7 +219,7 @@ function JobCard({
             <div className="jobCard__header__cta">
               <button onClick={saveJob}>
                 {localStorage.getItem('token') ? 
-                  (job.saved ? "Job Saved" : "Save Job") : 
+                  (userSavedJobs.includes(job.id) ? "Job Saved" : "Save Job") : 
                   (guestUser?.savedJobs.includes(job.id) ? "Job Saved" : "Save Job")
                 }
               </button>
