@@ -78,7 +78,7 @@ function App(): JSX.Element {
     const getUserData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/user/userProfile",
+          `${backendURL}/user/userProfile`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -102,7 +102,7 @@ function App(): JSX.Element {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8080/user/login", {
+      const response = await axios.post(`${backendURL}/user/login`, {
         username: event.target.username.value,
         password_hash: event.target.password_hash.value,
       });
@@ -114,7 +114,7 @@ function App(): JSX.Element {
       if (response.data.token) {
         // get user data
         const userResponse = await axios.get(
-          "http://localhost:8080/user/userProfile",
+          `${backendURL}/user/userProfile`,
           {
             headers: {
               Authorization: `Bearer ${response.data.token}`,

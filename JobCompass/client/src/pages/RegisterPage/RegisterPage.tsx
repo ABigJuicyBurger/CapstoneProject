@@ -56,7 +56,7 @@ function RegisterPage({ showNotification }: RegisterPageProps) {
     
     try {
       // Send registration request to server
-      await axios.post('http://localhost:8080/user/register', {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/register`, {
         username: formData.username.toLowerCase(),
         email: formData.email.toLowerCase(),
         password: formData.password
@@ -212,5 +212,3 @@ function RegisterPage({ showNotification }: RegisterPageProps) {
 }
 
 export default RegisterPage;
-
-

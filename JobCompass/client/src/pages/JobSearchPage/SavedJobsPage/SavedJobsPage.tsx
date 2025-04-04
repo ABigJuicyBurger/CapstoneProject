@@ -17,7 +17,7 @@ function SavedJobsPage({
   const [savedJobs, setSavedJobs] = useState<JobCardType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-  const API_URL = "http://localhost:8080";
+  const API_URL = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem("token");
   const isLoggedIn = !!token;
 
