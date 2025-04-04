@@ -26,7 +26,7 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
   const [updateError, setUpdateError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
-  const API_URL = 'http://localhost:8080';
+  const API_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     // Redirect if not logged in
