@@ -137,22 +137,39 @@ function App(): JSX.Element {
     localStorage.removeItem("token");
     setLoggedIn(false);
     setUser({});
-    showNotification("You have been successfully logged out", "success");
+    showNotification("Successfully logged out", "success");
+    
+    // Clear any existing guest data and create a fresh guest session
+    sessionStorage.removeItem("guestUser");
+    createGuest();
+    
     navigate("/");
   };
 
   const createGuest = () => {
-    const newGuest = {
+    // Check if we have a guest user in session storage
+    const existingGuest = sessionStorage.getItem("guestUser");
+    
+    if (existingGuest) {
+      try {
+        const parsedGuest = JSON.parse(existingGuest);
+        setGuestUser(parsedGuest);
+        return;
+      } catch (error) {
+        console.error("Error parsing existing guest:", error);
+        // Continue to create new guest if parsing fails
+      }
+    }
+
+    // Create a new guest if none exists or parsing failed
+    const newGuestUser = {
       name: "Guest",
-      id: `guest-${Date.now()}`,
+      id: Math.random().toString(36).substring(2, 9),
       savedJobs: [],
     };
 
-    setGuestUser(newGuest);
-
-    sessionStorage.setItem("guestUser", JSON.stringify(newGuest));
-
-    return newGuest;
+    setGuestUser(newGuestUser);
+    sessionStorage.setItem("guestUser", JSON.stringify(newGuestUser));
   };
 
   const updateGuestSavedJobs = (jobId: string) => {

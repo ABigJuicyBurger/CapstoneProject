@@ -72,6 +72,12 @@ function Header({
         <>
           <Link
             className="homePage__header__register-cta"
+            to={"/profile"}
+          >
+            Profile
+          </Link>
+          <Link
+            className="homePage__header__register-cta"
             onClick={handleLogout}
             to={"/"}
           >
