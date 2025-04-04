@@ -500,3 +500,6 @@ April 02
     \_ localstorage to persist auth between sessions
     \_ let app use usenavigate by moving browser router above
     \_ fixed types for API connection
+
+    \_ vibe code....
+    \_ now there is a user registration adn login (using bcrypt and JWT), some tests to check if form data is valid for registering, UI to show a profile pag as well as save jobs and update bio
