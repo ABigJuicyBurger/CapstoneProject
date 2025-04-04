@@ -17,11 +17,12 @@ router.post("/register", usersController.register);
 
 /* Get meta info of user (Protected) */
 router.get("/meta", authenticateToken, usersController.getMetaInfo);
+router.put("/meta", authenticateToken, usersController.updateMetaInfo);
 
 /* Protected endpoint to get user details */
 router.get("/userProfile", authenticateToken, usersController.getUser);
 
-/* Get and update user meta information (Protected) */
+/* Get and update user meta information (Protected) - Deprecated, use /meta instead */
 router.get("/user/meta", authenticateToken, usersController.getMetaInfo);
 router.put("/user/meta", authenticateToken, usersController.updateMetaInfo);
 

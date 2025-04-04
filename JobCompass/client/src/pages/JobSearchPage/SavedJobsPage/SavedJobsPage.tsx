@@ -34,7 +34,7 @@ function SavedJobsPage({
             return;
           }
           
-          const response = await axios.get(`${API_URL}/meta`, {
+          const response = await axios.get(`${API_URL}/user/meta`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -102,7 +102,7 @@ function SavedJobsPage({
         }
         
         // Get current saved jobs
-        const response = await axios.get(`${API_URL}/meta`, {
+        const response = await axios.get(`${API_URL}/user/meta`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -117,7 +117,7 @@ function SavedJobsPage({
             const updatedSavedJobs = currentSavedJobs.filter((id: string) => id !== jobId);
             
             // Update the server
-            await axios.put(`${API_URL}/meta`, {
+            await axios.put(`${API_URL}/user/meta`, {
               savedjobs: JSON.stringify(updatedSavedJobs)
             }, {
               headers: {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import './ProfilePage.scss';
 
@@ -18,10 +18,13 @@ type UserMetaData = {
 
 function ProfilePage({ user, loggedIn }: ProfilePageProps) {
   const [userMeta, setUserMeta] = useState<UserMetaData | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [editableBio, setEditableBio] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [updateMessage, setUpdateMessage] = useState('');
+  const [updateError, setUpdateError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
   const API_URL = 'http://localhost:8080';
 
@@ -38,7 +41,7 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
         setLoading(true);
         const token = localStorage.getItem('token');
         
-        const response = await axios.get(`${API_URL}/meta`, {
+        const response = await axios.get(`${API_URL}/user/meta`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -59,9 +62,11 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
 
   const handleSaveBio = async () => {
     try {
+      setIsSaving(true);
       const token = localStorage.getItem('token');
       
-      await axios.put(`${API_URL}/meta`, {
+      // Only send the bio field to update, to avoid touching other fields like savedjobs
+      const response = await axios.put(`${API_URL}/user/meta`, {
         bio: editableBio
       }, {
         headers: {
@@ -70,29 +75,89 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
         }
       });
       
-      // Update local state
-      if (userMeta) {
-        setUserMeta({
-          ...userMeta,
-          bio: editableBio
-        });
+      // Update the local state with the response data to ensure consistency
+      if (response.data) {
+        setUserMeta(response.data);
       }
       
-      setIsEditing(false);
+      setEditMode(false);
+      setUpdateMessage('Bio updated successfully!');
+      
+      // Clear the success message after a few seconds
+      setTimeout(() => {
+        setUpdateMessage('');
+      }, 3000);
     } catch (error) {
       console.error('Error updating bio:', error);
-      setError('Failed to update profile');
+      setUpdateError('Failed to update bio. Please try again.');
+      
+      // Clear the error message after a few seconds
+      setTimeout(() => {
+        setUpdateError('');
+      }, 5000);
+    } finally {
+      setIsSaving(false);
     }
   };
 
+  // More robust function for counting saved jobs
   const renderJobCount = () => {
-    if (!userMeta || !userMeta.savedjobs) return 0;
-    
     try {
-      const savedJobs = JSON.parse(userMeta.savedjobs);
+      if (!userMeta) return 0;
+      if (!userMeta.savedjobs) return 0;
+      
+      let savedJobs;
+      try {
+        const savedJobsValue = userMeta.savedjobs.trim ? userMeta.savedjobs.trim() : '';
+        savedJobs = savedJobsValue === '' ? [] : JSON.parse(savedJobsValue);
+      } catch (parseError) {
+        console.error('Error parsing saved jobs:', parseError);
+        savedJobs = [];
+      }
+      
       return Array.isArray(savedJobs) ? savedJobs.length : 0;
     } catch (error) {
+      console.error('Unexpected error in renderJobCount:', error);
       return 0;
+    }
+  };
+
+  const renderSavedJobsSection = () => {
+    try {
+      const jobCount = renderJobCount();
+      
+      return (
+        <div className="profile-section">
+          <h2 className="profile-section__title">Saved Jobs</h2>
+          {jobCount > 0 ? (
+            <div className="profile-saved-jobs">
+              <Link to={`/user/${user.userId}/savedJobs`} className="profile-saved-jobs__link">
+                View all {jobCount} saved jobs
+              </Link>
+            </div>
+          ) : (
+            <div className="profile-saved-jobs profile-saved-jobs--empty">
+              <p>You haven't saved any jobs yet.</p>
+              <Link to="/jobs" className="profile-saved-jobs__browse-link">
+                Browse Jobs
+              </Link>
+            </div>
+          )}
+        </div>
+      );
+    } catch (error) {
+      console.error('Error rendering saved jobs section:', error);
+      return (
+        <div className="profile-section">
+          <h2 className="profile-section__title">Saved Jobs</h2>
+          <div className="profile-saved-jobs">
+            <p>Could not load saved jobs. Please refresh the page.</p>
+            <Link to="/jobs" className="profile-saved-jobs__browse-link">
+              Browse Jobs
+            </Link>
+          </div>
+        </div>
+      );
     }
   };
 
@@ -115,7 +180,7 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
         <div className="profile-header">
           <div className="profile-avatar">
             <img 
-              src={user.avatar || "/assets/default-avatar.png"} 
+              src={user.avatar || `${API_URL}/default-avatar.png`} 
               alt={`${user.userName}'s avatar`} 
               className="profile-avatar__image"
               onError={(e) => {
@@ -146,34 +211,55 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
               <h2 className="profile-section__title">About</h2>
               <button 
                 className="profile-section__edit-button"
-                onClick={() => setIsEditing(!isEditing)}
+                onClick={() => setEditMode(!editMode)}
               >
-                {isEditing ? 'Cancel' : 'Edit'}
+                {editMode ? 'Cancel' : 'Edit'}
               </button>
             </div>
             
-            {isEditing ? (
-              <div className="profile-bio profile-bio--editing">
+            {updateMessage && (
+              <div className="profile-bio__success">{updateMessage}</div>
+            )}
+            
+            {updateError && (
+              <div className="profile-bio__error">{updateError}</div>
+            )}
+            
+            {editMode ? (
+              <div className="profile-bio profile-bio--edit">
                 <textarea
-                  className="profile-bio__textarea"
+                  className="profile-bio__input"
                   value={editableBio}
                   onChange={(e) => setEditableBio(e.target.value)}
-                  placeholder="Write a short bio about yourself, your skills, and what kind of job you're looking for..."
-                  rows={5}
-                ></textarea>
-                <button 
-                  className="profile-bio__save-button"
-                  onClick={handleSaveBio}
-                >
-                  Save
-                </button>
+                  placeholder="Tell us about yourself..."
+                />
+                <div className="profile-bio__actions">
+                  <button
+                    className="profile-bio__button profile-bio__button--cancel"
+                    onClick={() => {
+                      setEditMode(false);
+                      setEditableBio(userMeta?.bio || '');
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="profile-bio__button profile-bio__button--save"
+                    onClick={handleSaveBio}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? 'Saving...' : 'Save'}
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="profile-bio">
-                <p>{userMeta?.bio || 'No bio added yet. Click Edit to add one.'}</p>
+                {userMeta?.bio || 'No bio yet. Click Edit to add one.'}
               </div>
             )}
           </div>
+          
+          {renderSavedJobsSection()}
           
           <div className="profile-section">
             <h2 className="profile-section__title">Resume</h2>
@@ -187,22 +273,6 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
               <div className="profile-resume profile-resume--empty">
                 <p>No resume uploaded yet.</p>
                 <button className="profile-resume__upload-button">Upload Resume</button>
-              </div>
-            )}
-          </div>
-          
-          <div className="profile-section">
-            <h2 className="profile-section__title">Saved Jobs</h2>
-            {renderJobCount() > 0 ? (
-              <div className="profile-saved-jobs">
-                <a href={`/user/${user.userId}/savedJobs`} className="profile-saved-jobs__link">
-                  View all saved jobs
-                </a>
-              </div>
-            ) : (
-              <div className="profile-saved-jobs profile-saved-jobs--empty">
-                <p>You haven't saved any jobs yet.</p>
-                <a href="/jobs" className="profile-saved-jobs__browse-link">Browse Jobs</a>
               </div>
             )}
           </div>

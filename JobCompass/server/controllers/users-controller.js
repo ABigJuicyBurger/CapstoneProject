@@ -134,7 +134,7 @@ const getMetaInfo = async (req, res) => {
 
 const updateMetaInfo = async (req, res) => {
   try {
-    const { bio, resume } = req.body;
+    const { bio, resume, savedjobs } = req.body;
     const userId = req.user.userId;
 
     // Validate user exists
@@ -150,6 +150,23 @@ const updateMetaInfo = async (req, res) => {
     const updates = {};
     if (bio !== undefined) updates.bio = bio;
     if (resume !== undefined) updates.resume = resume;
+    if (savedjobs !== undefined) {
+      // Validate that savedjobs is a valid JSON array before storing
+      try {
+        // If it's already a string, use it directly
+        if (typeof savedjobs === 'string') {
+          // Validate it's parseable
+          JSON.parse(savedjobs);
+          updates.savedjobs = savedjobs;
+        } else {
+          // If it's an object, stringify it
+          updates.savedjobs = JSON.stringify(savedjobs);
+        }
+      } catch (jsonError) {
+        console.error("Invalid savedjobs JSON format:", jsonError);
+        return res.status(400).json({ message: "Invalid saved jobs format" });
+      }
+    }
 
     // Only update if there are changes
     if (Object.keys(updates).length === 0) {
