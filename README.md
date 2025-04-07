@@ -2,7 +2,7 @@
 
 JobCompass
 ![](JobCompass.png)
-![](http://jobcompass.duckdns.org/)
+http://jobcompass.duckdns.org/
 
 ## Overview
 
