@@ -7,6 +7,7 @@ type HeaderMobilityTypes = {
   guestUser: { name: string; id: string; savedJobs: any[] } | null;
   loggedIn: boolean;
   handleLogout: () => void;
+  user: any;
 };
 
 function Header({
@@ -16,6 +17,7 @@ function Header({
   guestUser,
   loggedIn,
   handleLogout,
+  user,
 }: HeaderMobilityTypes) {
   const location = useLocation();
   const isHomePage = location.pathname === "/"; // are you home?
@@ -25,6 +27,12 @@ function Header({
   };
 
   useEffect(() => {}, [location]);
+
+  console.log(user);
+
+  const savedJobsPath = loggedIn
+    ? `/user/${user.userName}/savedJobs`
+    : `/guest/${guestUser?.id || ""}/savedJobs`;
 
   return (
     <header
@@ -50,10 +58,7 @@ function Header({
           {mobileMapMode ? "View Jobs" : "View Map"}
         </button>
       )}
-      <Link
-        className="homePage__header__register-cta "
-        to={guestUser ? `guest/savedJobs` : `user/:id/savedJobs`}
-      >
+      <Link className="homePage__header__register-cta " to={savedJobsPath}>
         Saved Jobs
       </Link>
       {!loggedIn ? (
@@ -82,5 +87,4 @@ function Header({
     </header>
   );
 }
-
 export default Header;

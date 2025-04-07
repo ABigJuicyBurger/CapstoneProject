@@ -508,3 +508,6 @@ April 02
 
   Apr 7 2025
   \_ start a location search bar
+  \_ before that, fixed proper url naming and job saving bug in individual card
+
+  - next, update header

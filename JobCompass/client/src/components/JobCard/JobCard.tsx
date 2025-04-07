@@ -52,8 +52,6 @@ function JobCard({
     fetchJob();
   }, []);
 
-  // TODO: reload automatically on new job (if user types different id)
-
   useEffect(() => {
     fetchJob();
   }, [id]);
@@ -61,112 +59,121 @@ function JobCard({
   // Check if the user has saved this job when component loads
   useEffect(() => {
     const checkSavedJobs = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) return;
-      
+
       try {
         const response = await axios.get(`${backendURL}/user/meta`, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
-        
+
         if (response.data && response.data.savedjobs) {
           let currentSavedJobs = [];
-          
+
           // Parse current saved jobs, handling both string and array formats
           try {
-            if (typeof response.data.savedjobs === 'string') {
+            if (typeof response.data.savedjobs === "string") {
               // Handle string format (from database)
-              const savedJobsData = response.data.savedjobs.trim() === '' ? '[]' : response.data.savedjobs;
+              const savedJobsData =
+                response.data.savedjobs.trim() === ""
+                  ? "[]"
+                  : response.data.savedjobs;
               currentSavedJobs = JSON.parse(savedJobsData);
             } else if (Array.isArray(response.data.savedjobs)) {
               // Handle array format (already parsed by server)
               currentSavedJobs = response.data.savedjobs;
             }
-            
+
             if (!Array.isArray(currentSavedJobs)) currentSavedJobs = [];
           } catch (e) {
-            console.error('Error parsing saved jobs:', e);
+            console.error("Error parsing saved jobs:", e);
           }
-          
+
           setUserSavedJobs(currentSavedJobs);
         }
       } catch (error) {
-        console.error('Error fetching saved jobs:', error);
+        console.error("Error fetching saved jobs:", error);
       }
     };
-    
+
     checkSavedJobs();
   }, []);
 
-  // TODO: style to save job appropriately and have it link to user faves
   const saveJob = async () => {
     if (!job) return;
 
     // Check if we have a token (logged-in user)
-    const token = localStorage.getItem('token');
-    
+    const token = localStorage.getItem("token");
+
     if (token) {
       // Logged-in user flow
       try {
         console.log("Saving job for logged-in user:", job.id);
-        
+
         // Get current saved jobs
         const response = await axios.get(`${backendURL}/user/meta`, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
-        
+
         console.log("User meta response:", response.data);
-        
+
         if (response.data && response.data.savedjobs) {
           let currentSavedJobs = [];
-          
+
           // Parse current saved jobs, handling both string and array formats
           try {
-            if (typeof response.data.savedjobs === 'string') {
+            if (typeof response.data.savedjobs === "string") {
               // Handle string format (from database)
-              const savedJobsData = response.data.savedjobs.trim() === '' ? '[]' : response.data.savedjobs;
+              const savedJobsData =
+                response.data.savedjobs.trim() === ""
+                  ? "[]"
+                  : response.data.savedjobs;
               currentSavedJobs = JSON.parse(savedJobsData);
             } else if (Array.isArray(response.data.savedjobs)) {
               // Handle array format (already parsed by server)
               currentSavedJobs = response.data.savedjobs;
             }
-            
+
             if (!Array.isArray(currentSavedJobs)) currentSavedJobs = [];
           } catch (e) {
-            console.error('Error parsing saved jobs:', e);
+            console.error("Error parsing saved jobs:", e);
             currentSavedJobs = [];
           }
-          
+
           // Check if job is already saved
           if (currentSavedJobs.includes(job.id)) {
             setSaveMessage("Job already saved!");
           } else {
             // Add job ID to saved jobs
             const updatedSavedJobs = [...currentSavedJobs, job.id];
-            
+
             console.log("Updating server with saved jobs:", updatedSavedJobs);
-            const updateResponse = await axios.put(`${backendURL}/user/meta`, {
-              savedjobs: JSON.stringify(updatedSavedJobs)
-            }, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
+            const updateResponse = await axios.put(
+              `${backendURL}/user/meta`,
+              {
+                savedjobs: JSON.stringify(updatedSavedJobs),
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
               }
-            });
-            
+            );
+
             console.log("Server update response:", updateResponse.data);
-            
+
             // Update local state with the new saved jobs
             setUserSavedJobs(updatedSavedJobs);
             setSaveMessage("Job Saved!");
           }
         }
       } catch (error) {
-        console.error('Error saving job:', error);
+        console.error("Error saving job:", error);
         setSaveMessage("Failed to save job");
       }
     } else if (guestUser && updateGuestUser) {
@@ -179,7 +186,7 @@ function JobCard({
         setSaveMessage("Job Saved!");
       }
     }
-    
+
     setTimeout(() => {
       setSaveMessage(null);
     }, 3000);
@@ -218,10 +225,13 @@ function JobCard({
             </section>
             <div className="jobCard__header__cta">
               <button onClick={saveJob}>
-                {localStorage.getItem('token') ? 
-                  (userSavedJobs.includes(job.id) ? "Job Saved" : "Save Job") : 
-                  (guestUser?.savedJobs.includes(job.id) ? "Job Saved" : "Save Job")
-                }
+                {localStorage.getItem("token")
+                  ? userSavedJobs.includes(job.id)
+                    ? "Job Saved"
+                    : "Save Job"
+                  : guestUser?.savedJobs.includes(job.id)
+                  ? "Job Saved"
+                  : "Save Job"}
               </button>
 
               <button onClick={() => updateNoteVisibility?.()}>

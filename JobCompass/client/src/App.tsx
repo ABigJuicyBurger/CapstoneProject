@@ -45,27 +45,30 @@ function App(): JSX.Element {
   const [notification, setNotification] = useState<{
     show: boolean;
     message: string;
-    type: 'success' | 'error' | 'info';
+    type: "success" | "error" | "info";
   }>({
     show: false,
     message: "",
-    type: "success"
+    type: "success",
   });
 
   // Show notification helper function
-  const showNotification = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+  const showNotification = (
+    message: string,
+    type: "success" | "error" | "info" = "success"
+  ) => {
     setNotification({
       show: true,
       message,
-      type
+      type,
     });
   };
 
   // Hide notification helper function
   const hideNotification = () => {
-    setNotification(prev => ({
+    setNotification((prev) => ({
       ...prev,
-      show: false
+      show: false,
     }));
   };
 
@@ -77,14 +80,11 @@ function App(): JSX.Element {
 
     const getUserData = async () => {
       try {
-        const response = await axios.get(
-          `${backendURL}/user/userProfile`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${backendURL}/user/userProfile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setLoggedIn(true);
         setUser(response.data.user);
       } catch (error: any) {
@@ -113,14 +113,11 @@ function App(): JSX.Element {
 
       if (response.data.token) {
         // get user data
-        const userResponse = await axios.get(
-          `${backendURL}/user/userProfile`,
-          {
-            headers: {
-              Authorization: `Bearer ${response.data.token}`,
-            },
-          }
-        );
+        const userResponse = await axios.get(`${backendURL}/user/userProfile`, {
+          headers: {
+            Authorization: `Bearer ${response.data.token}`,
+          },
+        });
 
         setLoggedIn(true);
         setUser(userResponse.data.user);
@@ -138,18 +135,18 @@ function App(): JSX.Element {
     setLoggedIn(false);
     setUser({});
     showNotification("Successfully logged out", "success");
-    
+
     // Clear any existing guest data and create a fresh guest session
     sessionStorage.removeItem("guestUser");
     createGuest();
-    
+
     navigate("/");
   };
 
   const createGuest = () => {
     // Check if we have a guest user in session storage
     const existingGuest = sessionStorage.getItem("guestUser");
-    
+
     if (existingGuest) {
       try {
         const parsedGuest = JSON.parse(existingGuest);
@@ -234,6 +231,7 @@ function App(): JSX.Element {
         guestUser={guestUser}
         loggedIn={loggedIn}
         handleLogout={handleLogout}
+        user={user}
       />
 
       {/* Notification component */}
@@ -309,7 +307,10 @@ function App(): JSX.Element {
             />
           }
         />
-        <Route path="/register" element={<RegisterPage showNotification={showNotification} />} />
+        <Route
+          path="/register"
+          element={<RegisterPage showNotification={showNotification} />}
+        />
         <Route
           path={`/:userType/:id?/savedJobs`}
           element={<SavedJobsPage jobs={jobs} guestUser={guestUser} />}
