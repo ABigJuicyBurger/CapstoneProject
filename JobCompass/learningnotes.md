@@ -503,3 +503,8 @@ April 02
 
     \_ vibe code....
     \_ now there is a user registration adn login (using bcrypt and JWT), some tests to check if form data is valid for registering, UI to show a profile page as well as save jobs and update bio
+
+  Done!
+
+  Apr 7 2025
+  \_ start a location search bar

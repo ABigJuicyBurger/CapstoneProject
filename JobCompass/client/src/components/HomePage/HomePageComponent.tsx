@@ -10,7 +10,7 @@ function HomePage(): JSX.Element {
         <h1 className="heroPage__title">JobCompass</h1>
         <h2 className="heroPage__text">Let's Help You Find Your Next Job</h2>
         <Link className="heroPage__guest-cta" to={"/jobs"}>
-          Try Our Page Out!
+          Guest Mode
         </Link>
       </main>
       <footer className="homePage__footer">
