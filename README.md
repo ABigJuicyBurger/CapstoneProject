@@ -1,7 +1,7 @@
 # Project Title
 
-JobCompass
 ![](JobCompass.png)
+<br>
 http://jobcompass.duckdns.org/
 
 ## Overview
