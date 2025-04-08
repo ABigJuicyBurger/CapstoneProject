@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import ProfileBar from "../ProfileBar/ProfileBar.tsx";
 type HeaderMobilityTypes = {
   mobileState: boolean;
   mobileMapMode: boolean;
@@ -19,6 +20,8 @@ function Header({
   handleLogout,
   user,
 }: HeaderMobilityTypes) {
+  const [headerToggle, setHeaderToggle] = useState<boolean>(false);
+
   const location = useLocation();
   const isHomePage = location.pathname === "/"; // are you home?
 
@@ -61,26 +64,15 @@ function Header({
       <Link className="homePage__header__register-cta " to={savedJobsPath}>
         Saved Jobs
       </Link>
-      {!loggedIn ? (
+      {loggedIn ? (
+        <ProfileBar user={user} handleLogout={handleLogout} />
+      ) : (
         <>
           <Link className="homePage__header__signIn-cta" to={"/signIn"}>
             Sign In
           </Link>
           <Link className="homePage__header__register-cta" to={"/register"}>
             Register
-          </Link>
-        </>
-      ) : (
-        <>
-          <Link className="homePage__header__register-cta" to={"/profile"}>
-            Profile
-          </Link>
-          <Link
-            className="homePage__header__register-cta"
-            onClick={handleLogout}
-            to={"/"}
-          >
-            Logout
           </Link>
         </>
       )}
