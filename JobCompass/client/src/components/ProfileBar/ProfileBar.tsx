@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import "./ProfileBar.scss";
 
 type ProfileBarType = {
   user: any;
@@ -12,27 +13,46 @@ const ProfileBar = ({ user, handleLogout }: ProfileBarType) => {
     setIsOpen(!isOpen);
   };
 
+  // Get the first letter of the username for the avatar
+  const avatarLetter = user?.userName ? user.userName.charAt(0).toUpperCase() : "U";
+
   return (
-    <nav className="homePage__header-cta">
-      <div onClick={toggleBar}>
-        <img src="null" alt="openTaskbar" />
-        <img src="null" alt="Avatar" />
-      </div>
+    <div className="profile-bar">
+      <button className="profile-bar__button" onClick={toggleBar}>
+        <div className="profile-bar__avatar">{avatarLetter}</div>
+        <span className="profile-bar__name">{user?.userName}</span>
+      </button>
+
       {isOpen && (
-        <div className="profile-dropdown">
-          <Link className="homePage__header__register-cta" to={"/profile"}>
-            {user.userName}
-          </Link>
-          <Link
-            className="homePage__header__register-cta"
-            onClick={handleLogout}
-            to={"/"}
-          >
-            Logout
-          </Link>
+        <div className="profile-bar__dropdown">
+          <div className="profile-bar__dropdown-content">
+            <Link 
+              to={`/user/${user.userName}/profile`} 
+              className="profile-bar__link"
+              onClick={() => setIsOpen(false)}
+            >
+              Profile
+            </Link>
+            <Link 
+              to={`/user/${user.userName}/savedJobs`} 
+              className="profile-bar__link"
+              onClick={() => setIsOpen(false)}
+            >
+              Saved Jobs
+            </Link>
+            <button 
+              className="profile-bar__logout-button" 
+              onClick={() => {
+                handleLogout();
+                setIsOpen(false);
+              }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
       )}
-    </nav>
+    </div>
   );
 };
 

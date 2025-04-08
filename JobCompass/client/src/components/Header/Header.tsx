@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ProfileBar from "../ProfileBar/ProfileBar.tsx";
+import "./Header.scss";
+
 type HeaderMobilityTypes = {
   mobileState: boolean;
   mobileMapMode: boolean;
@@ -31,8 +33,6 @@ function Header({
 
   useEffect(() => {}, [location]);
 
-  console.log(user);
-
   const savedJobsPath = loggedIn
     ? `/user/${user.userName}/savedJobs`
     : `/guest/${guestUser?.id || ""}/savedJobs`;
@@ -48,11 +48,12 @@ function Header({
           <img
             className="homePage__header__logo__image"
             src="/assets/Logo/compassfavicon.png"
-            alt=""
+            alt="JobCompass Logo"
           />
           <h1>JobCompass</h1>
         </Link>
       </div>
+      
       {mobileState && !isHomePage && (
         <button
           onClick={() => toggleMapList()}
@@ -61,9 +62,14 @@ function Header({
           {mobileMapMode ? "View Jobs" : "View Map"}
         </button>
       )}
-      <Link className="homePage__header__register-cta " to={savedJobsPath}>
-        Saved Jobs
-      </Link>
+      
+      {/* Only show Saved Jobs in header for non-logged in users */}
+      {!loggedIn && (
+        <Link className="homePage__header__register-cta" to={savedJobsPath}>
+          Saved Jobs
+        </Link>
+      )}
+      
       {loggedIn ? (
         <ProfileBar user={user} handleLogout={handleLogout} />
       ) : (
