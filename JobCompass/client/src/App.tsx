@@ -122,7 +122,7 @@ function App(): JSX.Element {
         setLoggedIn(true);
         setUser(userResponse.data.user);
         setError("");
-        navigate("/profile");
+        navigate(`/user/${userResponse.data.user.username}/profile`);
       }
     } catch (error: Error | any) {
       console.error(error.response.data.message);
@@ -316,7 +316,8 @@ function App(): JSX.Element {
           element={<SavedJobsPage jobs={jobs} guestUser={guestUser} />}
         />
         <Route
-          path="/profile"
+          // path="/profile"
+          path="/user/:username/profile"
           element={<ProfilePage user={user} loggedIn={loggedIn} />}
         />
       </Routes>

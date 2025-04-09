@@ -507,7 +507,8 @@ April 02
   Done!
 
   Apr 7 2025
-  \_ start a location search bar
+  \_ start a location search bar LATER
   \_ before that, fixed proper url naming and job saving bug in individual card
 
   - next, update header
+    \_ logic to show a taskbar, separated to its own component

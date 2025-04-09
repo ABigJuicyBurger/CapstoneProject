@@ -53,23 +53,27 @@ function Header({
           <h1>JobCompass</h1>
         </Link>
       </div>
-      
+
       {mobileState && !isHomePage && (
         <button
           onClick={() => toggleMapList()}
           className="homePage__header--mobile-toggle"
         >
-          {mobileMapMode ? "View Jobs" : "View Map"}
+          {mobileMapMode ? (
+            <img src="/assets/Icons/listIcon.png" alt="List Icon"></img>
+          ) : (
+            <img src="/assets/Icons/icon.png" alt="Map Icon"></img>
+          )}
         </button>
       )}
-      
+
       {/* Only show Saved Jobs in header for non-logged in users */}
       {!loggedIn && (
         <Link className="homePage__header__register-cta" to={savedJobsPath}>
           Saved Jobs
         </Link>
       )}
-      
+
       {loggedIn ? (
         <ProfileBar user={user} handleLogout={handleLogout} />
       ) : (
