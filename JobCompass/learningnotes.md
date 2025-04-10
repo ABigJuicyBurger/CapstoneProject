@@ -503,3 +503,26 @@ April 02
 
     \_ vibe code....
     \_ now there is a user registration adn login (using bcrypt and JWT), some tests to check if form data is valid for registering, UI to show a profile page as well as save jobs and update bio
+
+  Done!
+
+  Apr 7 2025
+  \_ start a location search bar LATER
+  \_ before that, fixed proper url naming and job saving bug in individual card
+
+  - next, update header
+    \_ logic to show a taskbar, separated to its own component
+    \_ cleaned up header button and prover navigation
+
+  \_ now focus on having real jobs through Active Jobs DB API
+
+  - Free tier but limited API Calls
+  - which means a simple job fetching script
+    \_ use JobsDB API
+
+    - (AI helped provide the right API call as I had a space in my API env and had the dynaic route before causing error in api call)
+    - got the data, have a simple caching system so i dont use up all api calls
+
+    okay
+    now i need to cache locally (on myDB) as well as the EC2 server.
+    \_ with local, start with knex

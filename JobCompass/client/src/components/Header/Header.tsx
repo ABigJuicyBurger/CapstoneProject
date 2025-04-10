@@ -1,5 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import ProfileBar from "../ProfileBar/ProfileBar.tsx";
+import "./Header.scss";
+
 type HeaderMobilityTypes = {
   mobileState: boolean;
   mobileMapMode: boolean;
@@ -7,6 +10,7 @@ type HeaderMobilityTypes = {
   guestUser: { name: string; id: string; savedJobs: any[] } | null;
   loggedIn: boolean;
   handleLogout: () => void;
+  user: any;
 };
 
 function Header({
@@ -16,6 +20,7 @@ function Header({
   guestUser,
   loggedIn,
   handleLogout,
+  user,
 }: HeaderMobilityTypes) {
   const location = useLocation();
   const isHomePage = location.pathname === "/"; // are you home?
@@ -25,6 +30,10 @@ function Header({
   };
 
   useEffect(() => {}, [location]);
+
+  const savedJobsPath = loggedIn
+    ? `/user/${user.userName}/savedJobs`
+    : `/guest/${guestUser?.id || ""}/savedJobs`;
 
   return (
     <header
@@ -37,50 +46,39 @@ function Header({
           <img
             className="homePage__header__logo__image"
             src="/assets/Logo/compassfavicon.png"
-            alt=""
+            alt="JobCompass Logo"
           />
           <h1>JobCompass</h1>
         </Link>
       </div>
+
       {mobileState && !isHomePage && (
         <button
           onClick={() => toggleMapList()}
           className="homePage__header--mobile-toggle"
         >
-          {mobileMapMode ? "View Jobs" : "View Map"}
+          {mobileMapMode ? (
+            <img src="/assets/Icons/listIcon.png" alt="List Icon"></img>
+          ) : (
+            <img src="/assets/Icons/icon.png" alt="Map Icon"></img>
+          )}
         </button>
       )}
-      <Link
-        className="homePage__header__register-cta "
-        to={guestUser ? `guest/savedJobs` : `user/:id/savedJobs`}
-      >
-        Saved Jobs
-      </Link>
-      {!loggedIn ? (
-        <>
-          <Link className="homePage__header__signIn-cta" to={"/signIn"}>
-            Sign In
-          </Link>
-          <Link className="homePage__header__register-cta" to={"/register"}>
-            Register
-          </Link>
-        </>
-      ) : (
-        <>
-          <Link className="homePage__header__register-cta" to={"/profile"}>
-            Profile
-          </Link>
-          <Link
-            className="homePage__header__register-cta"
-            onClick={handleLogout}
-            to={"/"}
-          >
-            Logout
-          </Link>
-        </>
-      )}
+
+      {/* {Guest Saved Jobs} */}
+      {/* {!loggedIn && !mobileState && (
+        <Link className="homePage__header__register-cta" to={savedJobsPath}>
+          Saved Jobs
+        </Link>
+      )} */}
+
+      <ProfileBar
+        user={user}
+        handleLogout={handleLogout}
+        mobileState={mobileState}
+        loggedIn={loggedIn}
+      />
     </header>
   );
 }
-
 export default Header;

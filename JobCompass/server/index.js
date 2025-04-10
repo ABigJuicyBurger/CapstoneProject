@@ -1,4 +1,3 @@
-import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -6,11 +5,13 @@ import dotenv from "dotenv";
 import jobsRoutes from "./routes/jobsRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
-import authenticateToken from "./middleware/AuthToken.js";
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const { PORT, CORS_ORIGIN } = process.env;
-dotenv.config();
+
+console.log("Environment variables loaded:", { PORT, CORS_ORIGIN });
 
 app.use(
   cors({
@@ -33,16 +34,9 @@ app.get("/", (req, res) => {
   res.send("Welcome!");
 });
 
-app.get("/debug", (req, res) => {
-  res.json({
-    message: "Server is running",
-    env: {
-      hasJwtSecret: !!process.env.JWT_SECRET_KEY,
-      port: process.env.PORT,
-    },
-  });
-});
+// Use a default port if not specified in .env
+const port = PORT || 8080;
 
-app.listen(PORT, () => {
-  console.log(`Now runnin at http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });

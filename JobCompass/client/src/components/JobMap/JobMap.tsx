@@ -18,18 +18,22 @@ import MapJobCardNoteType from "../../../types/MapJobCardType.ts";
 import { formatSalary } from "./formatSalary.tsx";
 import JobCardType from "../../../types/JobCardType.ts";
 
-const CALGARY_CENTER = {
-  lat: 51.0447,
-  lng: -114.0719,
+// Updated to center of Canada
+const CANADA_CENTER = {
+  lat: 56.1304,
+  lng: -106.3468,
 };
-const CALGARY_BOUNDS = {
-  north: 51.3, // Northern boundary latitude
-  south: 50.75, // Southern boundary latitude
-  west: -114.5, // Western boundary longitude
-  east: -113.65, // Eastern boundary longitude
+
+// Extended to cover all of Canada
+const CANADA_BOUNDS = {
+  north: 83.0, // Northern boundary latitude (covers Arctic islands)
+  south: 41.7, // Southern boundary latitude (covers Windsor, ON)
+  west: -141.0, // Western boundary longitude (covers Yukon)
+  east: -52.6, // Eastern boundary longitude (covers Newfoundland)
 };
+
 const RESTRICTION = {
-  latLngBounds: CALGARY_BOUNDS,
+  latLngBounds: CANADA_BOUNDS,
   strictBounds: false,
 };
 
@@ -43,7 +47,7 @@ const JobMap = ({
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
   // TODO: Show salary on hover (originally show title and company on load)
   const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
-  const [currentZoom, setCurrentZoom] = useState<number>(10.8); // Default zoom level
+  const [currentZoom, setCurrentZoom] = useState<number>(4); // Lower default zoom level for all of Canada
 
   const apiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -110,9 +114,9 @@ const JobMap = ({
           <APIProvider apiKey={apiKey}>
             <Map
               // style={{ width: "95vw", height: "100vh" }}
-              defaultCenter={CALGARY_CENTER}
+              defaultCenter={CANADA_CENTER}
               mapId={`6ca41446c199331d`}
-              defaultZoom={10.8}
+              defaultZoom={4}
               // remove zoom in out
               disableDefaultUI={true}
               // remove satellide mode
@@ -125,9 +129,9 @@ const JobMap = ({
               streetViewControl={false}
               draggableCursor={"default"}
               fullscreenControl={false}
-              //prevent user from zooming into other cities
+              //prevent user from zooming outside Canada
               restriction={RESTRICTION}
-              minZoom={8}
+              minZoom={3}
               maxZoom={17}
               onZoomChanged={onZoomChanged}
             >

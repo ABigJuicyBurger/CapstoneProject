@@ -1,6 +1,7 @@
 import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
+import jobApiService from "../services/jobApiService.js";
 
 const getJobs = async (_req, res) => {
   // always need async here
@@ -29,4 +30,18 @@ const singleJob = async (req, res) => {
   }
 };
 
-export { getJobs, singleJob };
+const getJobsfromAPI = async (req, res) => {
+  try {
+    // Check if location is in route params or query params
+    const location = req.params.location || req.query.location || "Calgary"; // Default to Calgary if no location provided
+
+    const jobs = await jobApiService.fetchJobsfromAPI(location);
+
+    res.json(jobs);
+  } catch (error) {
+    console.error("Error in getJobsfromAPI controller:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export { getJobs, singleJob, getJobsfromAPI };
