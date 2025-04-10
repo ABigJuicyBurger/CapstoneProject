@@ -512,3 +512,9 @@ April 02
 
   - next, update header
     \_ logic to show a taskbar, separated to its own component
+    \_ cleaned up header button and prover navigation
+
+  \_ now focus on having real jobs through Active Jobs DB API
+
+  - Free tier but limited API Calls
+  - which means a simple job fetching script

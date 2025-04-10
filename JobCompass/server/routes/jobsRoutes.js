@@ -12,5 +12,6 @@ const knex = initKnex(configuration);
 
 router.get("/", jobsController.getJobs);
 router.get("/:id", jobsController.singleJob);
+router.get("/api-jobs", jobsController.getJobsfromAPI);
 
 export default router;

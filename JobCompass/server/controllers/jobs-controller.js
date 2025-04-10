@@ -1,6 +1,7 @@
 import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
+import jobApiService from "../services/jobApiService.js";
 
 const getJobs = async (_req, res) => {
   // always need async here
@@ -29,4 +30,13 @@ const singleJob = async (req, res) => {
   }
 };
 
-export { getJobs, singleJob };
+const getJobsfromAPI = async (_req, res) => {
+  try {
+    const jobs = await jobApiService.fetchJobsfromAPI();
+    res.json(jobs);
+  } catch (error) {
+    res.status(500).json({ error: error.messagee });
+  }
+};
+
+export { getJobs, singleJob, getJobsfromAPI };
