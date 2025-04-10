@@ -519,5 +519,10 @@ April 02
   - Free tier but limited API Calls
   - which means a simple job fetching script
     \_ use JobsDB API
+
     - (AI helped provide the right API call as I had a space in my API env and had the dynaic route before causing error in api call)
     - got the data, have a simple caching system so i dont use up all api calls
+
+    okay
+    now i need to cache locally (on myDB) as well as the EC2 server.
+    \_ with local, start with knex

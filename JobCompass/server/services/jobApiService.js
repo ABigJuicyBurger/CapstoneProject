@@ -70,6 +70,8 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
       return jobsCache[location].data;
     }
 
+    // TODO: check if there is cached data in the database for this location
+
     const options = {
       method: "GET",
       url: "https://active-jobs-db.p.rapidapi.com/active-ats-7d",
