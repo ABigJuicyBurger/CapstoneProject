@@ -22,8 +22,6 @@ function Header({
   handleLogout,
   user,
 }: HeaderMobilityTypes) {
-  const [headerToggle, setHeaderToggle] = useState<boolean>(false);
-
   const location = useLocation();
   const isHomePage = location.pathname === "/"; // are you home?
 
@@ -67,25 +65,19 @@ function Header({
         </button>
       )}
 
-      {/* Only show Saved Jobs in header for non-logged in users */}
-      {!loggedIn && (
+      {/* {Guest Saved Jobs} */}
+      {/* {!loggedIn && !mobileState && (
         <Link className="homePage__header__register-cta" to={savedJobsPath}>
           Saved Jobs
         </Link>
-      )}
+      )} */}
 
-      {loggedIn ? (
-        <ProfileBar user={user} handleLogout={handleLogout} />
-      ) : (
-        <>
-          <Link className="homePage__header__signIn-cta" to={"/signIn"}>
-            Sign In
-          </Link>
-          <Link className="homePage__header__register-cta" to={"/register"}>
-            Register
-          </Link>
-        </>
-      )}
+      <ProfileBar
+        user={user}
+        handleLogout={handleLogout}
+        mobileState={mobileState}
+        loggedIn={loggedIn}
+      />
     </header>
   );
 }

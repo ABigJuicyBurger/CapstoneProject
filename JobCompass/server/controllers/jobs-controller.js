@@ -30,12 +30,17 @@ const singleJob = async (req, res) => {
   }
 };
 
-const getJobsfromAPI = async (_req, res) => {
+const getJobsfromAPI = async (req, res) => {
   try {
-    const jobs = await jobApiService.fetchJobsfromAPI();
+    // Check if location is in route params or query params
+    const location = req.params.location || req.query.location || "Calgary"; // Default to Calgary if no location provided
+
+    const jobs = await jobApiService.fetchJobsfromAPI(location);
+
     res.json(jobs);
   } catch (error) {
-    res.status(500).json({ error: error.messagee });
+    console.error("Error in getJobsfromAPI controller:", error.message);
+    res.status(500).json({ error: error.message });
   }
 };
 
