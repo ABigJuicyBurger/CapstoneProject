@@ -27,8 +27,27 @@ const transformJobData = (apiJob) => {
 
   // Get location data
   const location = apiJob.locations_derived?.[0] || "";
-  const latitude = apiJob.lats_derived?.[0] || 0;
-  const longitude = apiJob.lngs_derived?.[0] || 0;
+
+  // Create a consistent offset based on job ID to prevent markers from stacking
+  const getConsistentOffset = (id) => {
+    // Use the job ID to generate a consistent offset
+    const hash = id
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    // Generate offset between -0.005 and 0.005 degrees (roughly ±500 meters)
+    return ((hash % 100) - 50) / 10000;
+  };
+
+  // Get base coordinates
+  const baseLatitude = apiJob.lats_derived?.[0] || 0;
+  const baseLongitude = apiJob.lngs_derived?.[0] || 0;
+
+  // Add offset to create unique position
+  const latOffset = getConsistentOffset(apiJob.id);
+  const lngOffset = getConsistentOffset(apiJob.id + "1"); // Add '1' to create different offset
+
+  const latitude = baseLatitude + latOffset;
+  const longitude = baseLongitude + lngOffset;
 
   // Get salary information
   let salaryRange = "Not specified";
@@ -83,11 +102,22 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
   let cachedJobs = [];
   try {
     // Check if we have valid cached data for this location
-    // see if jobs exist in DB through Knex
+    // Query by search location, not by exact coordinates
     cachedJobs = await knex("api_jobs")
-      .where({ location })
+      .where({ location }) // This is the search term (e.g., "Calgary")
       .where("cached_at", ">", cacheDate)
       .orderBy("created_at", "desc");
+
+    // Log the number of cached jobs and their unique coordinates
+    if (cachedJobs.length > 0) {
+      const uniqueCoords = new Set();
+      cachedJobs.forEach((job) => {
+        uniqueCoords.add(`${job.latitude},${job.longitude}`);
+      });
+      console.log(
+        `Found ${cachedJobs.length} cached jobs with ${uniqueCoords.size} unique coordinates`
+      );
+    }
 
     if (cachedJobs.length > 0) {
       console.log(`Returning cached jobs data for ${location}`);
@@ -114,6 +144,29 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
     console.log("API response status:", response.status);
     console.log("API response data length:", response.data?.length || 0);
 
+    // Log unique coordinates from the API response
+    const apiUniqueCoords = new Set();
+    response.data.forEach((job) => {
+      const lat = job.lats_derived?.[0];
+      const lng = job.lngs_derived?.[0];
+      if (lat && lng) {
+        apiUniqueCoords.add(`${lat},${lng}`);
+      }
+    });
+    console.log(
+      `API returned ${apiUniqueCoords.size} unique coordinates out of ${response.data.length} jobs`
+    );
+
+    // Log the first few coordinates to check
+    console.log("Sample coordinates from API:");
+    let count = 0;
+    apiUniqueCoords.forEach((coord) => {
+      if (count < 5) {
+        console.log(coord);
+        count++;
+      }
+    });
+
     // Transform the data to match our schema
     const transformedJobs = response.data.map(transformJobData);
 
@@ -122,13 +175,14 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
     let errorCount = 0;
     for (const job of transformedJobs) {
       try {
+        // Check if this exact job ID exists
         const existingJob = await knex("api_jobs")
-          .where({ id: job.id, location })
+          .where({ id: job.id })
           .first();
 
         if (existingJob) {
           await knex("api_jobs")
-            .where({ id: job.id, location })
+            .where({ id: job.id })
             .update({
               ...job,
               cached_at: new Date()

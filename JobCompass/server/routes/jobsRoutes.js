@@ -8,6 +8,7 @@ const router = express.Router();
 router.get("/", jobsController.getJobs);
 router.get("/api-jobs", jobsController.getJobsfromAPI);
 router.get("/location/:location", jobsController.getJobsfromAPI);
+router.get("/api-jobs/:id", jobsController.getSingleApiJob);
 router.get("/:id", jobsController.singleJob);
 
 export default router;

@@ -45,4 +45,71 @@ const getJobsfromAPI = async (req, res) => {
   }
 };
 
-export { getJobs, singleJob, getJobsfromAPI };
+const getSingleApiJob = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(`Fetching API job with ID: ${id}`);
+
+    // Query the api_jobs table for the job with this ID
+    const job = await knex("api_jobs").where({ id }).first();
+
+    if (!job) {
+      return res
+        .status(404)
+        .json({ message: `API job with ID ${id} not found` });
+    }
+
+    // Parse the skills JSON string back to an array
+    if (job.skills && typeof job.skills === "string") {
+      try {
+        job.skills = JSON.parse(job.skills);
+      } catch (e) {
+        console.error(`Error parsing skills for job ${id}:`, e);
+        job.skills = [];
+      }
+    }
+
+    // Format the job description for better readability
+    if (job.description) {
+      // Format common section headers with line breaks
+      const formattedDescription = job.description
+        // Add line breaks before common section headers
+        .replace(
+          /([.!?])\s*(About|Company Description|Job Description|Qualifications|Requirements|Responsibilities|What you'll do|What you bring|Why Join|Additional Information)/g,
+          "$1\n\n$2"
+        )
+        // Add line breaks after colons in headers
+        .replace(/(:\s*)/g, "$1\n")
+        // Add line breaks before bullet points (often indicated by dashes or asterisks)
+        .replace(/([.!?])\s*(-|\*|\d+\.)/g, "$1\n\n$2")
+        // Add line breaks for paragraphs
+        .replace(/([.!?])\s+([A-Z])/g, "$1\n\n$2")
+        // Replace multiple consecutive line breaks with just two
+        .replace(/\n{3,}/g, "\n\n");
+
+      job.description = formattedDescription;
+    }
+
+    // Also format requirements field if it exists
+    if (job.requirements) {
+      const formattedRequirements = job.requirements
+        // Add line breaks before bullet points or numbered items
+        .replace(/([.!?])\s*(-|\*|\d+\.)/g, "$1\n\n$2")
+        // Add line breaks for paragraphs
+        .replace(/([.!?])\s+([A-Z])/g, "$1\n\n$2")
+        // Replace multiple consecutive line breaks with just two
+        .replace(/\n{3,}/g, "\n\n");
+
+      job.requirements = formattedRequirements;
+    }
+
+    res.status(200).json(job);
+  } catch (err) {
+    console.error(`Error fetching API job: ${err.message}`);
+    res.status(500).json({
+      message: `Could not fetch API job, ${err.message}`,
+    });
+  }
+};
+
+export { getJobs, singleJob, getJobsfromAPI, getSingleApiJob };

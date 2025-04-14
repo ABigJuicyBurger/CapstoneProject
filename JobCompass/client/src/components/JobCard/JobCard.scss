@@ -152,8 +152,31 @@
   }
 
   &__description {
-    &__text {
+    &__text,
+    &__requirements {
       white-space: pre-line; // preserve line breaks from the source
+      line-height: 1.5;
+      margin-bottom: 1rem;
+
+      // Style section headers
+      strong,
+      b {
+        display: block;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      // Style bullet points
+      ul,
+      ol {
+        margin-left: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      // Add spacing between paragraphs
+      p {
+        margin-bottom: 1rem;
+      }
     }
 
     button {

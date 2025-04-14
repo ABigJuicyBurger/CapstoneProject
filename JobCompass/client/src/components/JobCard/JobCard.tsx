@@ -38,8 +38,11 @@ function JobCard({
     // void means it just completes operation
     // this function is a promise that returns nothing
     try {
-      console.log("Attempting to fetch from:", `${backendURL}/jobs/${id}`);
-      const jobResponse = await axios.get(`${backendURL}/jobs/${id}`);
+      console.log(
+        "Attempting to fetch from:",
+        `${backendURL}/jobs/api-jobs/${id}`
+      );
+      const jobResponse = await axios.get(`${backendURL}/jobs/api-jobs/${id}`);
       setJob(jobResponse.data);
     } catch (err: any) {
       setJob(null);
@@ -60,7 +63,7 @@ function JobCard({
   useEffect(() => {
     const checkSavedJobs = async () => {
       const token = localStorage.getItem("token");
-      if (!token) return;
+      if (!token) return; // Skip if not logged in
 
       try {
         const response = await axios.get(`${backendURL}/user/meta`, {
@@ -93,8 +96,14 @@ function JobCard({
 
           setUserSavedJobs(currentSavedJobs);
         }
-      } catch (error) {
-        console.error("Error fetching saved jobs:", error);
+      } catch (error: any) {
+        // Handle 401 errors gracefully - just means user isn't properly authenticated
+        if (error.response && error.response.status === 401) {
+          console.log("User not authenticated, clearing token");
+          localStorage.removeItem("token"); // Clear invalid token
+        } else {
+          console.error("Error fetching saved jobs:", error);
+        }
       }
     };
 
@@ -172,9 +181,14 @@ function JobCard({
             setSaveMessage("Job Saved!");
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error saving job:", error);
-        setSaveMessage("Failed to save job");
+        if (error.response && error.response.status === 401) {
+          localStorage.removeItem("token"); // Clear invalid token
+          setSaveMessage("Please log in to save jobs");
+        } else {
+          setSaveMessage("Failed to save job");
+        }
       }
     } else if (guestUser && updateGuestUser) {
       // Guest user flow
@@ -277,11 +291,14 @@ function JobCard({
           </div>
           <div className="jobCard__description">
             <h3 className="jobCard__description__title">Job Description</h3>
-            <p className="jobCard__description__text">
+            <div
+              className="jobCard__description__text"
+              style={{ whiteSpace: "pre-line" }}
+            >
               {expandedText
                 ? job.description
                 : `${job.description.substring(0, MAX_LENGTH)}...`}
-            </p>
+            </div>
             <button
               className="jobCard__description__button"
               onClick={() => setExpandedText(!expandedText)}
@@ -289,9 +306,12 @@ function JobCard({
               {expandedText ? "Show Less" : "Read More"}
             </button>
             <h3 className="jobCard__description__title">Requirements</h3>
-            <p className="jobCard__description__requirements">
+            <div
+              className="jobCard__description__requirements"
+              style={{ whiteSpace: "pre-line" }}
+            >
               {job.requirements}
-            </p>
+            </div>
           </div>
         </div>
       )}

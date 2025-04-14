@@ -532,3 +532,6 @@ April 02
   - Apr 14 2025
     - clea up path of header for guest saved jobs
   - Today, tiem to add a caching system to store jobs
+    \_ caching successful!
+
+  finally the frontend

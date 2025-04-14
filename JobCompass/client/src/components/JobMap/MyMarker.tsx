@@ -6,13 +6,13 @@ import {
 
 import JobCardType from "../../../types/JobCardType.ts";
 
-export function MyMarker({ 
-  job, 
-  handleMarkerClick, 
-  setHoveredJobId, 
-  isHovered, 
+export function MyMarker({
+  job,
+  handleMarkerClick,
+  setHoveredJobId,
+  isHovered,
   salary_range,
-  miniMarker = true 
+  miniMarker = true,
 }: {
   job: JobCardType;
   handleMarkerClick: (jobId: string) => void;
@@ -22,39 +22,49 @@ export function MyMarker({
   miniMarker?: boolean;
 }) {
   // Create a state to track whether this marker is hovered
-  
+
   // Calculate z-index - higher for hovered markers to appear on top
   const zIndex = isHovered ? 1000 : 1;
 
-  return <AdvancedMarker
-  anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
-  key={job.id}
-  position={{
-    lat: Number(job.latitude),
-    lng: Number(job.longitude),
-  }}
-  // render some jobs and some clusters through preprocessing
-  // too many jobs ? cluster : job
-  clickable={true}
-  onClick={() => {
-    handleMarkerClick(job.id);
-  }}
-  onMouseEnter={() => {
-    setHoveredJobId(job.id);
-  }}
-  onMouseLeave={() => setHoveredJobId(null)}
-  className="info-window"
-  // Apply zIndex directly to the AdvancedMarker
-  zIndex={zIndex}
->
-  <div
-    className={`info-window-anchor ${
-      isHovered ? "hovered" : ""
-    } ${miniMarker ? "mini-marker" : ""}`}
-  >
-    <div className="info-window-anchor__marker">
-      {(isHovered || !miniMarker) && salary_range}
-    </div>
-  </div>
-</AdvancedMarker>
+  return (
+    <AdvancedMarker
+      anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
+      key={job.id}
+      position={{
+        lat:
+          typeof job.latitude === "string"
+            ? parseFloat(job.latitude)
+            : job.latitude,
+        lng:
+          typeof job.longitude === "string"
+            ? parseFloat(job.longitude)
+            : job.longitude,
+      }}
+      // render some jobs and some clusters through preprocessing
+      // too many jobs ? cluster : job
+      clickable={true}
+      onClick={() => {
+        handleMarkerClick(job.id);
+      }}
+      onMouseEnter={() => {
+        setHoveredJobId(job.id);
+      }}
+      onMouseLeave={() => {
+        setHoveredJobId(null);
+      }}
+      className="info-window"
+      // Apply zIndex directly to the AdvancedMarker
+      zIndex={zIndex}
+    >
+      <div
+        className={`info-window-anchor ${isHovered ? "hovered" : ""} ${
+          miniMarker ? "mini-marker" : ""
+        }`}
+      >
+        <div className="info-window-anchor__marker">
+          {(isHovered || !miniMarker) && salary_range}
+        </div>
+      </div>
+    </AdvancedMarker>
+  );
 }

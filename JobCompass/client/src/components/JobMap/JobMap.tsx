@@ -45,7 +45,6 @@ const JobMap = ({
   updateGuestUser,
 }: MapJobCardNoteType): JSX.Element => {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
-  // TODO: Show salary on hover (originally show title and company on load)
   const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
   const [currentZoom, setCurrentZoom] = useState<number>(4); // Lower default zoom level for all of Canada
 
