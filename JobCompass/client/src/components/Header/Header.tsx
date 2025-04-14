@@ -23,17 +23,13 @@ function Header({
   user,
 }: HeaderMobilityTypes) {
   const location = useLocation();
-  const isHomePage = location.pathname === "/"; // are you home?
+  const isJobPage = location.pathname === "/jobs"; // are you in jobs?
 
   const toggleMapList = () => {
     setMobileMapMode(!mobileMapMode);
   };
 
   useEffect(() => {}, [location]);
-
-  const savedJobsPath = loggedIn
-    ? `/user/${user.userName}/savedJobs`
-    : `/guest/${guestUser?.id || ""}/savedJobs`;
 
   return (
     <header
@@ -52,7 +48,7 @@ function Header({
         </Link>
       </div>
 
-      {mobileState && !isHomePage && (
+      {mobileState && isJobPage && (
         <button
           onClick={() => toggleMapList()}
           className="homePage__header--mobile-toggle"
@@ -64,13 +60,6 @@ function Header({
           )}
         </button>
       )}
-
-      {/* {Guest Saved Jobs} */}
-      {/* {!loggedIn && !mobileState && (
-        <Link className="homePage__header__register-cta" to={savedJobsPath}>
-          Saved Jobs
-        </Link>
-      )} */}
 
       <ProfileBar
         user={user}

@@ -526,3 +526,5 @@ April 02
     okay
     now i need to cache locally (on myDB) as well as the EC2 server.
     \_ with local, start with knex
+
+    - tomorrow add a cached at timestamp with knex, then modify service.js to fetch data and store in DB or to check cahced jobs and store api results in DB, update controller to handle DB

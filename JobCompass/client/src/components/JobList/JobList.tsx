@@ -9,6 +9,7 @@ function JobList({ jobBoard }: { jobBoard: JobCardType[] }): JSX.Element {
   if (!jobBoard) {
     return <h1>Loading...</h1>;
   }
+  console.log(jobBoard);
 
   return (
     <div className="job-list">

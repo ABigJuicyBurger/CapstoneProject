@@ -25,6 +25,10 @@ const ProfileBar = ({
     ? user.userName.charAt(0).toUpperCase()
     : "";
 
+  const savedJobsUrl = loggedIn
+    ? `/user/${user.userName}/savedJobs`
+    : `/guest/${user?.id || ""}savedJobs`;
+
   return (
     <div className="profile-bar">
       <button className="profile-bar__button" onClick={toggleBar}>
@@ -62,7 +66,7 @@ const ProfileBar = ({
               </>
             )}
             <Link
-              to={`/user/${user.userName}/savedJobs`}
+              to={savedJobsUrl}
               className="profile-bar__link"
               onClick={() => setIsOpen(false)}
             >

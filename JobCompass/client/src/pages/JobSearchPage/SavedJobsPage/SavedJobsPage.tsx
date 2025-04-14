@@ -12,7 +12,6 @@ function SavedJobsPage({
   guestUser: { name: string; id: string; savedJobs: string[] } | null;
   jobs: JobCardType[];
 }) {
-  const navigate = useNavigate();
   const [userSavedJobs, setUserSavedJobs] = useState<string[]>([]);
   const [savedJobs, setSavedJobs] = useState<JobCardType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -26,32 +25,35 @@ function SavedJobsPage({
     const fetchUserSavedJobs = async () => {
       try {
         setLoading(true);
-        
+
         if (isLoggedIn) {
           // Logged-in user flow
           try {
             const response = await axios.get(`${API_URL}/user/meta`, {
               headers: {
-                Authorization: `Bearer ${token}`
-              }
+                Authorization: `Bearer ${token}`,
+              },
             });
-            
+
             if (response.data && response.data.savedjobs) {
               try {
                 // Handle both string and array formats of saved jobs
                 let parsedSavedJobs = [];
-                
-                if (typeof response.data.savedjobs === 'string') {
+
+                if (typeof response.data.savedjobs === "string") {
                   // Handle string format (from database)
-                  const savedJobsData = response.data.savedjobs.trim() === '' ? '[]' : response.data.savedjobs;
+                  const savedJobsData =
+                    response.data.savedjobs.trim() === ""
+                      ? "[]"
+                      : response.data.savedjobs;
                   parsedSavedJobs = JSON.parse(savedJobsData);
                 } else if (Array.isArray(response.data.savedjobs)) {
                   // Handle array format (already parsed by server)
                   parsedSavedJobs = response.data.savedjobs;
                 }
-                
+
                 if (!Array.isArray(parsedSavedJobs)) parsedSavedJobs = [];
-                
+
                 setUserSavedJobs(parsedSavedJobs);
                 console.log("Logged-in user saved jobs:", parsedSavedJobs);
               } catch (e) {
@@ -70,7 +72,7 @@ function SavedJobsPage({
             console.log("Guest user saved jobs:", guestUser.savedJobs);
           }
         }
-        
+
         setLoading(false);
       } catch (error) {
         console.error("Error in fetchUserSavedJobs:", error);
@@ -85,68 +87,79 @@ function SavedJobsPage({
   // Filter jobs based on saved job IDs
   useEffect(() => {
     if (jobs && userSavedJobs) {
-      const filtered = jobs.filter(job => userSavedJobs.includes(job.id));
+      const filtered = jobs.filter((job) => userSavedJobs.includes(job.id));
       console.log("Filtered saved jobs:", filtered.length);
       setSavedJobs(filtered);
     }
   }, [jobs, userSavedJobs]);
-  
+
   // Remove a job from saved jobs
   const handleRemoveJob = async (jobId: string) => {
     try {
       if (!isLoggedIn && guestUser) {
         // Update for guest user (client-side only)
-        const updatedSavedJobs = guestUser.savedJobs.filter(id => id !== jobId);
-        
+        const updatedSavedJobs = guestUser.savedJobs.filter(
+          (id) => id !== jobId
+        );
+
         // Update session storage
         const updatedGuestUser = {
           ...guestUser,
-          savedJobs: updatedSavedJobs
+          savedJobs: updatedSavedJobs,
         };
-        
+
         sessionStorage.setItem("guestUser", JSON.stringify(updatedGuestUser));
-        
+
         // Update local state
         setUserSavedJobs(updatedSavedJobs);
       } else if (isLoggedIn) {
         // Update for logged-in user (server-side)
         setLoading(true);
-        
+
         // Get current saved jobs
         const response = await axios.get(`${API_URL}/user/meta`, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
-        
+
         if (response.data && response.data.savedjobs) {
           try {
             // Handle both string and array formats of saved jobs
             let currentSavedJobs = [];
-            
-            if (typeof response.data.savedjobs === 'string') {
+
+            if (typeof response.data.savedjobs === "string") {
               // Handle string format (from database)
-              const savedJobsData = response.data.savedjobs.trim() === '' ? '[]' : response.data.savedjobs;
+              const savedJobsData =
+                response.data.savedjobs.trim() === ""
+                  ? "[]"
+                  : response.data.savedjobs;
               currentSavedJobs = JSON.parse(savedJobsData);
             } else if (Array.isArray(response.data.savedjobs)) {
               // Handle array format (already parsed by server)
               currentSavedJobs = response.data.savedjobs;
             }
-            
+
             if (!Array.isArray(currentSavedJobs)) currentSavedJobs = [];
-            
-            const updatedSavedJobs = currentSavedJobs.filter((id: string) => id !== jobId);
-            
+
+            const updatedSavedJobs = currentSavedJobs.filter(
+              (id: string) => id !== jobId
+            );
+
             // Update the server
-            await axios.put(`${API_URL}/user/meta`, {
-              savedjobs: JSON.stringify(updatedSavedJobs)
-            }, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
+            await axios.put(
+              `${API_URL}/user/meta`,
+              {
+                savedjobs: JSON.stringify(updatedSavedJobs),
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
               }
-            });
-            
+            );
+
             // Update local state
             setUserSavedJobs(updatedSavedJobs);
             console.log("Updated saved jobs after removal:", updatedSavedJobs);
@@ -155,7 +168,7 @@ function SavedJobsPage({
             setError("Failed to remove job");
           }
         }
-        
+
         setLoading(false);
       }
     } catch (error) {
@@ -180,17 +193,14 @@ function SavedJobsPage({
       <h1 className="saved-jobs__title">
         {isLoggedIn ? "Your Saved Jobs" : "Guest Saved Jobs"}
       </h1>
-      
+
       {error && <div className="saved-jobs__error">{error}</div>}
 
       {savedJobs.length > 0 ? (
         <div className="saved-jobs__list">
           {savedJobs.map((job) => (
             <div className="saved-jobs__item-container" key={job.id}>
-              <Link
-                className="saved-jobs__item"
-                to={`/job/${job.id}`}
-              >
+              <Link className="saved-jobs__item" to={`/job/${job.id}`}>
                 <div className="saved-jobs__content">
                   <h3 className="saved-jobs__job-title">{job.title}</h3>
                   <p className="saved-jobs__company">{job.company}</p>
@@ -199,7 +209,7 @@ function SavedJobsPage({
                   </div>
                 </div>
               </Link>
-              <button 
+              <button
                 className="saved-jobs__remove-btn"
                 onClick={() => handleRemoveJob(job.id)}
                 aria-label="Remove job"
