@@ -167,6 +167,12 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
     }
   };
 
+  const generateDefaultAvatarSvg = (userName: string) => {
+    return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23cccccc"/><text x="50%" y="50%" font-family="Arial" font-size="24" fill="%23ffffff" text-anchor="middle" dominant-baseline="middle">${
+      userName ? userName.charAt(0).toUpperCase() : "G"
+    }</text></svg>`;
+  };
+
   if (loading) {
     return (
       <div className="page-content profile-page">
@@ -186,19 +192,14 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
         <div className="profile-header">
           <div className="profile-avatar">
             <img
-              src={user.avatar || `${API_URL}/default-avatar.png`}
+              src={user.avatar || generateDefaultAvatarSvg(user.userName)}
               alt={`${user.userName}'s avatar`}
               className="profile-avatar__image"
               onError={(e) => {
                 // Fallback to inline SVG if image fails to load
                 const target = e.target as HTMLImageElement;
                 target.onerror = null; // Prevent infinite loop
-                target.src =
-                  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23cccccc"/><text x="50%" y="50%" font-family="Arial" font-size="24" fill="%23ffffff" text-anchor="middle" dominant-baseline="middle">' +
-                  (user.userName
-                    ? user.userName.charAt(0).toUpperCase()
-                    : "U") +
-                  "</text></svg>";
+                target.src = generateDefaultAvatarSvg(user.userName);
               }}
             />
           </div>
