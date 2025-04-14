@@ -13,9 +13,18 @@ const CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 const transformJobData = (apiJob) => {
   const sanitizeText = (text) => {
     if (!text) return "";
-    // Remove emojis and other problematic characters
-    return text.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u0800-\uFFFF]/g, "");
+    // More targeted sanitization
+    return text
+      .replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, "") // Remove emoji
+      .replace(/[\u0000-\u001F\u007F-\u009F]/g, ""); // Remove control characters
   };
+
+  // Truncate long text fields
+  const truncate = (text, maxLength) => {
+    if (!text) return "";
+    return text.length > maxLength ? text.substring(0, maxLength) : text;
+  };
+
   // Get location data
   const location = apiJob.locations_derived?.[0] || "";
   const latitude = apiJob.lats_derived?.[0] || 0;
@@ -46,16 +55,18 @@ const transformJobData = (apiJob) => {
 
   return {
     id: apiJob.id,
-    title: apiJob.title || "Unknown Title",
-    company: apiJob.organization || "Unknown Company",
-    description: sanitizeText(apiJob.description_text || ""),
+    title: truncate(apiJob.title || "Unknown Title", 250),
+    company: truncate(apiJob.organization || "Unknown Company", 250),
+    description: sanitizeText(truncate(apiJob.description_text || "", 65000)),
     type: jobType,
-    salary_range: salaryRange,
-    address: location,
+    salary_range: truncate(salaryRange, 250),
+    address: truncate(location, 250),
     latitude: latitude,
     longitude: longitude,
-    company_logo_url: apiJob.organization_logo || "",
-    requirements: sanitizeText(apiJob.ai_requirements_summary || ""),
+    company_logo_url: truncate(apiJob.organization_logo || "", 250),
+    requirements: sanitizeText(
+      truncate(apiJob.ai_requirements_summary || "", 65000)
+    ),
     skills: JSON.stringify(skills),
     created_at: new Date(apiJob.date_posted || Date.now())
       .toISOString()
@@ -107,28 +118,57 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
     const transformedJobs = response.data.map(transformJobData);
 
     // Update cache for this location
+    let successCount = 0;
+    let errorCount = 0;
     for (const job of transformedJobs) {
-      const existingJob = await knex("api_jobs")
-        .where({ id: job.id, location })
-        .first();
-
-      if (existingJob) {
-        await knex("api_jobs")
+      try {
+        const existingJob = await knex("api_jobs")
           .where({ id: job.id, location })
-          .update({
+          .first();
+
+        if (existingJob) {
+          await knex("api_jobs")
+            .where({ id: job.id, location })
+            .update({
+              ...job,
+              cached_at: new Date()
+                .toISOString()
+                .slice(0, 19)
+                .replace("T", " "),
+              updated_at: new Date()
+                .toISOString()
+                .slice(0, 19)
+                .replace("T", " "),
+            });
+          successCount++;
+        } else {
+          await knex("api_jobs").insert({
             ...job,
+            location,
             cached_at: new Date().toISOString().slice(0, 19).replace("T", " "),
             updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
           });
-      } else {
-        await knex("api_jobs").insert({
-          ...job,
-          location,
-          cached_at: new Date().toISOString().slice(0, 19).replace("T", " "),
-          updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
-        });
+          successCount++;
+        }
+      } catch (err) {
+        errorCount++;
+        console.error(`Error processing job ${job.id}:`, err.message);
+        // Log the job data that caused the error
+        console.error(
+          "Job data:",
+          JSON.stringify({
+            id: job.id,
+            title: job.title,
+            company: job.company,
+            // Don't log the full description as it might be very long
+            description_length: job.description ? job.description.length : 0,
+          })
+        );
       }
     }
+    console.log(
+      `Job processing complete: ${successCount} succeeded, ${errorCount} failed`
+    );
 
     return transformedJobs;
   } catch (error) {
