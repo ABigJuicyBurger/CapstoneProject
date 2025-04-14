@@ -3,9 +3,9 @@
  * @returns { Promise<void> }
  */
 export function up(knex) {
-  return knex.schema.createTable("api-jobs", (table) => {
+  return knex.schema.createTable("api_jobs", (table) => {
     // Primary ID
-    table.increments("id").primary();
+    table.string("id").primary();
     table.string("title").notNullable();
     table.string("company").notNullable();
 
@@ -15,9 +15,10 @@ export function up(knex) {
     table.string("salary_range");
 
     // location
-    table.string("address").notNullable();
-    table.decimal("latitude", 10, 8).notNullable();
-    table.decimal("longitude", 11, 8).notNullable();
+    table.string("address");
+    table.string("location").notNullable();
+    table.decimal("latitude", 10, 8);
+    table.decimal("longitude", 11, 8);
 
     // optional
     table.string("company_logo_url");
@@ -29,6 +30,7 @@ export function up(knex) {
     table
       .timestamp("updated_at")
       .defaultTo(knex.raw("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"));
+    table.timestamp("cached_at").defaultTo(knex.fn.now());
   });
 }
 
@@ -37,5 +39,5 @@ export function up(knex) {
  * @returns { Promise<void> }
  */
 export function down(knex) {
-  return knex.schema.dropTable("api-jobs");
+  return knex.schema.dropTable("api_jobs");
 }

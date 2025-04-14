@@ -36,6 +36,7 @@ const getJobsfromAPI = async (req, res) => {
     const location = req.params.location || req.query.location || "Calgary"; // Default to Calgary if no location provided
 
     const jobs = await jobApiService.fetchJobsfromAPI(location);
+    console.log(`Returning ${jobs.length} jobs to client`);
 
     res.json(jobs);
   } catch (error) {

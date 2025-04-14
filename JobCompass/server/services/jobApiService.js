@@ -11,6 +11,11 @@ const CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
 // Transform API job data to match our database schema
 const transformJobData = (apiJob) => {
+  const sanitizeText = (text) => {
+    if (!text) return "";
+    // Remove emojis and other problematic characters
+    return text.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u0800-\uFFFF]/g, "");
+  };
   // Get location data
   const location = apiJob.locations_derived?.[0] || "";
   const latitude = apiJob.lats_derived?.[0] || 0;
@@ -43,28 +48,32 @@ const transformJobData = (apiJob) => {
     id: apiJob.id,
     title: apiJob.title || "Unknown Title",
     company: apiJob.organization || "Unknown Company",
-    description: apiJob.description_text || "",
+    description: sanitizeText(apiJob.description_text || ""),
     type: jobType,
     salary_range: salaryRange,
     address: location,
     latitude: latitude,
     longitude: longitude,
     company_logo_url: apiJob.organization_logo || "",
-    requirements: apiJob.ai_requirements_summary || "",
+    requirements: sanitizeText(apiJob.ai_requirements_summary || ""),
     skills: JSON.stringify(skills),
-    created_at: new Date(apiJob.date_posted || Date.now()).toISOString(),
-    updated_at: new Date().toISOString(),
+    created_at: new Date(apiJob.date_posted || Date.now())
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", " "),
+    updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
   };
 };
 
 const fetchJobsfromAPI = async (location = "Calgary") => {
+  const now = new Date();
+  const cacheDate = new Date(now.getTime() - CACHE_EXPIRY);
+
+  let cachedJobs = [];
   try {
     // Check if we have valid cached data for this location
-    const now = Date.now();
-    const cacheDate = new Date(now.getTime() - CACHE_EXPIRY);
     // see if jobs exist in DB through Knex
-
-    const cachedJobs = await knex("api_jobs")
+    cachedJobs = await knex("api_jobs")
       .where({ location })
       .where("cached_at", ">", cacheDate)
       .orderBy("created_at", "desc");
@@ -108,13 +117,15 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
           .where({ id: job.id, location })
           .update({
             ...job,
-            cached_at: new Date(),
+            cached_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+            updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
           });
       } else {
         await knex("api_jobs").insert({
           ...job,
           location,
-          cached_at: new Date(),
+          cached_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+          updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
         });
       }
     }
