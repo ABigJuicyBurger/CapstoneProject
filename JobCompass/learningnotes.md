@@ -528,3 +528,7 @@ April 02
     \_ with local, start with knex
 
     - tomorrow add a cached at timestamp with knex, then modify service.js to fetch data and store in DB or to check cahced jobs and store api results in DB, update controller to handle DB
+
+  - Apr 14 2025
+    - clea up path of header for guest saved jobs
+  - Today, tiem to add a caching system to store jobs

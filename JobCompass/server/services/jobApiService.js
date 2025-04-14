@@ -1,11 +1,12 @@
 import axios from "axios";
 import dotenv from "dotenv";
+import initKnex from "knex";
+import configuration from "../knexfile.js";
+const knex = initKnex(configuration);
 import "dotenv/config";
 
 dotenv.config();
 
-// In-memory cache for jobs by location
-let jobsCache = {};
 const CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
 // Transform API job data to match our database schema
@@ -60,17 +61,18 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
   try {
     // Check if we have valid cached data for this location
     const now = Date.now();
-    if (
-      jobsCache[location] &&
-      jobsCache[location].data.length > 0 &&
-      jobsCache[location].timestamp &&
-      now - jobsCache[location].timestamp < CACHE_EXPIRY
-    ) {
-      console.log(`Returning cached jobs data for ${location}`);
-      return jobsCache[location].data;
-    }
+    const cacheDate = new Date(now.getTime() - CACHE_EXPIRY);
+    // see if jobs exist in DB through Knex
 
-    // TODO: check if there is cached data in the database for this location
+    const cachedJobs = await knex("api_jobs")
+      .where({ location })
+      .where("cached_at", ">", cacheDate)
+      .orderBy("created_at", "desc");
+
+    if (cachedJobs.length > 0) {
+      console.log(`Returning cached jobs data for ${location}`);
+      return cachedJobs;
+    }
 
     const options = {
       method: "GET",
@@ -96,10 +98,26 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
     const transformedJobs = response.data.map(transformJobData);
 
     // Update cache for this location
-    jobsCache[location] = {
-      data: transformedJobs,
-      timestamp: now,
-    };
+    for (const job of transformedJobs) {
+      const existingJob = await knex("api_jobs")
+        .where({ id: job.id, location })
+        .first();
+
+      if (existingJob) {
+        await knex("api_jobs")
+          .where({ id: job.id, location })
+          .update({
+            ...job,
+            cached_at: new Date(),
+          });
+      } else {
+        await knex("api_jobs").insert({
+          ...job,
+          location,
+          cached_at: new Date(),
+        });
+      }
+    }
 
     return transformedJobs;
   } catch (error) {
@@ -109,9 +127,7 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
       console.error("API response data:", error.response.data);
     }
     // Return cached data for this location if available, otherwise empty array
-    return jobsCache[location]?.data?.length > 0
-      ? jobsCache[location].data
-      : [];
+    return cachedJobs.length > 0 ? cachedJobs : [];
   }
 };
 
