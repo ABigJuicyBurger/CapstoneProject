@@ -1,14 +1,26 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-const SubmitResume = () => {
+type UserMetaData = {
+  id: number;
+  user_id: number;
+  bio: string;
+  resume: string;
+  savedjobs: string | string[]; // Update the type of savedjobs to string | string[]
+};
+
+const SubmitResume = ({
+  setUserMeta,
+}: {
+  setUserMeta: React.Dispatch<React.SetStateAction<UserMetaData | null>>;
+}) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedFile(event.target.files?.[0] || null);
   }; // handle file update
 
-  const onFileUpload = () => {
+  const onFileUpload = async () => {
     const formData = new FormData();
     const API_URL = import.meta.env.VITE_BACKEND_URL;
     const token = localStorage.getItem("token");
@@ -18,11 +30,20 @@ const SubmitResume = () => {
         alert("What a large resume! Try to reduce the size");
         return;
       }
-      formData.append("Resume", selectedFile, selectedFile.name);
+      formData.append("resume", selectedFile, selectedFile.name);
     }
     console.log(selectedFile);
     try {
-      axios.post("", formData);
+      const response = await axios.put(`${API_URL}/user/meta`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }); // add headers to the request
+
+      // if (response.data) {
+      //   setUserMeta(response.data);
+      // }
     } catch (err) {
       console.error(err);
     }
@@ -65,5 +86,4 @@ const SubmitResume = () => {
     </div>
   );
 };
-
 export default SubmitResume;

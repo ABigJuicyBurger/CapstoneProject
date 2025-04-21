@@ -541,3 +541,6 @@ April 02
 
   Apr 21 2025
   -\_ try to fix the repetitive render of each marker on hover
+  \_ i give up, focused on resume upload. this required
+  a post request but backend needs multer for form data
+  being uploaded

@@ -118,7 +118,6 @@ function App(): JSX.Element {
             Authorization: `Bearer ${response.data.token}`,
           },
         });
-
         setLoggedIn(true);
         setUser(userResponse.data.user);
         setError("");

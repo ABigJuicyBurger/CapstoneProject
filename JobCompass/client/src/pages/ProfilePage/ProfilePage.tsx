@@ -292,7 +292,7 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
             ) : (
               <div className="profile-resume profile-resume--empty">
                 {/* <p>No resume uploaded yet.</p> */}
-                <SubmitResume />
+                <SubmitResume setUserMeta={setUserMeta} />
               </div>
             )}
           </div>

@@ -51,7 +51,7 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   const { username, email, password } = req.body;
-  
+
   try {
     console.log("Registration attempt:", { username, email });
 
@@ -66,9 +66,9 @@ const register = async (req, res) => {
       .first();
 
     if (existingUsername) {
-      return res.status(409).json({ 
-        message: "Username already taken", 
-        field: "username" 
+      return res.status(409).json({
+        message: "Username already taken",
+        field: "username",
       });
     }
 
@@ -78,9 +78,9 @@ const register = async (req, res) => {
       .first();
 
     if (existingEmail) {
-      return res.status(409).json({ 
-        message: "Email already registered", 
-        field: "email" 
+      return res.status(409).json({
+        message: "Email already registered",
+        field: "email",
       });
     }
 
@@ -93,7 +93,7 @@ const register = async (req, res) => {
       username: username.toLowerCase(),
       email: email.toLowerCase(),
       password_hash,
-      avatar: "default-avatar.png" // Default avatar path
+      avatar: "default-avatar.png", // Default avatar path
       // created_at and updated_at are handled automatically by timestamps(true, true) in the schema
     });
 
@@ -102,12 +102,12 @@ const register = async (req, res) => {
       user_id: userId,
       bio: "",
       resume: "",
-      savedjobs: JSON.stringify([])
+      savedjobs: JSON.stringify([]),
     });
 
-    return res.status(201).json({ 
+    return res.status(201).json({
       message: "User registered successfully",
-      userId
+      userId,
     });
   } catch (error) {
     console.error("Registration error:", error);
@@ -138,9 +138,7 @@ const updateMetaInfo = async (req, res) => {
     const userId = req.user.userId;
 
     // Validate user exists
-    const userMeta = await knex("user_meta")
-      .where({ user_id: userId })
-      .first();
+    const userMeta = await knex("user_meta").where({ user_id: userId }).first();
 
     if (!userMeta) {
       return res.status(404).json({ message: "User not found" });
@@ -148,13 +146,18 @@ const updateMetaInfo = async (req, res) => {
 
     // Update fields
     const updates = {};
+
+    if (req.file) {
+      updates.resume = `/uploads/${req.file.filename}`;
+    }
+
     if (bio !== undefined) updates.bio = bio;
     if (resume !== undefined) updates.resume = resume;
     if (savedjobs !== undefined) {
       // Validate that savedjobs is a valid JSON array before storing
       try {
         // If it's already a string, use it directly
-        if (typeof savedjobs === 'string') {
+        if (typeof savedjobs === "string") {
           // Validate it's parseable
           JSON.parse(savedjobs);
           updates.savedjobs = savedjobs;
@@ -174,9 +177,7 @@ const updateMetaInfo = async (req, res) => {
     }
 
     // Perform update
-    await knex("user_meta")
-      .where({ user_id: userId })
-      .update(updates);
+    await knex("user_meta").where({ user_id: userId }).update(updates);
 
     // Return updated data
     const updatedUserMeta = await knex("user_meta")

@@ -29,6 +29,9 @@ app.use("/jobs", jobsRoutes);
 // Get user info
 app.use("/user", userRoutes);
 
+// to handle uploads
+app.use("/uploads", express.static("uploads"));
+
 // basic route for home
 app.get("/", (req, res) => {
   res.send("Welcome!");
