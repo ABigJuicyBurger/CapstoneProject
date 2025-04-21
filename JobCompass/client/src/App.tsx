@@ -207,7 +207,7 @@ function App(): JSX.Element {
 
   const fetchAllJobs = async (): Promise<void | JSX.Element> => {
     try {
-      const jobListResponse = await axios.get(`${backendURL}/jobs/api-jobs`);
+      const jobListResponse = await axios.get(`${backendURL}/jobs`);
       console.log(jobListResponse.data);
 
       // Log unique coordinates to check for duplicates

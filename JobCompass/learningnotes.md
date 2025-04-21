@@ -535,3 +535,9 @@ April 02
     \_ caching successful!
 
   finally the frontend
+
+  Apr 18 2025
+  \_ start button apply
+
+  Apr 21 2025
+  -\_ try to fix the repetitive render of each marker on hover

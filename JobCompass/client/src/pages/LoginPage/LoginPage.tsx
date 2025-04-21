@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 type loginUtility = {
   loggedIn: boolean;
@@ -20,7 +20,9 @@ function LoginPage({ loggedIn, handleLogin, error }: loginUtility) {
           <h2 className="auth-title">Login to JobCompass</h2>
           <form className="auth-form" onSubmit={handleLogin}>
             <div className="auth-form__field">
-              <label htmlFor="username" className="auth-form__label">Username</label>
+              <label htmlFor="username" className="auth-form__label">
+                Username
+              </label>
               <input
                 className="auth-form__input"
                 type="text"
@@ -32,7 +34,9 @@ function LoginPage({ loggedIn, handleLogin, error }: loginUtility) {
               />
             </div>
             <div className="auth-form__field">
-              <label htmlFor="password" className="auth-form__label">Password</label>
+              <label htmlFor="password" className="auth-form__label">
+                Password
+              </label>
               <div className="auth-form__password-container">
                 <input
                   className="auth-form__input auth-form__input--with-toggle"
@@ -43,9 +47,9 @@ function LoginPage({ loggedIn, handleLogin, error }: loginUtility) {
                   autoComplete="current-password"
                   required
                 />
-                <button 
-                  type="button" 
-                  className="auth-form__password-toggle" 
+                <button
+                  type="button"
+                  className="auth-form__password-toggle"
                   onClick={togglePasswordVisibility}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
@@ -58,7 +62,10 @@ function LoginPage({ loggedIn, handleLogin, error }: loginUtility) {
             </button>
             {error && <p className="auth-form__error">{error}</p>}
             <p className="auth-form__link-text">
-              Don't have an account? <a href="/register" className="auth-form__link">Register here</a>
+              Don't have an account?{" "}
+              <a href="/register" className="auth-form__link">
+                Register here
+              </a>
             </p>
           </form>
         </div>

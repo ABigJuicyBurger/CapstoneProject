@@ -3,20 +3,21 @@ import {
   AdvancedMarkerAnchorPoint,
   // InfoWindow, maybe needed for custom marker styling
 } from "@vis.gl/react-google-maps";
+import React, { useCallback } from "react";
 
 import JobCardType from "../../../types/JobCardType.ts";
 
-export function MyMarker({
+export const MyMarker = React.memo(function MyMarker({
   job,
   handleMarkerClick,
-  setHoveredJobId,
+  handleMarkerHover,
   isHovered,
   salary_range,
   miniMarker = true,
 }: {
   job: JobCardType;
   handleMarkerClick: (jobId: string) => void;
-  setHoveredJobId: (jobId: string | null) => void;
+  handleMarkerHover: (jobId: string, isHovered: boolean) => void;
   isHovered: boolean;
   salary_range: string;
   miniMarker?: boolean;
@@ -25,6 +26,14 @@ export function MyMarker({
 
   // Calculate z-index - higher for hovered markers to appear on top
   const zIndex = isHovered ? 1000 : 1;
+
+  const onMouseEnter = useCallback(() => {
+    handleMarkerHover(job.id, true);
+  }, [job.id, handleMarkerHover]);
+
+  const onMouseLeave = useCallback(() => {
+    handleMarkerHover(job.id, false);
+  }, [job.id, handleMarkerHover]);
 
   return (
     <AdvancedMarker
@@ -46,12 +55,8 @@ export function MyMarker({
       onClick={() => {
         handleMarkerClick(job.id);
       }}
-      onMouseEnter={() => {
-        setHoveredJobId(job.id);
-      }}
-      onMouseLeave={() => {
-        setHoveredJobId(null);
-      }}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       className="info-window"
       // Apply zIndex directly to the AdvancedMarker
       zIndex={zIndex}
@@ -67,4 +72,4 @@ export function MyMarker({
       </div>
     </AdvancedMarker>
   );
-}
+});

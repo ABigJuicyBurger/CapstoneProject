@@ -1,10 +1,10 @@
 import {
   APIProvider,
   Map,
-  Pin,
-  AdvancedMarker,
-  AdvancedMarkerAnchorPoint,
-  useMap,
+  // Pin,
+  // AdvancedMarker,
+  // AdvancedMarkerAnchorPoint,
+  // useMap,
   // InfoWindow, maybe needed for custom marker styling
 } from "@vis.gl/react-google-maps";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,7 @@ import "./JobMap.scss";
 
 import MapJobCardNoteType from "../../../types/MapJobCardType.ts";
 import { formatSalary } from "./formatSalary.tsx";
-import JobCardType from "../../../types/JobCardType.ts";
+// import JobCardType from "../../../types/JobCardType.ts";
 
 // Updated to center of Canada
 const CANADA_CENTER = {
@@ -45,7 +45,9 @@ const JobMap = ({
   updateGuestUser,
 }: MapJobCardNoteType): JSX.Element => {
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
-  const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
+  const [hoveredMarkers, setHoveredMarkers] = useState<Record<string, boolean>>(
+    {}
+  );
   const [currentZoom, setCurrentZoom] = useState<number>(4); // Lower default zoom level for all of Canada
 
   const apiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -60,10 +62,12 @@ const JobMap = ({
     [navigate]
   );
 
-  useEffect(() => {
-    console.log("Hovered job id", hoveredJobId);
-  }, [hoveredJobId]);
-
+  const handleMarkerHover = useCallback((jobId: string, isHovered: boolean) => {
+    setHoveredMarkers((prev) => ({
+      ...prev,
+      [jobId]: isHovered,
+    }));
+  }, []);
   // Calculate which markers should show text based on zoom and density
   const jobsWithVisibility = useMemo(() => {
     if (!jobs) return [];
@@ -139,13 +143,13 @@ const JobMap = ({
                 jobsWithVisibility.map((job) => {
                   const salary_range = formatSalary(job.salary_range);
 
-                  const isHovered = hoveredJobId === job.id;
+                  const isHovered = hoveredMarkers[job.id] || false;
                   return (
                     <MyMarker
                       key={job.id}
                       job={job}
                       handleMarkerClick={handleMarkerClick}
-                      setHoveredJobId={setHoveredJobId}
+                      handleMarkerHover={handleMarkerHover}
                       isHovered={isHovered}
                       salary_range={salary_range}
                       miniMarker={!job.showText && !isHovered}

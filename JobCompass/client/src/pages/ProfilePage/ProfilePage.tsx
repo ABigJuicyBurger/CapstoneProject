@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./ProfilePage.scss";
+import SubmitResume from "../../components/SubmitResumee/SubmitResume";
 
 type ProfilePageProps = {
   user: any;
@@ -290,10 +291,8 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
               </div>
             ) : (
               <div className="profile-resume profile-resume--empty">
-                <p>No resume uploaded yet.</p>
-                <button className="profile-resume__upload-button">
-                  Upload Resume
-                </button>
+                {/* <p>No resume uploaded yet.</p> */}
+                <SubmitResume />
               </div>
             )}
           </div>
