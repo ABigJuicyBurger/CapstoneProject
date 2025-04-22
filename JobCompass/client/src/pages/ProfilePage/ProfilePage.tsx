@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import "./ProfilePage.scss";
-import SubmitResume from "../../components/SubmitResumee/SubmitResume";
+import SubmitResume from "../../components/SubmitResume/SubmitResume";
 
 type ProfilePageProps = {
   user: any;
@@ -305,7 +305,7 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
             userMeta.resume !== null ? (
               <div className="profile-resume">
                 <a
-                  href={userMeta.resume}
+                  href={`${API_URL}${userMeta.resume}`}
                   className="profile-resume__link"
                   target="_blank"
                   rel="noopener noreferrer"

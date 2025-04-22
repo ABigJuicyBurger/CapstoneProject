@@ -30,10 +30,11 @@ const SubmitResume = ({
         alert("What a large resume! Try to reduce the size");
         return;
       }
-      formData.append("resume", selectedFile, selectedFile.name);
+      formData.append("resume", selectedFile);
     }
     console.log(selectedFile);
     try {
+      console.log("Uploading file:", selectedFile?.name);
       const response = await axios.put(`${API_URL}/user/meta`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -41,9 +42,11 @@ const SubmitResume = ({
         },
       }); // add headers to the request
 
-      // if (response.data) {
-      //   setUserMeta(response.data);
-      // }
+      if (response.data) {
+        setUserMeta(response.data);
+        setSelectedFile(null);
+        alert("File uploaded successfully!");
+      }
     } catch (err) {
       console.error(err);
     }
@@ -65,16 +68,20 @@ const SubmitResume = ({
       return (
         <div>
           <br />
-          <h4>Upload your resume here</h4>
+          {/* <h4>Upload your resume here</h4> */}
         </div>
       );
     }
   };
 
   return (
-    <div>
-      <div>
-        <input type="file" onChange={onFileChange} />
+    <>
+      <div className="profile-resume__div">
+        <input
+          className="profile-resume__input"
+          type="file"
+          onChange={onFileChange}
+        />
         <button
           onClick={onFileUpload}
           className="profile-resume__upload-button"
@@ -83,7 +90,7 @@ const SubmitResume = ({
         </button>
       </div>
       {fileData()}
-    </div>
+    </>
   );
 };
 export default SubmitResume;
