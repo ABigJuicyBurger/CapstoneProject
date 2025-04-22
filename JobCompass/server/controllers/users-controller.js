@@ -149,6 +149,8 @@ const updateMetaInfo = async (req, res) => {
 
     if (req.file) {
       updates.resume = `/uploads/${req.file.filename}`;
+    } else if (resume !== undefined) {
+      updates.resume = resume; // update and delete resume
     }
 
     if (bio !== undefined) updates.bio = bio;

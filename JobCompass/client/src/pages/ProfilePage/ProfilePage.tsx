@@ -173,6 +173,28 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
       userName ? userName.charAt(0).toUpperCase() : "G"
     }</text></svg>`;
   };
+  const onFileDelete = async () => {
+    const API_URL = import.meta.env.VITE_BACKEND_URL;
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.put(
+        `${API_URL}/user/meta`,
+        { resume: "" },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data) {
+        setUserMeta(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (loading) {
     return (
@@ -278,7 +300,9 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
 
           <div className="profile-section">
             <h2 className="profile-section__title">Resume</h2>
-            {userMeta?.resume ? (
+            {userMeta?.resume &&
+            userMeta.resume !== "" &&
+            userMeta.resume !== null ? (
               <div className="profile-resume">
                 <a
                   href={userMeta.resume}
@@ -288,6 +312,14 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
                 >
                   View Resume
                 </a>
+                <div className="profile-resume__actions">
+                  <button
+                    onClick={onFileDelete}
+                    className="profile-resume__delete-button"
+                  >
+                    Delete Resume
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="profile-resume profile-resume--empty">
