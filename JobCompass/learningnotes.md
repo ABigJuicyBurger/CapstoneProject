@@ -544,3 +544,8 @@ April 02
   \_ i give up, focused on resume upload. this required
   a post request but backend needs multer for form data
   being uploaded
+
+  April 28 2025
+  \_ Almost out of EC2 hours, will switch to Render for now
+  \_ uses Postgre and reconfigure knex to match Render's postgre requirements + pooling
+  \_ pooling DB means use same "pool" of reusable connections (from 2-10, helps with perfomance and resource management)

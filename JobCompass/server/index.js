@@ -16,6 +16,7 @@ console.log("Environment variables loaded:", { PORT, CORS_ORIGIN });
 app.use(
   cors({
     origin: CORS_ORIGIN,
+    credentials: true,
   })
 );
 app.use(express.json()); // body parser
@@ -33,7 +34,7 @@ app.use("/user", userRoutes);
 app.use("/uploads", express.static("uploads"));
 
 // basic route for home
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.send("Welcome!");
 });
 

@@ -110,7 +110,7 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
 
     // Log the number of cached jobs and their unique coordinates
     if (cachedJobs.length > 0) {
-      const uniqueCoords = new Set();
+      const uniqueCoords = new Set(); // for unique jobs
       cachedJobs.forEach((job) => {
         uniqueCoords.add(`${job.latitude},${job.longitude}`);
       });
@@ -124,6 +124,7 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
       return cachedJobs;
     }
 
+    // Make API request
     const options = {
       method: "GET",
       url: "https://active-jobs-db.p.rapidapi.com/active-ats-7d",

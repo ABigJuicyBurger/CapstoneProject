@@ -2,6 +2,8 @@ import initKnex from "knex";
 import configuration from "../knexfile.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import fs from "fs";
+import path from "path";
 const knex = initKnex(configuration);
 
 const login = async (req, res) => {
@@ -137,34 +139,49 @@ const updateMetaInfo = async (req, res) => {
     const { bio, resume, savedjobs } = req.body;
     const userId = req.user.userId;
 
-    // Validate user exists
+    // Get current user meta to check existing resume
     const userMeta = await knex("user_meta").where({ user_id: userId }).first();
-
     if (!userMeta) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update fields
     const updates = {};
 
+    // Handle resume updates
     if (req.file) {
+      // If there's an existing resume, delete it
+      if (userMeta.resume) {
+        const oldFilePath = path.join(
+          process.cwd(),
+          userMeta.resume.replace("/", "")
+        );
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
+        }
+      }
       updates.resume = `/uploads/${req.file.filename}`;
-    } else if (resume !== undefined) {
-      updates.resume = resume; // update and delete resume
+    } else if (resume === "") {
+      // Handle resume deletion
+      if (userMeta.resume) {
+        const filePath = path.join(
+          process.cwd(),
+          userMeta.resume.replace("/", "")
+        );
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      }
+      updates.resume = "";
     }
 
+    // Handle other updates
     if (bio !== undefined) updates.bio = bio;
-    if (resume !== undefined) updates.resume = resume;
     if (savedjobs !== undefined) {
-      // Validate that savedjobs is a valid JSON array before storing
       try {
-        // If it's already a string, use it directly
         if (typeof savedjobs === "string") {
-          // Validate it's parseable
           JSON.parse(savedjobs);
           updates.savedjobs = savedjobs;
         } else {
-          // If it's an object, stringify it
           updates.savedjobs = JSON.stringify(savedjobs);
         }
       } catch (jsonError) {
