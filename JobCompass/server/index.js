@@ -16,7 +16,6 @@ console.log("Environment variables loaded:", { PORT, CORS_ORIGIN });
 app.use(
   cors({
     origin: CORS_ORIGIN,
-    credentials: true,
   })
 );
 app.use(express.json()); // body parser
