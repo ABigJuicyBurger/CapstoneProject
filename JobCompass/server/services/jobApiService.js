@@ -1,9 +1,11 @@
 import axios from "axios";
 import dotenv from "dotenv";
-import initKnex from "knex";
-import configuration from "../knexfile.js";
-const knex = initKnex(configuration);
-import "dotenv/config";
+import knex from "knex";
+import knexConfig from "../knexfile.js";
+
+// Initialize knex with the correct environment
+const environment = process.env.NODE_ENV || "development";
+const db = knex(knexConfig[environment]);
 
 dotenv.config();
 
