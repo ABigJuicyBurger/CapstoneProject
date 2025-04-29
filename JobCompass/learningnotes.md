@@ -549,3 +549,10 @@ April 02
   \_ Almost out of EC2 hours, will switch to Render for now
   \_ uses Postgre and reconfigure knex to match Render's postgre requirements + pooling
   \_ pooling DB means use same "pool" of reusable connections (from 2-10, helps with perfomance and resource management)
+
+  Apr 29 2025
+  \_ to relaunch AWS EC2 just use new ip address for duckdns - else all works (may need to relaod nginx and pm2)
+  \_ for render + netlify
+  \_ knexfile.js updated to include production config for postgre (render) and development (local + EC2)
+  \_ pooled connection and created centralized DB connection, then fixed routes to use that connection
+  \_ changed env and added SSL config
