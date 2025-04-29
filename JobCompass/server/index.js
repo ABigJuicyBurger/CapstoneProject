@@ -1,27 +1,33 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-
-import jobsRoutes from "./routes/jobsRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
+import knex from "knex";
+import knexConfig from "./knexfile.js";
 
 // Load environment variables
 dotenv.config();
 
+// Initialize knex with the correct environment
+const environment = process.env.NODE_ENV || "development";
+const db = knex(knexConfig[environment]);
+
+// Create Express app
 const app = express();
-const { PORT, CORS_ORIGIN } = process.env;
+const PORT = process.env.PORT || 8080;
 
-console.log("Environment variables loaded:", { PORT, CORS_ORIGIN });
-
+// Middleware
+app.use(express.json());
 app.use(
   cors({
-    origin: CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN || "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
-app.use(express.json()); // body parser
-app.use(express.static("public")); // serves static files
 
-/* Custom Middleware to verify JWT Token */
+// Import routes
+import jobsRoutes from "./routes/jobsRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 // Get all jobs or individual job
 app.use("/jobs", jobsRoutes);
@@ -37,9 +43,9 @@ app.get("/", (_req, res) => {
   res.send("Welcome!");
 });
 
-// Use a default port if not specified in .env
-const port = PORT || 8080;
-
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${environment}`);
+  console.log(`CORS origin: ${process.env.CORS_ORIGIN || "*"}`);
 });
