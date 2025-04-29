@@ -1,4 +1,4 @@
-# Project Title
+# JobCompass
 
 ![](JobCompass.png)
 <br>
