@@ -2,7 +2,7 @@ import "dotenv/config";
 
 export default {
   development: {
-    client: "postgresql",
+    client: "mysql2",
     connection: {
       host: process.env.DB_HOST || "127.0.0.1",
       database: process.env.DB_NAME || "jobcompass",

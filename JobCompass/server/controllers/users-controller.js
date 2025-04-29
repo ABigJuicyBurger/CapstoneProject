@@ -1,10 +1,8 @@
-import initKnex from "knex";
-import configuration from "../knexfile.js";
+import db from "../db/connection.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import fs from "fs";
 import path from "path";
-const knex = initKnex(configuration);
 
 const login = async (req, res) => {
   const { username, password_hash } = req.body;
@@ -13,7 +11,7 @@ const login = async (req, res) => {
   try {
     console.log("Login attempt:", { username, password_hash });
 
-    const user = await knex("users")
+    const user = await db("users")
       .where({ username: username.toLowerCase() })
       .first();
     console.log(user);
@@ -63,7 +61,7 @@ const register = async (req, res) => {
     }
 
     // Check if username already exists
-    const existingUsername = await knex("users")
+    const existingUsername = await db("users")
       .where({ username: username.toLowerCase() })
       .first();
 
@@ -75,7 +73,7 @@ const register = async (req, res) => {
     }
 
     // Check if email already exists
-    const existingEmail = await knex("users")
+    const existingEmail = await db("users")
       .where({ email: email.toLowerCase() })
       .first();
 
@@ -91,7 +89,7 @@ const register = async (req, res) => {
     const password_hash = await bcrypt.hash(password, saltRounds);
 
     // Create new user
-    const [userId] = await knex("users").insert({
+    const [userId] = await db("users").insert({
       username: username.toLowerCase(),
       email: email.toLowerCase(),
       password_hash,
@@ -100,7 +98,7 @@ const register = async (req, res) => {
     });
 
     // Create user meta entry - only using fields that exist in the schema
-    await knex("user_meta").insert({
+    await db("user_meta").insert({
       user_id: userId,
       bio: "",
       resume: "",
@@ -119,7 +117,7 @@ const register = async (req, res) => {
 
 const getMetaInfo = async (req, res) => {
   try {
-    const userMeta = await knex("user_meta")
+    const userMeta = await db("user_meta")
       .where({ user_id: req.user.userId })
       .first();
 
@@ -140,7 +138,7 @@ const updateMetaInfo = async (req, res) => {
     const userId = req.user.userId;
 
     // Get current user meta to check existing resume
-    const userMeta = await knex("user_meta").where({ user_id: userId }).first();
+    const userMeta = await db("user_meta").where({ user_id: userId }).first();
     if (!userMeta) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -196,10 +194,10 @@ const updateMetaInfo = async (req, res) => {
     }
 
     // Perform update
-    await knex("user_meta").where({ user_id: userId }).update(updates);
+    await db("user_meta").where({ user_id: userId }).update(updates);
 
     // Return updated data
-    const updatedUserMeta = await knex("user_meta")
+    const updatedUserMeta = await db("user_meta")
       .where({ user_id: userId })
       .first();
 
