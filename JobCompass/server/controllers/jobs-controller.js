@@ -1,13 +1,10 @@
-import initKnex from "knex";
-import configuration from "../knexfile.js";
-const knex = initKnex(configuration);
+// Import the centralized db connection
+import db from "../db/connection.js";
 import jobApiService from "../services/jobApiService.js";
 
 const getJobs = async (_req, res) => {
-  // always need async here
-  // sync: all at the same time top to bottom fast
   try {
-    const jobsData = await knex("jobs");
+    const jobsData = await db("jobs");
     res.status(200).json(jobsData);
   } catch (err) {
     res.status(400).json({
@@ -20,7 +17,7 @@ const singleJob = async (req, res) => {
   try {
     // get the id from the request of the server
     const { id } = req.params;
-    const job = await knex("jobs").where({ id }).first();
+    const job = await db("jobs").where({ id }).first();
     // const jobData = job[0];
     res.status(200).json(job);
   } catch (err) {
@@ -51,7 +48,7 @@ const getSingleApiJob = async (req, res) => {
     console.log(`Fetching API job with ID: ${id}`);
 
     // Query the api_jobs table for the job with this ID
-    const job = await knex("api_jobs").where({ id }).first();
+    const job = await db("api_jobs").where({ id }).first();
 
     if (!job) {
       return res

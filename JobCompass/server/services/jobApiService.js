@@ -1,11 +1,7 @@
 import axios from "axios";
 import dotenv from "dotenv";
-import knex from "knex";
-import knexConfig from "../knexfile.js";
-
-// Initialize knex with the correct environment
-const environment = process.env.NODE_ENV || "development";
-const db = knex(knexConfig[environment]);
+// Import the centralized db connection
+import db from "../db/connection.js";
 
 dotenv.config();
 
@@ -105,7 +101,7 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
   try {
     // Check if we have valid cached data for this location
     // Query by search location, not by exact coordinates
-    cachedJobs = await knex("api_jobs")
+    cachedJobs = await db("api_jobs")
       .where({ location }) // This is the search term (e.g., "Calgary")
       .where("cached_at", ">", cacheDate)
       .orderBy("created_at", "desc");
@@ -179,12 +175,10 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
     for (const job of transformedJobs) {
       try {
         // Check if this exact job ID exists
-        const existingJob = await knex("api_jobs")
-          .where({ id: job.id })
-          .first();
+        const existingJob = await db("api_jobs").where({ id: job.id }).first();
 
         if (existingJob) {
-          await knex("api_jobs")
+          await db("api_jobs")
             .where({ id: job.id })
             .update({
               ...job,
@@ -199,7 +193,7 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
             });
           successCount++;
         } else {
-          await knex("api_jobs").insert({
+          await db("api_jobs").insert({
             ...job,
             location,
             cached_at: new Date().toISOString().slice(0, 19).replace("T", " "),

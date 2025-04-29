@@ -1,15 +1,14 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import knex from "knex";
-import knexConfig from "./knexfile.js";
+// Import the centralized db connection
+import db from "./db/connection.js";
 
 // Load environment variables
 dotenv.config();
 
-// Initialize knex with the correct environment
+// Get environment
 const environment = process.env.NODE_ENV || "development";
-const db = knex(knexConfig[environment]);
 
 // Create Express app
 const app = express();
