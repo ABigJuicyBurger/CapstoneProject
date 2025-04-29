@@ -1,15 +1,16 @@
-import initKnex from "knex";
-import configuration from "../knexfile.js";
 import express from "express";
 import multer from "multer";
 import path from "path";
 
 import * as usersController from "../controllers/users-controller.js";
 import authenticateToken from "../middleware/AuthToken.js";
+// Import the centralized db connection instead of creating a new one
+import db from "../db/connection.js";
 
 const router = express.Router();
 
-const knex = initKnex(configuration);
+// Remove this line - don't create a new Knex instance here
+// const knex = initKnex(configuration);
 
 // multer for file uploads
 const storage = multer.diskStorage({
