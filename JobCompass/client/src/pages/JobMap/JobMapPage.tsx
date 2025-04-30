@@ -7,6 +7,8 @@ function JobMapPage({
   noteState,
   updateNoteVisibility,
   jobs,
+  guestUser,
+  updateGuestUser,
 }: MapJobCardNoteType): JSX.Element {
   return (
     <>
@@ -14,6 +16,8 @@ function JobMapPage({
         noteState={noteState}
         updateNoteVisibility={updateNoteVisibility}
         jobs={jobs}
+        guestUser={guestUser}
+        updateGuestUser={updateGuestUser}
       />
     </>
   );

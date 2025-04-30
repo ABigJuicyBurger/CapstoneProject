@@ -1,12 +1,4 @@
-import {
-  APIProvider,
-  Map,
-  // Pin,
-  // AdvancedMarker,
-  // AdvancedMarkerAnchorPoint,
-  // useMap,
-  // InfoWindow, maybe needed for custom marker styling
-} from "@vis.gl/react-google-maps";
+import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import { useNavigate } from "react-router-dom";
 import { JSX, useEffect, useState, useMemo, useCallback } from "react";
 import { MyMarker } from "./MyMarker.tsx";
@@ -16,12 +8,11 @@ import "./JobMap.scss";
 
 import MapJobCardNoteType from "../../../types/MapJobCardType.ts";
 import { formatSalary } from "./formatSalary.tsx";
-// import JobCardType from "../../../types/JobCardType.ts";
 
 // Updated to center of Canada
-const CANADA_CENTER = {
-  lat: 56.1304,
-  lng: -106.3468,
+const CALGARY_CENTER = {
+  lat: 51.0447,
+  lng: -114.0719,
 };
 
 // Extended to cover all of Canada
@@ -48,7 +39,7 @@ const JobMap = ({
   const [hoveredMarkers, setHoveredMarkers] = useState<Record<string, boolean>>(
     {}
   );
-  const [currentZoom, setCurrentZoom] = useState<number>(4); // Lower default zoom level for all of Canada
+  const [currentZoom, setCurrentZoom] = useState<number>(10); // Lower default zoom level for all of Canada
 
   const apiKey: string = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -117,9 +108,9 @@ const JobMap = ({
           <APIProvider apiKey={apiKey}>
             <Map
               // style={{ width: "95vw", height: "100vh" }}
-              defaultCenter={CANADA_CENTER}
+              defaultCenter={CALGARY_CENTER}
               mapId={`6ca41446c199331d`}
-              defaultZoom={4}
+              defaultZoom={12}
               // remove zoom in out
               disableDefaultUI={true}
               // remove satellide mode
