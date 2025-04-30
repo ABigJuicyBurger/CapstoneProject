@@ -6,7 +6,7 @@ import axios from "axios";
 import IndividualJob from "./pages/IndividualJob/IndividualJobPage.tsx";
 import JobList from "./components/JobList/JobList";
 import HomePage from "./pages/HomePage/HomePage";
-import JobMapPage from "./components/JobMap/JobMap.tsx";
+import JobMapPage from "./pages/JobMap/JobMapPage.tsx";
 import Header from "./components/Header/Header.tsx";
 import JobNote from "./components/JobNote/JobNote.tsx";
 import LoginPage from "./pages/LoginPage/LoginPage.tsx";
