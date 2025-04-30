@@ -235,7 +235,7 @@ function RegisterPage({ showNotification }: RegisterPageProps) {
 
           <p className="auth-form__link-text">
             Already have an account?{" "}
-            <Link to="/login" className="auth-form__link">
+            <Link to="/signIn" className="auth-form__link">
               Login here
             </Link>
           </p>
