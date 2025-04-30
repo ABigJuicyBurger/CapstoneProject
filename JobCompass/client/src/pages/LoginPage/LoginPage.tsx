@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 type loginUtility = {
   loggedIn: boolean;
@@ -63,9 +64,9 @@ function LoginPage({ loggedIn, handleLogin, error }: loginUtility) {
             {error && <p className="auth-form__error">{error}</p>}
             <p className="auth-form__link-text">
               Don't have an account?{" "}
-              <a href="/register" className="auth-form__link">
+              <Link className="auth-form__link" to="/register">
                 Register here
-              </a>
+              </Link>
             </p>
           </form>
         </div>
