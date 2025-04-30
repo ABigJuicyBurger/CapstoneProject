@@ -55,8 +55,4 @@ router.put(
 /* Protected endpoint to get user details */
 router.get("/userProfile", authenticateToken, usersController.getUser);
 
-/* Get and update user meta information (Protected) - Deprecated, use /meta instead */
-router.get("/user/meta", authenticateToken, usersController.getMetaInfo);
-router.put("/user/meta", authenticateToken, usersController.updateMetaInfo);
-
 export default router;

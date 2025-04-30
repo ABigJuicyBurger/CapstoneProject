@@ -4,6 +4,10 @@ import dotenv from "dotenv";
 // Import the centralized db connection
 import db from "./db/connection.js";
 
+// Import routes
+import jobsRoutes from "./routes/jobsRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+
 // Load environment variables
 dotenv.config();
 
@@ -23,10 +27,6 @@ app.use(
     credentials: true,
   })
 );
-
-// Import routes
-import jobsRoutes from "./routes/jobsRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
 
 // Get all jobs or individual job
 app.use("/jobs", jobsRoutes);
