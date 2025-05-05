@@ -42,7 +42,7 @@ app.get("/", (_req, res) => {
   res.send("Welcome!");
 });
 
-app.get("*", (req, res) => {
+app.use((req, res) => {
   res.status(404).send("Error, please try again or go home");
 });
 
