@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ProfileBar from "../ProfileBar/ProfileBar.tsx";
-import "./Header.scss";
+import { AppBar, Box, Button, IconButton, Toolbar, Typography, useTheme } from "@mui/material";
+import { MapOutlined, ListOutlined } from "@mui/icons-material";
 
-type HeaderMobilityTypes = {
+interface HeaderProps {
   mobileState: boolean;
   mobileMapMode: boolean;
   setMobileMapMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -11,7 +12,7 @@ type HeaderMobilityTypes = {
   loggedIn: boolean;
   handleLogout: () => void;
   user: any;
-};
+}
 
 function Header({
   mobileState,
@@ -21,9 +22,10 @@ function Header({
   loggedIn,
   handleLogout,
   user,
-}: HeaderMobilityTypes) {
+}: HeaderProps) {
   const location = useLocation();
-  const isJobPage = location.pathname === "/jobs"; // are you in jobs?
+  const theme = useTheme();
+  const isJobPage = location.pathname === "/jobs";
 
   const toggleMapList = () => {
     setMobileMapMode(!mobileMapMode);
@@ -32,42 +34,54 @@ function Header({
   useEffect(() => {}, [location]);
 
   return (
-    <header
-      className={`homePage__header ${
-        mobileState ? "homePage__header--mobile" : ""
-      }`}
-    >
-      <div className="homePage__header__logo">
-        <Link to={"/"}>
-          <img
-            className="homePage__header__logo__image"
-            src="/assets/Logo/compassfavicon.png"
-            alt="JobCompass Logo"
-          />
-          <h1>JobCompass</h1>
-        </Link>
-      </div>
+    <AppBar  className={`homePage__header ${
+      mobileState ? "homePage__header--mobile" : ""
+    }`} position="static" color="primary">
+      <Toolbar>
+        <Box className="homePage__header__logo" sx={{ display: 'flex', alignItems: 'center', gap: 2 }} >
+          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <img
+                 className="homePage__header__logo__image"
+           
+                src="/assets/Logo/compassfavicon.png"
+                alt="JobCompass Logo"
+                style={{ height: '32px', width: '32px' }}
+              />
+              <Typography variant="h6" component="h1">
+                JobCompass
+              </Typography>
+            </Box>
+          </Link>
 
-      {mobileState && isJobPage && (
-        <button
-          onClick={() => toggleMapList()}
-          className="homePage__header--mobile-toggle"
-        >
-          {mobileMapMode ? (
-            <img src="/assets/Icons/listIcon.png" alt="List Icon"></img>
-          ) : (
-            <img src="/assets/Icons/icon.png" alt="Map Icon"></img>
+          {mobileState && isJobPage && (
+            <IconButton
+              onClick={toggleMapList}
+              color="inherit"
+              size="medium"
+              className="homePage__header--mobile-toggle"
+
+            >
+              {mobileMapMode ? (
+                <ListOutlined />
+              ) : (
+                <MapOutlined />
+              )}
+            </IconButton>
           )}
-        </button>
-      )}
+        </Box>
 
-      <ProfileBar
-        user={user}
-        handleLogout={handleLogout}
-        mobileState={mobileState}
-        loggedIn={loggedIn}
-      />
-    </header>
+        <Box sx={{ flexGrow: 1 }} />
+        
+        <ProfileBar
+          user={user}
+          handleLogout={handleLogout}
+          mobileState={mobileState}
+          loggedIn={loggedIn}
+        />
+      </Toolbar>
+    </AppBar>
   );
 }
+
 export default Header;

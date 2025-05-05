@@ -45,7 +45,9 @@ const SubmitResume = ({
       if (response.data) {
         setUserMeta(response.data);
         setSelectedFile(null);
-        alert("File uploaded successfully!");
+        alert("File uploaded successfully!"); // fix as window.alert is oldy, switch to a component library
+        // from a css framework
+        // tailwind just makes css faster
       }
     } catch (err) {
       console.error(err);

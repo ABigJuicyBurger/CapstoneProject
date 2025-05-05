@@ -42,6 +42,10 @@ app.get("/", (_req, res) => {
   res.send("Welcome!");
 });
 
+app.get("*", (req, res) => {
+  res.status(404).send("Error, please try again or go home");
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
