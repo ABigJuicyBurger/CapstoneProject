@@ -1,6 +1,21 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import "./ProfileBar.scss";
+import {
+  Box,
+  Button,
+  Avatar,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
+import LogoutIcon from "@mui/icons-material/Logout";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LoginIcon from "@mui/icons-material/Login";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { styled } from "@mui/material/styles";
 
 type ProfileBarType = {
   user: any;
@@ -8,19 +23,29 @@ type ProfileBarType = {
   mobileState: boolean;
   loggedIn: boolean;
 };
+
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
+  fontSize: "1.25rem",
+}));
+
 const ProfileBar = ({
   user,
   handleLogout,
   mobileState,
   loggedIn,
 }: ProfileBarType) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const toggleBar = () => {
-    setIsOpen(!isOpen);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  // Get the first letter of the username for the avatar
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const avatarLetter = user?.userName
     ? user.userName.charAt(0).toUpperCase()
     : "";
@@ -30,63 +55,99 @@ const ProfileBar = ({
     : `/guest/${user?.id || ""}savedJobs`;
 
   return (
-    <div className="profile-bar">
-      <button className="profile-bar__button" onClick={toggleBar}>
-        <div className="profile-bar__avatar">{avatarLetter}</div>
-        <span className="profile-bar__name">{user?.userName}</span>
-      </button>
+    <Box>
+      <Button
+        onClick={handleClick}
+        sx={{
+          color: "inherit",
+          textTransform: "none",
+          "&:hover": {
+            backgroundColor: "transparent",
+          },
+        }}
+      >
+        <Typography variant="body1">{user?.userName}</Typography>
+        <StyledAvatar>{avatarLetter}</StyledAvatar>
+      </Button>
 
-      {isOpen && (
-        <div className="profile-bar__dropdown">
-          <div className="profile-bar__dropdown-content">
-            {loggedIn ? (
-              <Link
-                to={`/user/${user.userName}/profile`}
-                className="profile-bar__link"
-                onClick={() => setIsOpen(false)}
-              >
-                Profile
-              </Link>
-            ) : (
-              <>
-                <Link
-                  className="profile-bar__link"
-                  to={"/signIn"}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  className="profile-bar__link"
-                  to={"/register"}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Register
-                </Link>
-              </>
-            )}
-            <Link
-              to={savedJobsUrl}
-              className="profile-bar__link"
-              onClick={() => setIsOpen(false)}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        {loggedIn ? (
+          <>
+            <MenuItem
+              component={Link}
+              to={`/user/${user.userName}/profile`}
+              onClick={handleClose}
             >
-              Saved Jobs
-            </Link>
-            {loggedIn && (
-              <button
-                className="profile-bar__logout-button"
-                onClick={() => {
-                  handleLogout();
-                  setIsOpen(false);
-                }}
-              >
-                Logout
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary="Profile" />
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to={savedJobsUrl}
+              onClick={handleClose}
+            >
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary="Saved Jobs" />
+            </MenuItem>
+            <MenuItem onClick={handleLogout}>
+              <ListItemIcon>
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </MenuItem>
+          </>
+        ) : (
+          <>
+            <MenuItem
+              component={Link}
+              to={savedJobsUrl}
+              onClick={handleClose}
+            >
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary="Saved Jobs" />
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/signIn"
+              onClick={handleClose}
+            >
+              <ListItemIcon>
+                <LoginIcon />
+              </ListItemIcon>
+              <ListItemText primary="Sign In" />
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/register"
+              onClick={handleClose}
+            >
+              <ListItemIcon>
+                <PersonAddIcon />
+              </ListItemIcon>
+              <ListItemText primary="Register" />
+            </MenuItem>
+          </>
+        )}
+      </Menu>
+    </Box>
   );
 };
 
