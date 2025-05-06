@@ -48,6 +48,7 @@ const SubmitResume = ({
         alert("File uploaded successfully!"); // fix as window.alert is oldy, switch to a component library
         // from a css framework
         // tailwind just makes css faster
+        // material ui - component lib
       }
     } catch (err) {
       console.error(err);

@@ -80,9 +80,20 @@ export const theme = createTheme({
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: '#000000',
+          '&:hover': {
+            color: '#000000',
+          },
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
+          color: '#000000',
           borderRadius: 8,
           textTransform: 'none',
           boxShadow: 'none',
@@ -103,6 +114,13 @@ export const theme = createTheme({
           color: '#6c757d',
           '&:hover': {
             backgroundColor: '#e9ecef',
+          },
+        },
+        colorInherit: {
+          color: '#000000',
+          '&:hover': {
+            color: '#000000',
+            backgroundColor: 'rgba(0, 0, 0, 0.05)',
           },
         },
       },

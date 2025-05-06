@@ -34,16 +34,12 @@ function Header({
   useEffect(() => {}, [location]);
 
   return (
-    <AppBar  className={`homePage__header ${
-      mobileState ? "homePage__header--mobile" : ""
-    }`} position="static" color="primary">
+    <AppBar position="static" color="primary">
       <Toolbar>
-        <Box className="homePage__header__logo" sx={{ display: 'flex', alignItems: 'center', gap: 2 }} >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <img
-                 className="homePage__header__logo__image"
-           
                 src="/assets/Logo/compassfavicon.png"
                 alt="JobCompass Logo"
                 style={{ height: '32px', width: '32px' }}
@@ -59,8 +55,6 @@ function Header({
               onClick={toggleMapList}
               color="inherit"
               size="medium"
-              className="homePage__header--mobile-toggle"
-
             >
               {mobileMapMode ? (
                 <ListOutlined />

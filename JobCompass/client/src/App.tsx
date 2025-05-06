@@ -17,7 +17,7 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";
 
 import "./App.scss";
 import JobCardType from "../types/JobCardType.ts";
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./theme/theme.tsx";
 
 type newGuest = {
@@ -344,13 +344,12 @@ function App(): JSX.Element {
   );
 }
 
-function AppWithTheme(){
-
-  return (   
+function AppWithTheme() {
+  return (
     <ThemeProvider theme={theme}>
-      <App/>
+      <App />
     </ThemeProvider>
-  )
+  );
 }
 
 export default AppWithTheme;
