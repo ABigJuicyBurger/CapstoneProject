@@ -71,6 +71,16 @@ export const theme = createTheme({
     },
   },
   components: {
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          transition: 'all 0.2 ease',
+          '&:hover' : {
+            transform: 'scale(1.05)'
+          }
+        }
+      }
+    },
     MuiAppBar: {
       styleOverrides: {
         root: {
