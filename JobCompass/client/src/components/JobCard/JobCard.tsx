@@ -21,11 +21,10 @@ function JobCard({
   onClose = () => {},
   guestUser,
   updateGuestUser,
+  jobs
 }: MapJobCardType): JSX.Element {
   console.log("updateNoteVisibility in JobCard:", typeof updateNoteVisibility);
 
-  // my fnxn will return JSX
-  const [job, setJob] = useState<JobCardType | null>(null); // tells TS what data to expect
   const [expandedText, setExpandedText] = useState<boolean>(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [userSavedJobs, setUserSavedJobs] = useState<string[]>([]);
@@ -34,30 +33,7 @@ function JobCard({
   const { id: urlId } = useParams();
   const id = jobId || urlId; // ID can be from params or from what user clicks on map
 
-  const fetchJob = async (): Promise<void | unknown> => {
-    // void means it just completes operation
-    // this function is a promise that returns nothing
-    try {
-      console.log(
-        "Attempting to fetch from:",
-        `${backendURL}/jobs/api-jobs/${id}`
-      );
-      const jobResponse = await axios.get(`${backendURL}/jobs/${id}`);
-      setJob(jobResponse.data);
-    } catch (err: any) {
-      setJob(null);
-      console.log(err.message);
-      return <h1>Could not fetch job!</h1>;
-    }
-  };
-
-  useEffect(() => {
-    fetchJob();
-  }, []);
-
-  useEffect(() => {
-    fetchJob();
-  }, [id]);
+  const job = jobs?.find(j => j.id === jobId)
 
   // Check if the user has saved this job when component loads
   useEffect(() => {

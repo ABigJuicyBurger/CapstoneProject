@@ -103,7 +103,7 @@ export const theme = createTheme({
           },
         },
         containedPrimary: {
-          backgroundColor: '#007bff',
+          backgroundColor: '#2557a7',
           color: '#fff',
           '&:hover': {
             backgroundColor: '#0069d9',

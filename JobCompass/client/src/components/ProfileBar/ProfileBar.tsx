@@ -84,7 +84,7 @@ const ProfileBar = ({
         }}
       >
         {loggedIn ? (
-          <>
+          <Box>
             <MenuItem
               component={Link}
               to={`/user/${user.userName}/profile`}
@@ -111,9 +111,9 @@ const ProfileBar = ({
               </ListItemIcon>
               <ListItemText primary="Logout" />
             </MenuItem>
-          </>
+          </Box>
         ) : (
-          <>
+          <Box>
             <MenuItem
               component={Link}
               to={savedJobsUrl}
@@ -144,7 +144,7 @@ const ProfileBar = ({
               </ListItemIcon>
               <ListItemText primary="Register" />
             </MenuItem>
-          </>
+          </Box>
         )}
       </Menu>
     </Box>

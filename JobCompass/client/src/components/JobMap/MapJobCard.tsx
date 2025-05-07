@@ -9,6 +9,7 @@ const MapJobCard = ({
   onClose,
   guestUser,
   updateGuestUser,
+  jobs
 }: MapJobCardNoteType) => {
   return (
     <div className="map-job-card">
@@ -19,6 +20,7 @@ const MapJobCard = ({
         onClose={onClose}
         guestUser={guestUser}
         updateGuestUser={updateGuestUser}
+        jobs={jobs}
       />
     </div>
   );
