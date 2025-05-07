@@ -160,7 +160,6 @@ const JobMap = ({
               noteState={noteState}
               guestUser={guestUser}
               updateGuestUser={updateGuestUser}
-              jobs={jobs}
             />
           </div>
         )}
