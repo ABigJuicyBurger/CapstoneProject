@@ -1,6 +1,5 @@
 import express from 'express'
 import {GoogleGenAI} from '@google/genai';
-import pdf from 'pdf-parse';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from "fs";
@@ -13,13 +12,25 @@ const router = express.Router();
 const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
   });
+
+function extractTextFromBuffer(buffer) {
+    const text = buffer.toString('utf8');
+    // This is a simplified version that works for some PDFs
+    // For more complex PDFs, you might need to implement more sophisticated parsing
+    return text;
+}
   
 async function extractTextFromPDF(filePath) {
     try {
+        if (!fs.existsSync(filePath)) {
+            throw new Error (`File not found: ${filePath}`)
+        }
+        
         const pdfFile = fs.readFileSync(filePath);
-        const data = await pdf(pdfFile);
+        const text = await extractTextFromBuffer(pdfFile);
 
-        const cleanedText = data.text
+
+        const cleanedText = text
         .replace(/\r\n/g, '\n')      // Normalize line breaks
         .replace(/\n\s*\n/g, '\n')   // Remove extra blank lines
         .replace(/\s+/g, ' ')       // Normalize whitespace
@@ -32,8 +43,16 @@ async function extractTextFromPDF(filePath) {
     }
 }
 
+
+
 router.post("/", async (req, res) => {
     try {
+        if (!jobDescription || !resumePath) {
+            return res.status(400).json({ 
+                error: "Both jobDescription and resumePath are required" 
+            });
+        }
+
         const {jobDescription, resumePath} = req.body;
 
         const fullPath = path.join(__dirname, "../../uploads", resumePath);
@@ -60,5 +79,46 @@ router.post("/", async (req, res) => {
         res.status(500).json({ error: "Failed to process resume" });
     }
 })
+
+// Add this route at the top of your routes file, before the PDF route
+// Update the test route to handle the Gemini response correctly
+router.post("/test", async (req, res) => {
+    try {
+        const { jobDescription, resumeText } = req.body;
+
+        if (!jobDescription || !resumeText) {
+            return res.status(400).json({ 
+                error: "Both jobDescription and resumeText are required" 
+            });
+        }
+
+        const prompt = `Analyze the compatibility between this resume and job description:
+        Job Description: ${jobDescription}
+        Resume: ${resumeText}
+        
+        Provide a compatibility score (1-10) and detailed analysis of strengths and areas for improvement.`;
+
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.0-flash',
+            contents: prompt
+        });
+
+        // Wait for the response and get the text
+        const text = response.text;
+
+        
+        // Extract the score (if it exists)
+        const scoreMatch = text.match(/(\d+)/);
+        const score = scoreMatch ? scoreMatch[0] : 'N/A';
+
+        res.json({
+            score: score,
+            analysis: text
+        });
+    } catch (error) {
+        console.error("AI Analysis Error:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 export default router;
