@@ -7,6 +7,7 @@ import db from "./db/connection.js";
 // Import routes
 import jobsRoutes from "./routes/jobsRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js"
 
 // Load environment variables
 dotenv.config();
@@ -36,6 +37,8 @@ app.use("/user", userRoutes);
 
 // to handle uploads
 app.use("/uploads", express.static("uploads"));
+
+app.use("/resumeAI", aiRoutes)
 
 // basic route for home
 app.get("/", (_req, res) => {

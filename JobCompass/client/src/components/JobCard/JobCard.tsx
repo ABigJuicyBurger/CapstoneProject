@@ -256,6 +256,9 @@ function JobCard({
               >
                 Apply
               </button>
+              <button onClick={(() => console.log("analyze resume"))}>
+                AI Checker
+              </button>
               {saveMessage && (
                 <div className="jobCard__save-message">{saveMessage}</div>
               )}
@@ -302,7 +305,7 @@ function JobCard({
             >
               {expandedText
                 ? job.description
-                : `${job.description.substring(0, MAX_LENGTH)}...`}
+                 : `${job.description.substring(0, MAX_LENGTH)}...`}
             </div>
             <button
               className="jobCard__description__button"
