@@ -10,4 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping the backend to keep it awake
-        run: curl https://jobcompass-s2az.onrender.com
+        run:  |
+    echo "---- Ping at $(date -u) UTC ----"
+    curl -I https://jobcompass-s2az.onrender.com
