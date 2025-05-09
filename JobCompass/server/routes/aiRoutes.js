@@ -100,7 +100,10 @@ router.post("/test", async (req, res) => {
 
         const response = await ai.models.generateContent({
             model: 'gemini-2.0-flash',
-            contents: prompt
+            contents: prompt,
+            config: {
+                systemInstruction: "You are an AI resume advisor. You will be given a resume in text format, and a job title and description and you will provide easy, simple to read advice. Think how you'd present your response in a UX/UI friendly manner in an application that visualizes job postings and allows users to create profiles"
+            }
         });
 
         // Wait for the response and get the text
