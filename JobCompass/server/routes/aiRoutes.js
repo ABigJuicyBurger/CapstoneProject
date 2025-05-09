@@ -45,40 +45,46 @@ async function extractTextFromPDF(filePath) {
 
 
 
+// Update the route to handle the request correctly
 router.post("/", async (req, res) => {
     try {
-        if (!jobDescription || !resumePath) {
+        const { jobDescription, resumeText } = req.body;
+
+        if (!jobDescription || !resumeText) {
             return res.status(400).json({ 
-                error: "Both jobDescription and resumePath are required" 
+                error: "Both jobDescription and resumeText are required" 
             });
         }
 
-        const {jobDescription, resumePath} = req.body;
-
-        const fullPath = path.join(__dirname, "../../uploads", resumePath);
-
-        const resumeText = await extractTextFromPDF(fullPath);
-
         const prompt = `Analyze the compatibility between this resume and job description:
-    Job Description: ${jobDescription}
-    Resume: ${resumeText}`
+        Job Description: ${jobDescription}
+        Resume: ${resumeText}
+        
+        Provide a compatibility score (1-10) and detailed analysis of strengths and areas for improvement.`;
 
-    const result = await ai.models.generateContent({
-       model: 'gemini-2.0-flash', // Using the latest stable modelm
-        contents: prompt
-    });
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.0-flash',
+            contents: prompt,
+            config: {
+                systemInstruction: "You are an AI resume advisor. You will be given a resume in text format, and a job title and description and you will provide easy, simple to read advice. Think how you'd present your response in a UX/UI friendly manner in an application that visualizes job postings and allows users to create profiles"
+            }
+        });
 
-    const response = await result.response;
+        const text = response.text;
+        
+        // Extract the score (if it exists)
+        const scoreMatch = text.match(/(\d+)/);
+        const score = scoreMatch ? scoreMatch[0] : 'N/A';
 
-    res.json({
-        score: response.text().match(/\d+/)[0],
-        analysis: response.text()
-    });
+        res.json({
+            score: score,
+            analysis: text
+        });
     } catch (error) {
-        console.error("Error processing resume:", error);
-        res.status(500).json({ error: "Failed to process resume" });
+        console.error("AI Analysis Error:", error);
+        res.status(500).json({ error: error.message });
     }
-})
+});
 
 // Add this route at the top of your routes file, before the PDF route
 // Update the test route to handle the Gemini response correctly
