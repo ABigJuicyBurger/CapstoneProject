@@ -1,0 +1,13 @@
+name: Keep Render Backend Alive
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # Every 30 minutes
+  workflow_dispatch:        # Optional: lets you trigger it manually from GitHub
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping the backend to keep it awake
+        run: curl https://jobcompass-s2az.onrender.com
