@@ -9,9 +9,7 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Add random delay (0–300 seconds)
-        run: sleep $((RANDOM % 300))
-        
+     
       - name: Simulate real user visit
         run: |
           echo "---- Simulated visit at $(date -u) UTC ----"
