@@ -29,6 +29,10 @@ function JobCard({
   const [expandedText, setExpandedText] = useState<boolean>(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [userSavedJobs, setUserSavedJobs] = useState<string[]>([]);
+  const [aiChecker, setAiChecker] = useState<boolean>(false);
+  const [aiAnalysis, setAiAnalysis] = useState<{score: string, analysis: string}|null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [resumeText, setResumeText] = useState("");
   const MAX_LENGTH = 150;
 
   const { id: urlId } = useParams();
@@ -206,6 +210,42 @@ function JobCard({
     }, 3000);
   };
 
+  const AIAnalyzer = () => {
+    setAiChecker(!aiChecker);
+
+  }
+
+  const handleAnalyzeResume = async () => {
+    if (!job?.title || !job.description) return;
+    setIsAnalyzing(true);
+
+    const token = localStorage.getItem("token");
+      if (!token) return; // Skip if not logged in
+
+      try {
+        // get user resume
+        const resumeResponse = await axios.get(`${backendURL}/user/meta`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const resumeText = resumeResponse.data.resume;
+        console.log(resumeText);
+        
+        const response = await axios.post(`${backendURL}/resumeAI`, {
+          jobDescription: job.description,
+          resumeText: resumeText,
+        });
+        console.log(response)
+        console.log(response.data)
+        setAiAnalysis(response.data);
+        setIsAnalyzing(false);
+      } catch (error) {
+        console.error("Error analyzing resume:", error);
+        setIsAnalyzing(false);
+      }
+  }
+
   if (!job) {
     return <h1>Loading Job...</h1>;
   }
@@ -256,19 +296,42 @@ function JobCard({
               >
                 Apply
               </button>
-              <button onClick={(() => console.log("analyze resume"))}>
-                AI Checker
+              <button onClick={(() => AIAnalyzer())}>
+                {aiChecker ? "Return to job" : "AI Analyzer"}
               </button>
               {saveMessage && (
                 <div className="jobCard__save-message">{saveMessage}</div>
               )}
             </div>
           </div>
-          <div className="jobCard__details">
-            <h2 className="jobCard__details__heading">Job Details</h2>
-            <div className="jobCard__details__type">
-              <section className="jobCard__details__type__section">
-                <h3 className="jobCard__details__type-title">Job Type</h3>
+          {aiChecker ? (
+            <div className="jobCard__aiChecker">
+              <h2 className="jobCard__aiChecker__heading">AI Checker</h2>
+              <div className="jobCard__aiChecker__text">
+                      <button
+          onClick={() => console.log("Clicked")}
+          disabled={isAnalyzing || !resumeText}
+          className="analyze-button"
+        >
+          {isAnalyzing ? "Analyzing..." : "Analyze Resume"}
+        </button>
+        
+        {aiAnalysis && (
+          <div className="analysis-results">
+            <h4>Analysis Results</h4>
+            <p><strong>Score:</strong> {aiAnalysis.score}</p>
+            <p><strong>Analysis:</strong> {aiAnalysis.analysis}</p>
+          </div>
+        )}
+              </div>
+            </div>
+          ) : (
+            <>
+            <div className="jobCard__details">
+              <h2 className="jobCard__details__heading">Job Details</h2>
+              <div className="jobCard__details__type">
+                <section className="jobCard__details__type__section">
+                  <h3 className="jobCard__details__type-title">Job Type</h3>
                 <p className="jobCard__details__type-text">{job.type}</p>
               </section>
               <section className="jobCard__details__salary__section">
@@ -321,6 +384,8 @@ function JobCard({
               {job.requirements}
             </div>
           </div>
+          </>
+          )}
         </div>
       )}
     </>
