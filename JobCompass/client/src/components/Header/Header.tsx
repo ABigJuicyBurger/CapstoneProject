@@ -34,7 +34,7 @@ function Header({
   useEffect(() => {}, [location]);
 
   return (
-    <AppBar position="static" color="primary">
+    <AppBar position="relative" z-index='1' color="primary">
       <Toolbar>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>

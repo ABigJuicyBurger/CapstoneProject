@@ -25,35 +25,61 @@ const SubmitResume = ({
     const API_URL = import.meta.env.VITE_BACKEND_URL;
     const token = localStorage.getItem("token");
 
-    if (selectedFile) {
-      if (selectedFile.size > 5000000) {
-        alert("What a large resume! Try to reduce the size");
+    if (!selectedFile) {
+        alert("Please select a file first!");
         return;
-      }
-      formData.append("resume", selectedFile);
     }
-    console.log(selectedFile);
-    try {
-      console.log("Uploading file:", selectedFile?.name);
-      const response = await axios.put(`${API_URL}/user/meta`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }); // add headers to the request
 
-      if (response.data) {
-        setUserMeta(response.data);
-        setSelectedFile(null);
-        alert("File uploaded successfully!"); // fix as window.alert is oldy, switch to a component library
-        // from a css framework
-        // tailwind just makes css faster
-        // material ui - component lib
-      }
-    } catch (err) {
-      console.error(err);
+    // Validate file type
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (!allowedTypes.includes(selectedFile.type)) {
+        alert('Please upload a valid file type (PDF or Word document)');
+        return;
     }
-  };
+
+    // Validate file size (5MB max)
+    if (selectedFile.size > 5 * 1024 * 1024) {
+        alert("File size should be less than 5MB");
+        return;
+    }
+
+    formData.append("resume", selectedFile);
+
+    try {
+        const response = await axios.put(
+            `${API_URL}/user/meta`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+        
+        if (response.data) {
+            setUserMeta(prev => ({...prev, ...response.data}));
+            alert("Resume uploaded successfully!");
+        }
+    } catch (error: any) {
+        console.error("Upload error:", error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            console.error("Error data:", error.response.data);
+            console.error("Error status:", error.response.status);
+            console.error("Error headers:", error.response.headers);
+            alert(`Upload failed: ${error.response.data.message || 'Server error'}`);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error("No response received:", error.request);
+            alert("No response from server. Please try again.");
+        } else {
+            // Something happened in setting up the request
+            console.error('Error:', error.message);
+            alert(`Upload failed: ${error.message}`);
+        }
+    }
+};
 
   const fileData = () => {
     if (selectedFile) {
