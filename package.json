@@ -1,5 +1,10 @@
 {
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3"
+  },
+  "scripts":{
+    "start": "cd ./JobCompass/client && npm run dev",
+    "server": "cd ./JobCompass/server && npm run dev"
+
   }
 }

@@ -556,3 +556,5 @@ April 02
   \_ knexfile.js updated to include production config for postgre (render) and development (local + EC2)
   \_ pooled connection and created centralized DB connection, then fixed routes to use that connection
   \_ changed env and added SSL config
+
+FOCUS ON WHAT RECRUITERS CAN SEE. Backend can just mock data

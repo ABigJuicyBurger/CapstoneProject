@@ -1,0 +1,35 @@
+.map-job-card {
+  position: relative;
+  width: 100%;
+  max-width: 1200px; // Adjust as needed
+  margin: 0 auto;
+//   padding-top: 4.5rem; // This will push the content below the header
+  
+  &__container {
+    position: relative;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+}
+
+// Remove the top margin from JobCard when inside MapJobCard
+.map-job-card .jobCard {
+  margin-top: 0;
+  border: none;
+  box-shadow: none;
+}
+
+// Ensure the header stays above the job card
+header {
+  position: relative;
+  z-index: 10; // Higher than the job card
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .map-job-card {
+    padding-top: .5rem;
+  }
+}
