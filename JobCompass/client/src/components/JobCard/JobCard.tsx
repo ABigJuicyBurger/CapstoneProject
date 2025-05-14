@@ -3,7 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import axios from "axios";
 import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
-import path from 'path';
+import ReactMarkdown from 'react-markdown';
+
 
 
 import JobNote from "../JobNote/JobNote.tsx";
@@ -244,8 +245,8 @@ function JobCard({
 
         const resumeText = resumeResponse.data.resume;
         console.log(resumeText);
-        console.log("What is path? ", path.join(process.cwd(), resumeText))
-        
+        console.log('Sending resume path to server:', resumeText);
+
         const response = await axios.post(`${backendURL}/resumeAI`, {
           jobDescription: job.description,
           resumePath: resumeText,
@@ -323,8 +324,8 @@ function JobCard({
             </div>
           </div>
           {aiChecker ? (
-            <div className="jobCard__aiChecker">
-              <h2 className="jobCard__aiChecker__heading">AI Checker</h2>
+            <div className="jobCard__ai-analysis_section">
+              <h2 className="jobCard__ai-analysis_section__heading">AI Checker</h2>
               
              <button
           onClick={() => handleAnalyzeResume()}
@@ -335,11 +336,13 @@ function JobCard({
         </button>
         
         {aiAnalysis && (
-          <div className="analysis-results">
-            <h4>Analysis Results</h4>
-            <p><strong>Score:</strong> {aiAnalysis.score}</p>
-            <p><strong>Analysis:</strong> {aiAnalysis.analysis}</p>
-          </div>
+          <div className="jobCard__analysis-results">
+               <ReactMarkdown>
+            {typeof aiAnalysis === 'object' && aiAnalysis.analysis 
+                ? aiAnalysis.analysis 
+                : JSON.stringify(aiAnalysis)}
+        </ReactMarkdown>
+        </div>
         )}
               </div>
            
