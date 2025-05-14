@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import axios from "axios";
 import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
+import path from 'path';
+
 
 import JobNote from "../JobNote/JobNote.tsx";
 
@@ -242,14 +244,14 @@ function JobCard({
 
         const resumeText = resumeResponse.data.resume;
         console.log(resumeText);
+        console.log("What is path? ", path.join(process.cwd(), resumeText))
         
         const response = await axios.post(`${backendURL}/resumeAI`, {
           jobDescription: job.description,
-          resumeText: resumeText,
+          resumePath: resumeText,
         },      {
           headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
           } 
       });
         console.log(response)
@@ -323,8 +325,8 @@ function JobCard({
           {aiChecker ? (
             <div className="jobCard__aiChecker">
               <h2 className="jobCard__aiChecker__heading">AI Checker</h2>
-              <div className="jobCard__aiChecker__text">
-                      <button
+              
+             <button
           onClick={() => handleAnalyzeResume()}
           disabled={isAnalyzing}
           className="analyze-button"
@@ -340,7 +342,7 @@ function JobCard({
           </div>
         )}
               </div>
-            </div>
+           
           ) : (
             <>
             <div className="jobCard__details">

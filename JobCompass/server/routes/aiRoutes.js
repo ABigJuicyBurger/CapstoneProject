@@ -1,6 +1,7 @@
 import express from 'express'
 import {GoogleGenAI} from '@google/genai';
 import dotenv from 'dotenv';
+import pdf from 'pdf-parse'
 import path from 'path';
 import fs from "fs";
 
@@ -48,7 +49,25 @@ async function extractTextFromPDF(filePath) {
 // Update the route to handle the request correctly
 router.post("/", async (req, res) => {
     try {
-        const { jobDescription, resumeText } = req.body;
+        const { jobDescription, resumePath } = req.body;
+
+        const absolutePath = path.join(process.cwd(), resumePath);
+
+        console.log('Looking for PDF at path:', absolutePath);
+
+        if (!fs.existsSync(absolutePath)) {
+            console.error('PDF file does not exist at path:', absolutePath);
+            return res.status(400).json({ error: 'Resume file not found' });
+        }
+
+        const dataBuffer = fs.readFileSync(absolutePath);
+        const data = await pdf(dataBuffer);
+        const resumeText = data.text;
+
+        if (!resumeText) {
+            console.error('No text could be extracted from the PDF');
+            return res.status(400).json({ error: 'Could not extract text from resume' });
+        }
 
         if (!jobDescription || !resumeText) {
             return res.status(400).json({ 
@@ -64,7 +83,12 @@ router.post("/", async (req, res) => {
 
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-pro-preview-05-06',
-            contents: prompt,
+            contents: [{
+                role: 'user',
+                parts: [{
+                    text: `Job Description: ${jobDescription}\n\nResume: ${resumeText}`
+                }]
+            }],
             config: {
                 systemInstruction: "You are an AI resume advisor. You will be given a resume in text format, and a job title and description and you will provide easy, simple to read advice. Think how you'd present your response in a UX/UI friendly manner in an application that visualizes job postings and allows users to create profiles. If there is no resume text say you cannot read the resume and to reupload the resume "
             }
