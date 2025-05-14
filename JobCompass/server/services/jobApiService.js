@@ -7,8 +7,25 @@ dotenv.config();
 
 const CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
+const getConsistentOffset = (id, index = 0) => {
+  // Use the job ID to generate a consistent offset
+  const hash = id
+    .split("")
+    .reduce((acc, char) => ((acc << 5) - acc + char.charCodeAt(0)) | 0, 0);
+    // Generate offset between -0.01 and 0.01 degrees (roughly ±1 kilometer)
+  const positionSeed = (hash + index * 1000) % 1000;
+
+  const baseOffset = 0.03 // appx 3km
+
+  const latOffset = ( positionSeed % 200 - 100) / 1000 * baseOffset;
+  const longOffset = (Math.floor(positionSeed / 200) % 200 - 100) / 1000 * baseOffset;
+
+  return { latOffset, longOffset };
+
+};
+
 // Transform API job data to match our database schema
-const transformJobData = (apiJob) => {
+const transformJobData = (apiJob, index = 0) => {
   const sanitizeText = (text) => {
     if (!text) return "";
     // More targeted sanitization
@@ -27,30 +44,14 @@ const transformJobData = (apiJob) => {
   const location = apiJob.locations_derived?.[0] || "";
 
   // Create a consistent offset based on job ID to prevent markers from stacking
-  const getConsistentOffset = (id) => {
-    // Use the job ID to generate a consistent offset
-    const hash = id
-      .split("")
-      .reduce((acc, char) => acc + char.charCodeAt(0), 0 |0, 0);
-    // Generate offset between -0.01 and 0.01 degrees (roughly ±1 kilometer)
-    const positionSeed = (hash + index * 1000) % 1000;
-
-    const baseOffset = 0.03 // appx 3km
-
-    const latOffset = ( positionS % 200 - 100) / 1000 * baseOffset;
-    const longOffset = (Math.floor(positionseed / 200) % 200 - 100) / 1000 * baseOffset;
-
-    return { latOffset, longOffset };
-
-  };
 
   // Get base coordinates
 
   // Add offset to create unique position
 
-  const { latOffset, longOffset } = getConsistentOffset(apiJob.id);
-const latitude = parseFloat(apiJob.latitude) + latOffset;
-const longitude = parseFloat(apiJob.longitude) + longOffset;
+  const { latOffset, longOffset } = getConsistentOffset(apiJob.id, index);
+  const latitude = parseFloat(apiJob.latitude) + latOffset;
+  const longitude = parseFloat(apiJob.longitude) + longOffset;
 
   // Get salary information
   let salaryRange = "Not specified";
@@ -172,7 +173,8 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
     });
 
     // Transform the data to match our schema
-    const transformedJobs = response.data.map(transformJobData);
+    const transformedJobs = response.data.map((job, index) => transformJobData(job, index));
+
 
     // Update cache for this location
     let successCount = 0;
