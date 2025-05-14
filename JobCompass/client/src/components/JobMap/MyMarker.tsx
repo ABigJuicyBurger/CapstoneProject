@@ -23,22 +23,14 @@ export const MyMarker = React.memo(function MyMarker({
   miniMarker?: boolean;
 }) {
 
-  const getNumericCoordinate = (coord: any): number | null => {
-    if (coord === null || coord === undefined) return null;
-    if (typeof coord === 'number') return coord;
-    if (typeof coord === 'string') return parseFloat(coord);
-    if (coord.lat !== undefined) return coord.lat;
-    if (coord.lng !== undefined) return coord.lng;
-    return null;
-  };
+  const { id, latitude, longitude } = job;
 
-  const lat = getNumericCoordinate(job.latitude);
-  const lng = getNumericCoordinate(job.longitude);
+    // Log any invalid coordinates
+    if (isNaN(latitude) || isNaN(longitude)) {
+      console.error('Invalid coordinates for job:', id, latitude, longitude);
+      return null;
+    }
   
-  if (lat === null || lng === null) {
-    console.error('Invalid coordinates for job:', job.id, job.latitude, job.longitude);
-    return null;
-  }
   // Calculate z-index - higher for hovered markers to appear on top
   const zIndex = isHovered ? 1000 : 1;
 
@@ -54,10 +46,8 @@ export const MyMarker = React.memo(function MyMarker({
     <AdvancedMarker
       anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
       key={job.id}
-      position={{
-        lat,
-        lng
-      }}
+      position={{ lat: Number(latitude), lng: Number(longitude) }}
+
       // render some jobs and some clusters through preprocessing
       // too many jobs ? cluster : job
       clickable={true}

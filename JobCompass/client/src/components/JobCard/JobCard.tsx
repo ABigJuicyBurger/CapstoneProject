@@ -47,9 +47,9 @@ function JobCard({
     try {
       console.log(
         "Attempting to fetch from:",
-        `${backendURL}/jobs/api-jobs/${id}`
+        `${backendURL}/jobs/${id}`
       );
-      const jobResponse = await axios.get(`${backendURL}/jobs/api-jobs/${id}`);
+      const jobResponse = await axios.get(`${backendURL}/jobs/${id}`);
       setJob(jobResponse.data);
     } catch (err: any) {
       setJob(null);

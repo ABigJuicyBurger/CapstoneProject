@@ -9,19 +9,22 @@ const CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
 const getConsistentOffset = (id, index = 0) => {
   // Use the job ID to generate a consistent offset
-  const combinedString = `${id}-${index}`;
-
-  const hash = combinedString
-    .split("")
-    .reduce((acc, char) => ((acc << 5) - acc + char.charCodeAt(0)) | 0, 0);
-    // Generate offset between -0.01 and 0.01 degrees (roughly ±1 kilometer)
-
+  const combined = `${jobId}-${index}`;
+  
+  // Simple hash function to generate a number from the string
+  let hash = 0;
+  for (let i = 0; i < combined.length; i++) {
+    const char = combined.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  const offset = 0.01 + (Math.abs(hash) % 10) * 0.01; // 0.01 to 0.1 degrees
   const angle = (hash % 360) * (Math.PI / 180); // Convert to radians
-  const distance = 0.05 + (hash % 5) * 0.02; // Base distance + variation (0.05 to 0.15 degrees)  
 
+  // Calculate offsets using trigonometry to spread in a circle
+  const latOffset = Math.sin(angle) * offset;
+  const longOffset = Math.cos(angle) * offset;
 
-  const latOffset = Math.sin(angle) * distance;
-  const longOffset = Math.cos(angle) * distance;
 
   return { latOffset, longOffset };
 
@@ -29,7 +32,10 @@ const getConsistentOffset = (id, index = 0) => {
 
 // Transform API job data to match our database schema
 const transformJobData = (apiJob, index = 0) => {
-  console.log(`Transforming job ${apiJob.id} at index ${index}`);
+  console.log(`Transforming job ${apiJob.id} at index ${index}`, {
+    originalLat: apiJob.latitude,
+    originalLng: apiJob.longitude
+  });
 
   const sanitizeText = (text) => {
     if (!text) return "";
@@ -51,15 +57,24 @@ const transformJobData = (apiJob, index = 0) => {
   // Create a consistent offset based on job ID to prevent markers from stacking
 
   // Get base coordinates
+  let baseLat = parseFloat(apiJob.latitude) || 0;
+  let baseLng = parseFloat(apiJob.longitude) || 0;
 
   // Add offset to create unique position
+  if (baseLat === 0 && baseLng === 0) {
+    baseLat = 51.0447;  // Calgary's latitude
+    baseLng = -114.0719; // Calgary's longitude
+  }
 
   const { latOffset, longOffset } = getConsistentOffset(apiJob.id, index);
-  const latitude = parseFloat(apiJob.latitude) + latOffset;
-  const longitude = parseFloat(apiJob.longitude) + longOffset;
+  const latitude = baseLat + latOffset;
+  const longitude = baseLng + longOffset;
 
-  console.log(`Job ${apiJob.id} - Original: (${apiJob.latitude}, ${apiJob.longitude}), Offset: (${latOffset}, ${longOffset}), New: (${latitude}, ${longitude})`);
-
+  console.log(`Job ${apiJob.id} coordinates:`, {
+    original: { lat: apiJob.latitude, lng: apiJob.longitude },
+    base: { lat: baseLat, lng: baseLng },
+    withOffset: { lat: latitude, lng: longitude }
+  });
   // Get salary information
   let salaryRange = "Not specified";
   if (apiJob.ai_salary_minvalue && apiJob.ai_salary_maxvalue) {

@@ -72,7 +72,19 @@ const JobMap = ({
     // At medium zoom (11-13), show some markers with text based on criteria
     // At low zoom (<11), show mini markers only
 
-    return jobs.map((job, index) => {
+    return jobs.map((job) => {
+      let lat = Number(job.latitude);
+      let lng = Number(job.longitude);
+
+      if (isNaN(lat) || isNaN(lng)) {
+        // Create a simple hash from job ID to generate consistent offsets
+        const hash = job.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        const offset = 0.01 + (hash % 100) * 0.001; // Small offset (0.01 to 0.11 degrees)
+        
+        lat = 51.0447 + (hash % 2 === 0 ? offset : -offset);
+        lng = -114.0719 + (hash % 2 === 0 ? offset : -offset);
+      }
+      
       // Calculate if this marker should show text based on zoom level and density
       let showText = false;
 
@@ -92,7 +104,8 @@ const JobMap = ({
         // For high density at medium zoom, keep most as mini markers
       }
 
-      return { ...job, showText };
+      return { ...job, showText, latitude: lat,
+        longitude: lng };
     });
   }, [jobs, currentZoom]);
 
@@ -135,25 +148,18 @@ const JobMap = ({
                   const salary_range = formatSalary(job.salary_range);
 
                   const isHovered = hoveredMarkers[job.id] || false;
-                  console.log('Raw job data:', {
+                  
+                
+
+                  console.log('Marker position:', {
                     id: job.id,
-                    rawLat: job.latitude,
-                    rawLng: job.longitude,
-                    latType: typeof job.latitude,
-                    lngType: typeof job.longitude,
-                    latValue: job.latitude?.lat ?? job.latitude,
-                    lngValue: job.longitude?.lng ?? job.longitude
+                    position: { lat: job.latitude, lng: job.longitude }
                   });
 
                   return (
                     <MyMarker
                       key={job.id}
-                      job={{
-                        ...job,
-                        // Ensure coordinates are numbers
-                        latitude: Number(job.latitude?.lat ?? job.latitude),
-                        longitude: Number(job.longitude?.lng ?? job.longitude)
-                      }}
+                      job={job}
                       handleMarkerClick={handleMarkerClick}
                       handleMarkerHover={handleMarkerHover}
                       isHovered={isHovered}
