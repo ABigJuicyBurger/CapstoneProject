@@ -1,7 +1,6 @@
 import express from 'express'
 import {GoogleGenAI} from '@google/genai';
 import dotenv from 'dotenv';
-import pdf from 'pdf-parse'
 import path from 'path';
 import fs from "fs";
 
@@ -51,13 +50,15 @@ router.post("/", async (req, res) => {
     try {
         const { jobDescription, resumePath } = req.body;
 
-        const absolutePath = path.join(process.cwd(), resumePath);
+        const {default: pdf} = await import('pdf-parse')
 
+        const absolutePath = path.join(process.cwd(), resumePath);
         console.log('Looking for PDF at path:', absolutePath);
 
         if (!fs.existsSync(absolutePath)) {
             console.error('PDF file does not exist at path:', absolutePath);
-            return res.status(400).json({ error: 'Resume file not found' });
+            return res.status(400).json({ error: 'Resume file not found',                 details: `File not found at: ${absolutePath}`
+            });
         }
 
         const dataBuffer = fs.readFileSync(absolutePath);
