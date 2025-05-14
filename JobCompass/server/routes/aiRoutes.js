@@ -63,10 +63,10 @@ router.post("/", async (req, res) => {
         Provide a compatibility score (1-10) and detailed analysis of strengths and areas for improvement.`;
 
         const response = await ai.models.generateContent({
-            model: 'gemini-2.0-flash',
+            model: 'gemini-2.5-pro-preview-05-06',
             contents: prompt,
             config: {
-                systemInstruction: "You are an AI resume advisor. You will be given a resume in text format, and a job title and description and you will provide easy, simple to read advice. Think how you'd present your response in a UX/UI friendly manner in an application that visualizes job postings and allows users to create profiles"
+                systemInstruction: "You are an AI resume advisor. You will be given a resume in text format, and a job title and description and you will provide easy, simple to read advice. Think how you'd present your response in a UX/UI friendly manner in an application that visualizes job postings and allows users to create profiles. If there is no resume text say you cannot read the resume and to reupload the resume "
             }
         });
 

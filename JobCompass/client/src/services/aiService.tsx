@@ -1,8 +1,13 @@
 import axios from 'axios';
 
+// CURRENTLY NOT BEING USED 
+
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const analyzeResume = async (jobDescription: string, resumeText: string) => {
+    if (!resumeText) {
+        throw new Error('Resume is required');
+    }
     try {
         const response = await axios.post(
             `${backendURL}/resumeAI`,
@@ -24,4 +29,4 @@ const analyzeResume = async (jobDescription: string, resumeText: string) => {
     }
 };
 
-export default analyzeResume
+export default analyzeResume;

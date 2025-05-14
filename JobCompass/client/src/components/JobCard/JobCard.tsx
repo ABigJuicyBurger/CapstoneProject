@@ -220,7 +220,12 @@ function JobCard({
     setIsAnalyzing(true);
 
     const token = localStorage.getItem("token");
-      if (!token) return; // Skip if not logged in
+      if (!token) {
+        alert("Please log in to analyze your resume");
+        setIsAnalyzing(false);
+
+        return;
+      }; // Skip if not logged in
 
       try {
         // get user resume
@@ -229,13 +234,24 @@ function JobCard({
             Authorization: `Bearer ${token}`,
           },
         });
+        if (!resumeResponse.data.resume) {
+          alert("Please upload a resume to analyze");
+          setIsAnalyzing(false);
+          return;
+        }
+
         const resumeText = resumeResponse.data.resume;
         console.log(resumeText);
         
         const response = await axios.post(`${backendURL}/resumeAI`, {
           jobDescription: job.description,
           resumeText: resumeText,
-        });
+        },      {
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+          } 
+      });
         console.log(response)
         console.log(response.data)
         setAiAnalysis(response.data);
@@ -309,8 +325,8 @@ function JobCard({
               <h2 className="jobCard__aiChecker__heading">AI Checker</h2>
               <div className="jobCard__aiChecker__text">
                       <button
-          onClick={() => console.log("Clicked")}
-          disabled={isAnalyzing || !resumeText}
+          onClick={() => handleAnalyzeResume()}
+          disabled={isAnalyzing}
           className="analyze-button"
         >
           {isAnalyzing ? "Analyzing..." : "Analyze Resume"}
