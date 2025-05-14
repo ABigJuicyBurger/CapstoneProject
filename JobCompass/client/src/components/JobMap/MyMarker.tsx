@@ -23,10 +23,19 @@ export const MyMarker = React.memo(function MyMarker({
   miniMarker?: boolean;
 }) {
 
-  const lat = Number(job.latitude);
-  const lng = Number(job.longitude);
+  const getNumericCoordinate = (coord: any): number | null => {
+    if (coord === null || coord === undefined) return null;
+    if (typeof coord === 'number') return coord;
+    if (typeof coord === 'string') return parseFloat(coord);
+    if (coord.lat !== undefined) return coord.lat;
+    if (coord.lng !== undefined) return coord.lng;
+    return null;
+  };
+
+  const lat = getNumericCoordinate(job.latitude);
+  const lng = getNumericCoordinate(job.longitude);
   
-  if (isNaN(lat) || isNaN(lng)) {
+  if (lat === null || lng === null) {
     console.error('Invalid coordinates for job:', job.id, job.latitude, job.longitude);
     return null;
   }

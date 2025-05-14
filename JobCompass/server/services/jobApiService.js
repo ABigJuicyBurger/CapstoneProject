@@ -91,8 +91,8 @@ const transformJobData = (apiJob, index = 0) => {
     type: jobType,
     salary_range: truncate(salaryRange, 250),
     address: truncate(location, 250),
-    latitude: Number(latitude),
-    longitude: Number(longitude),
+    latitude: latitude?.lat || latitude || 0,  // If latitude is an object, use its .lat property
+    longitude: longitude?.lng || longitude || 0, // If longitude is an object, use its .lng property
     company_logo_url: truncate(apiJob.organization_logo || "", 250),
     requirements: sanitizeText(
       truncate(apiJob.ai_requirements_summary || "", 65000)

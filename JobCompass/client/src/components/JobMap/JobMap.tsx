@@ -135,12 +135,14 @@ const JobMap = ({
                   const salary_range = formatSalary(job.salary_range);
 
                   const isHovered = hoveredMarkers[job.id] || false;
-                  console.log('Job coordinates:', {
+                  console.log('Raw job data:', {
                     id: job.id,
-                    lat: job.latitude,
-                    lng: job.longitude,
-                    typeLat: typeof job.latitude,
-                    typeLng: typeof job.longitude
+                    rawLat: job.latitude,
+                    rawLng: job.longitude,
+                    latType: typeof job.latitude,
+                    lngType: typeof job.longitude,
+                    latValue: job.latitude?.lat ?? job.latitude,
+                    lngValue: job.longitude?.lng ?? job.longitude
                   });
 
                   return (
@@ -149,8 +151,8 @@ const JobMap = ({
                       job={{
                         ...job,
                         // Ensure coordinates are numbers
-                        latitude: Number(job.latitude),
-                        longitude: Number(job.longitude)
+                        latitude: Number(job.latitude?.lat ?? job.latitude),
+                        longitude: Number(job.longitude?.lng ?? job.longitude)
                       }}
                       handleMarkerClick={handleMarkerClick}
                       handleMarkerHover={handleMarkerHover}
