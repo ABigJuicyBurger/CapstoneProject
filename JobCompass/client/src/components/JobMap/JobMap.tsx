@@ -72,7 +72,7 @@ const JobMap = ({
     // At medium zoom (11-13), show some markers with text based on criteria
     // At low zoom (<11), show mini markers only
 
-    return jobs.map((job) => {
+    return jobs.map((job, index) => {
       // Calculate if this marker should show text based on zoom level and density
       let showText = false;
 
@@ -135,10 +135,23 @@ const JobMap = ({
                   const salary_range = formatSalary(job.salary_range);
 
                   const isHovered = hoveredMarkers[job.id] || false;
+                  console.log('Job coordinates:', {
+                    id: job.id,
+                    lat: job.latitude,
+                    lng: job.longitude,
+                    typeLat: typeof job.latitude,
+                    typeLng: typeof job.longitude
+                  });
+
                   return (
                     <MyMarker
                       key={job.id}
-                      job={job}
+                      job={{
+                        ...job,
+                        // Ensure coordinates are numbers
+                        latitude: Number(job.latitude),
+                        longitude: Number(job.longitude)
+                      }}
                       handleMarkerClick={handleMarkerClick}
                       handleMarkerHover={handleMarkerHover}
                       isHovered={isHovered}

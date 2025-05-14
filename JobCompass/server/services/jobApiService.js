@@ -9,16 +9,19 @@ const CACHE_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
 const getConsistentOffset = (id, index = 0) => {
   // Use the job ID to generate a consistent offset
-  const hash = id
+  const combinedString = `${id}-${index}`;
+
+  const hash = combinedString
     .split("")
     .reduce((acc, char) => ((acc << 5) - acc + char.charCodeAt(0)) | 0, 0);
     // Generate offset between -0.01 and 0.01 degrees (roughly ±1 kilometer)
-  const positionSeed = (hash + index * 1000) % 1000;
 
-  const baseOffset = 0.03 // appx 3km
+  const angle = (hash % 360) * (Math.PI / 180); // Convert to radians
+  const distance = 0.05 + (hash % 5) * 0.02; // Base distance + variation (0.05 to 0.15 degrees)  
 
-  const latOffset = ( positionSeed % 200 - 100) / 1000 * baseOffset;
-  const longOffset = (Math.floor(positionSeed / 200) % 200 - 100) / 1000 * baseOffset;
+
+  const latOffset = Math.sin(angle) * distance;
+  const longOffset = Math.cos(angle) * distance;
 
   return { latOffset, longOffset };
 
@@ -26,6 +29,8 @@ const getConsistentOffset = (id, index = 0) => {
 
 // Transform API job data to match our database schema
 const transformJobData = (apiJob, index = 0) => {
+  console.log(`Transforming job ${apiJob.id} at index ${index}`);
+
   const sanitizeText = (text) => {
     if (!text) return "";
     // More targeted sanitization
@@ -52,6 +57,8 @@ const transformJobData = (apiJob, index = 0) => {
   const { latOffset, longOffset } = getConsistentOffset(apiJob.id, index);
   const latitude = parseFloat(apiJob.latitude) + latOffset;
   const longitude = parseFloat(apiJob.longitude) + longOffset;
+
+  console.log(`Job ${apiJob.id} - Original: (${apiJob.latitude}, ${apiJob.longitude}), Offset: (${latOffset}, ${longOffset}), New: (${latitude}, ${longitude})`);
 
   // Get salary information
   let salaryRange = "Not specified";
@@ -84,8 +91,8 @@ const transformJobData = (apiJob, index = 0) => {
     type: jobType,
     salary_range: truncate(salaryRange, 250),
     address: truncate(location, 250),
-    latitude: latitude,
-    longitude: longitude,
+    latitude: Number(latitude),
+    longitude: Number(longitude),
     company_logo_url: truncate(apiJob.organization_logo || "", 250),
     requirements: sanitizeText(
       truncate(apiJob.ai_requirements_summary || "", 65000)
@@ -104,6 +111,8 @@ const fetchJobsfromAPI = async (location = "Calgary") => {
   const cacheDate = new Date(now.getTime() - CACHE_EXPIRY);
 
   let cachedJobs = [];
+  console.log('Fetching jobs from API...');
+
   try {
     // Check if we have valid cached data for this location
     // Query by search location, not by exact coordinates

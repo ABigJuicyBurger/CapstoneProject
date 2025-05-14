@@ -22,8 +22,14 @@ export const MyMarker = React.memo(function MyMarker({
   salary_range: string;
   miniMarker?: boolean;
 }) {
-  // Create a state to track whether this marker is hovered
 
+  const lat = Number(job.latitude);
+  const lng = Number(job.longitude);
+  
+  if (isNaN(lat) || isNaN(lng)) {
+    console.error('Invalid coordinates for job:', job.id, job.latitude, job.longitude);
+    return null;
+  }
   // Calculate z-index - higher for hovered markers to appear on top
   const zIndex = isHovered ? 1000 : 1;
 
@@ -40,14 +46,8 @@ export const MyMarker = React.memo(function MyMarker({
       anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
       key={job.id}
       position={{
-        lat:
-          typeof job.latitude === "string"
-            ? parseFloat(job.latitude)
-            : job.latitude,
-        lng:
-          typeof job.longitude === "string"
-            ? parseFloat(job.longitude)
-            : job.longitude,
+        lat,
+        lng
       }}
       // render some jobs and some clusters through preprocessing
       // too many jobs ? cluster : job

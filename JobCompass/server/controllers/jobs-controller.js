@@ -31,6 +31,7 @@ const getJobsfromAPI = async (req, res) => {
   try {
     // Check if location is in route params or query params
     const location = req.params.location || req.query.location || "Calgary"; // Default to Calgary if no location provided
+    console.log('About to fetch jobs with location:', location);
 
     const jobs = await jobApiService.fetchJobsfromAPI(location);
     console.log(`Returning ${jobs.length} jobs to client`);
