@@ -31,21 +31,26 @@ const transformJobData = (apiJob) => {
     // Use the job ID to generate a consistent offset
     const hash = id
       .split("")
-      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    // Generate offset between -0.005 and 0.005 degrees (roughly ±500 meters)
-    return ((hash % 100) - 50) / 10000;
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0 |0, 0);
+    // Generate offset between -0.01 and 0.01 degrees (roughly ±1 kilometer)
+    const positionSeed = (hash + index * 1000) % 1000;
+
+    const baseOffset = 0.03 // appx 3km
+
+    const latOffset = ( positionS % 200 - 100) / 1000 * baseOffset;
+    const longOffset = (Math.floor(positionseed / 200) % 200 - 100) / 1000 * baseOffset;
+
+    return { latOffset, longOffset };
+
   };
 
   // Get base coordinates
-  const baseLatitude = apiJob.lats_derived?.[0] || 0;
-  const baseLongitude = apiJob.lngs_derived?.[0] || 0;
 
   // Add offset to create unique position
-  const latOffset = getConsistentOffset(apiJob.id);
-  const lngOffset = getConsistentOffset(apiJob.id + "1"); // Add '1' to create different offset
 
-  const latitude = baseLatitude + latOffset;
-  const longitude = baseLongitude + lngOffset;
+  const { latOffset, longOffset } = getConsistentOffset(apiJob.id);
+const latitude = parseFloat(apiJob.latitude) + latOffset;
+const longitude = parseFloat(apiJob.longitude) + longOffset;
 
   // Get salary information
   let salaryRange = "Not specified";
