@@ -242,7 +242,7 @@ function App(): JSX.Element {
   }, []);
 
   return (
-    <div>
+    <>
       <Header
         mobileState={mobileState}
         setMobileMapMode={setMobileMapMode}
@@ -340,7 +340,7 @@ function App(): JSX.Element {
           element={<ProfilePage user={user} loggedIn={loggedIn} />}
         />
       </Routes>
-    </div>
+    </>
   );
 }
 

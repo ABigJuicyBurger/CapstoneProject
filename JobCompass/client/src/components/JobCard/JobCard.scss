@@ -7,22 +7,6 @@
   @include jobCard-inner-styling;
   position: relative;
   margin-top: 3.5625rem;
-
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-height: 85vh; // Adjust this value as needed
-  overflow-y: auto;
-  border-radius: 20px 20px 0 0;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-
-  max-height: calc(100vh - 100px); // Adjust the 100px to leave space at the top
-
-  
-  // For iOS safe areas
-  padding-bottom: env(safe-area-inset-bottom, 20px);
-  padding-bottom: constant(safe-area-inset-bottom, 20px); // For older iOS
   
 
   // remove margin when inside map only in mobile mode AND through joblist
