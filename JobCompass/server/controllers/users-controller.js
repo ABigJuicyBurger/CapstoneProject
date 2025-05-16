@@ -149,18 +149,52 @@ const register = async (req, res) => {
 
 const getMetaInfo = async (req, res) => {
   try {
+    const userId = req.user.userId;
+    console.log('Getting meta for user:', userId);
+
     const userMeta = await db("user_meta")
-      .where({ user_id: req.user.userId })
+      .where('user_id', userId)
       .first();
+      
+    console.log('Found user meta:', userMeta);
 
     if (!userMeta) {
-      return res.status(404).json({ message: "User not found" });
+      console.log('No user meta found, creating...');
+      try {
+        // Create a new meta record
+        const newMeta = {
+          user_id: userId,
+          bio: "",
+          resume: "",
+          savedjobs: "[]"
+        };
+        await db("user_meta").insert(newMeta);
+        console.log('User meta created');
+        
+        // Get the newly created record
+        const createdMeta = await db("user_meta")
+          .where('user_id', userId)
+          .first();
+        res.json(createdMeta);
+      } catch (error) {
+        console.error('Error creating user meta:', error);
+        // If creation fails, try to get the record again
+        const existingMeta = await db("user_meta")
+          .where('user_id', userId)
+          .first();
+        if (existingMeta) {
+          console.log('Found existing meta record after error');
+          res.json(existingMeta);
+        } else {
+          res.status(500).json({ message: 'Internal server error' });
+        }
+      }
+    } else {
+      res.json(userMeta);
     }
-
-    res.json(userMeta);
   } catch (error) {
     console.error("Get user meta error", error);
-    return res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -179,14 +213,30 @@ const updateMetaInfo = async (req, res) => {
 
     if (!userMeta) {
       console.log('No user meta found, creating...');
-      await db("user_meta").insert({
-        user_id: userId,
-        bio: req.body.bio || "",
-        resume: req.file ? `/uploads/resumes/${req.file.filename}` : "",
-        savedjobs: "[]"
-      });
-      console.log('User meta created');
-    } else {
+      try {
+        await db("user_meta").insert({
+          user_id: userId,
+          bio: req.body.bio || "",
+          resume: req.file ? `/uploads/resumes/${req.file.filename}` : "",
+          savedjobs: "[]"
+        });
+        console.log('User meta created');
+      } catch (insertError) {
+        console.error('Error creating user meta:', insertError);
+        // If insert fails, try to get the existing record
+        const existingMeta = await db("user_meta")
+          .where('user_id', userId)
+          .first();
+        if (existingMeta) {
+          console.log('Found existing meta record');
+          userMeta = existingMeta;
+        } else {
+          throw insertError;
+        }
+      }
+    }
+
+    if (userMeta) {
       // Update existing meta
       const updates = {
         bio: req.body.bio || userMeta.bio,
