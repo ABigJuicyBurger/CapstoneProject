@@ -30,15 +30,7 @@ const __dirname = dirname(__filename);
 console.log('Server root:', __dirname);
 console.log('Uploads path:', join(__dirname, 'uploads'));
 
-// to handle uploads
-app.use("/uploads", express.static(join(__dirname, 'uploads'), {
-  setHeaders: (res, path, stat) => {
-    console.log('Serving file:', path);
-  }}));
-
-
 // Middleware
-app.use(express.json());
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN || "*",
@@ -47,7 +39,14 @@ app.use(
   })
 );
 
-app.options('*', cors()); // Handle preflight requests
+// to handle uploads
+app.use("/uploads", express.static(join(__dirname, 'uploads'), {
+  setHeaders: (res, path, stat) => {
+    console.log('Serving file:', path);
+  }}));
+
+
+app.use(express.json());
 
 // Get all jobs or individual job
 app.use("/jobs", jobsRoutes);

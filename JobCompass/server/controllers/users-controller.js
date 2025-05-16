@@ -5,11 +5,26 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { existsSync, unlinkSync } from 'fs';
 
+export const checkUserMeta = async (userId) => {
+  try {
+    const userMeta = await db("user_meta")
+      .where('user_id', userId)
+      .first();
+    console.log('Checking user meta:', userMeta);
+    return userMeta;
+  } catch (error) {
+    console.error('Error checking user meta:', error);
+    throw error;
+  }
+};
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const login = async (req, res) => {
   const { username, password_hash } = req.body;
+  console.log('Login attempt:', { username });
+
   const { PORT, JWT_SECRET_KEY } = process.env;
 
   try {
@@ -20,6 +35,17 @@ const login = async (req, res) => {
       .first();
     console.log(user);
 
+    const userMeta = await checkUserMeta(user.id);
+    if (!userMeta) {
+      console.log('Creating user meta for new user');
+      await db("user_meta").insert({
+        user_id: user.id,
+        bio: "",
+        resume: "",
+        savedjobs: "[]"
+      });
+    }
+
     if (!user) {
       return res.status(401).json({ message: "Failed to authenticate" });
     }
@@ -29,6 +55,8 @@ const login = async (req, res) => {
     // compare hashed w/ provided password
     const match = await bcrypt.compare(password_hash, user.password_hash);
     console.log("Password match result:", match);
+
+    
 
     if (match) {
       // generate JWT token
@@ -138,77 +166,54 @@ const getMetaInfo = async (req, res) => {
 
 const updateMetaInfo = async (req, res) => {
   try {
-    const { bio, resume, savedjobs } = req.body;
-    const userId = req.body.userId || req.user.userId;
+    console.log('Updating meta for user:', req.user.userId);
+    console.log('Request body:', req.body);
+    console.log('Request file:', req.file);
 
-    if (!userId) {
-      return res.status(400).json({ message: "User ID is required" });
-    }
-
-    // Get current user meta to check existing resume
+    const userId = req.user.userId;
     const userMeta = await db("user_meta")
       .where('user_id', userId)
       .first();
+      
+    console.log('Found user meta:', userMeta);
+
     if (!userMeta) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const updates = {};
-
-    // Handle resume updates
-    if (req.file) {
-      // If there's an existing resume, delete it
-      if (userMeta.resume) {
-        const oldFilePath = join(__dirname, '..', 'uploads', userMeta.resume);
-        if (existsSync(oldFilePath)) {
-          unlinkSync(oldFilePath);
+      console.log('No user meta found, creating...');
+      await db("user_meta").insert({
+        user_id: userId,
+        bio: req.body.bio || "",
+        resume: req.file ? `/uploads/resumes/${req.file.filename}` : "",
+        savedjobs: "[]"
+      });
+      console.log('User meta created');
+    } else {
+      // Update existing meta
+      const updates = {
+        bio: req.body.bio || userMeta.bio,
+        savedjobs: req.body.savedjobs || userMeta.savedjobs
+      };
+      
+      if (req.file) {
+        // Handle resume update
+        updates.resume = `/uploads/resumes/${req.file.filename}`;
+        if (userMeta.resume) {
+          const oldFilePath = join(__dirname, '..', 'uploads', userMeta.resume);
+          if (existsSync(oldFilePath)) {
+            unlinkSync(oldFilePath);
+          }
         }
       }
-      updates.resume = `/uploads/resumes/${req.file.filename}`;
-    } else if (resume === "") {
-      // Handle resume deletion
-      if (userMeta.resume) {
-        const filePath = join(__dirname, '..', 'uploads', userMeta.resume);
-        if (existsSync(filePath)) {
-          unlinkSync(filePath);
-        }
-      }
-      updates.resume = null;
+      
+      await db("user_meta")
+        .where('user_id', userId)
+        .update(updates);
+      console.log('User meta updated');
     }
 
-    // Handle other updates
-    if (bio !== undefined) updates.bio = bio;
-    if (savedjobs !== undefined) {
-      try {
-        if (typeof savedjobs === "string") {
-          JSON.parse(savedjobs);
-          updates.savedjobs = savedjobs;
-        } else {
-          updates.savedjobs = JSON.stringify(savedjobs);
-        }
-      } catch (jsonError) {
-        console.error("Invalid savedjobs JSON format:", jsonError);
-        return res.status(400).json({ message: "Invalid saved jobs format" });
-      }
-    }
-
-    // Only update if there are changes
-    if (Object.keys(updates).length === 0) {
-      return res.status(400).json({ message: "No valid fields to update" });
-    }
-
-    // Perform update
-    await db("user_meta").where({ user_id: userId }).update(updates);
-
-    // Return updated data
-    const updatedUserMeta = await db("user_meta")
-      .where({ user_id: userId })
-      .first();
-
-    return res.json(updatedUserMeta);
+    res.json({ message: "Meta info updated successfully" });
   } catch (error) {
-    console.error("Update user meta error:", error);
-    return res.status(500).json({ message: error.message });
+    console.error('Error updating meta:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 
