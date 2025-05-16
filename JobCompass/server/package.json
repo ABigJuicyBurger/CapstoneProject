@@ -5,13 +5,13 @@
   "type": "module",
   "scripts": {
     "build": "npm install",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "knex migrate:latest",
     "migrate:down": "knex migrate:down",
     "migrate:rollback": "knex migrate:rollback",
     "seed": "knex seed:run",
     "dev": "node --watch index.js",
-    "start": "node index.js"
   },
   "keywords": [],
   "author": "",

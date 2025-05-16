@@ -17,6 +17,9 @@ import aiRoutes from "./routes/aiRoutes.js"
 // Load environment variables
 dotenv.config();
 
+const PORT = process.env.PORT || 3000;
+
+
 // Test database connection and schema
 db.raw("SELECT 1")
   .then(() => {
@@ -49,7 +52,6 @@ const environment = process.env.NODE_ENV || "development";
 
 // Create Express app
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

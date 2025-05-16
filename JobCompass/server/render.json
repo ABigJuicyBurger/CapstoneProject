@@ -1,23 +1,22 @@
 {
-  "services": [
-    {
-      "name": "jobcompass",
-      "type": "web",
-      "buildCommand": "npm run build",
-      "startCommand": "node index.js",
-      "env": {
-        "NODE_ENV": "production",
-        "PORT": "3000",
-        "CORS_ORIGIN": "https://jobcompass-demo.netlify.app"
-      },
-      "buildEnvironment": {
-        "DB_HOST": "dpg-d07ti8mr433s73bkhoeg-a",
-        "DB_NAME": "jobcompass",
-        "DB_USER": "jobcompass_user",
-        "DB_PASSWORD": "YOUR_DB_PASSWORD",
-        "DB_PORT": "5432"
-      },
-      "preStartCommand": "npx knex migrate:latest && npx knex seed:run"
-    }
-  ]
-}
+    "services": [
+      {
+        "name": "jobcompass",
+        "type": "web",
+        "buildCommand": "npm run build",
+        "startCommand": "node index.js",
+        "env": {
+          "NODE_ENV": "production",
+          "CORS_ORIGIN": "https://jobcompass-demo.netlify.app"
+        },
+        "buildEnvironment": {
+          "DB_HOST": "dpg-d07ti8mr433s73bkhoeg-a",
+          "DB_NAME": "jobcompass",
+          "DB_USER": "jobcompass_user",
+          "DB_PASSWORD": "YOUR_DB_PASSWORD",
+          "DB_PORT": "5432"
+        },
+        "preStartCommand": "npx knex migrate:latest && npx knex seed:run"
+      }
+    ]
+  }
