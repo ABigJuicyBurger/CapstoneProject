@@ -18,6 +18,10 @@ const __dirname = dirname(__filename);
 const uploadDir = join(__dirname, 'uploads');
 const resumeDir = join(uploadDir, 'resumes');
 
+console.log('Upload directory:', uploadDir);
+console.log('Resume directory:', resumeDir);
+
+
 if (!existsSync(uploadDir)) {
   mkdirSync(uploadDir);
 }

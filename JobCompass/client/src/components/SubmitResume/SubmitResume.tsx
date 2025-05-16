@@ -56,6 +56,9 @@ const SubmitResume = ({
                 }
             }
         );
+
+        console.log('Resume upload response:', response.data);
+
         
         setUserMeta((prev) => {
           if (!prev) return null;

@@ -1,6 +1,11 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+
+
 // Import the centralized db connection
 import db from "./db/connection.js";
 
@@ -19,6 +24,13 @@ const environment = process.env.NODE_ENV || "development";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+console.log('Server root:', __dirname);
+console.log('Uploads path:', join(__dirname, 'uploads'));
+
+
 // Middleware
 app.use(express.json());
 app.use(
@@ -36,7 +48,10 @@ app.use("/jobs", jobsRoutes);
 app.use("/user", userRoutes);
 
 // to handle uploads
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(join(__dirname, 'uploads'), {
+  setHeaders: (res, path, stat) => {
+    console.log('Serving file:', path);
+  }}));
 
 app.use("/resumeAI", aiRoutes)
 
@@ -47,6 +62,11 @@ app.get("/", (_req, res) => {
 
 app.use((_req, res) => {
   res.status(404).send("Error, please try again or go home");
+});
+
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ message: 'Internal server error' });
 });
 
 // Start server

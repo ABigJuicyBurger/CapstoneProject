@@ -160,7 +160,7 @@ const updateMetaInfo = async (req, res) => {
           unlinkSync(oldFilePath);
         }
       }
-      updates.resume = `/uploads/${req.file.filename}`;
+      updates.resume = `/uploads/resumes/${req.file.filename}`;
     } else if (resume === "") {
       // Handle resume deletion
       if (userMeta.resume) {
