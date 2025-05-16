@@ -1,8 +1,12 @@
 import db from "../db/connection.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import fs from "fs";
-import path from "path";
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import { existsSync, unlinkSync } from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const login = async (req, res) => {
   const { username, password_hash } = req.body;
@@ -138,7 +142,9 @@ const updateMetaInfo = async (req, res) => {
     const userId = req.user.userId;
 
     // Get current user meta to check existing resume
-    const userMeta = await db("user_meta").where({ user_id: userId }).first();
+    const userMeta = await db("user_meta")
+      .where('user_id', userId)
+      .first();
     if (!userMeta) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -149,27 +155,21 @@ const updateMetaInfo = async (req, res) => {
     if (req.file) {
       // If there's an existing resume, delete it
       if (userMeta.resume) {
-        const oldFilePath = path.join(
-          process.cwd(),
-          userMeta.resume.replace("/", "")
-        );
-        if (fs.existsSync(oldFilePath)) {
-          fs.unlinkSync(oldFilePath);
+        const oldFilePath = join(__dirname, '..', 'uploads', userMeta.resume);
+        if (existsSync(oldFilePath)) {
+          unlinkSync(oldFilePath);
         }
       }
       updates.resume = `/uploads/${req.file.filename}`;
     } else if (resume === "") {
       // Handle resume deletion
       if (userMeta.resume) {
-        const filePath = path.join(
-          process.cwd(),
-          userMeta.resume.replace("/", "")
-        );
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
+        const filePath = join(__dirname, '..', 'uploads', userMeta.resume);
+        if (existsSync(filePath)) {
+          unlinkSync(filePath);
         }
       }
-      updates.resume = "";
+      updates.resume = null;
     }
 
     // Handle other updates
@@ -204,7 +204,7 @@ const updateMetaInfo = async (req, res) => {
     return res.json(updatedUserMeta);
   } catch (error) {
     console.error("Update user meta error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: error.message });
   }
 };
 

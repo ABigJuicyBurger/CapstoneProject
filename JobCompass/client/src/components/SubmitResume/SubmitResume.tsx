@@ -43,7 +43,7 @@ const SubmitResume = ({
         return;
     }
 
-    formData.append("resume", selectedFile);
+    formData.append("resume", selectedFile, selectedFile.name);
 
     try {
         const response = await axios.put(
@@ -57,10 +57,15 @@ const SubmitResume = ({
             }
         );
         
-        if (response.data) {
-            setUserMeta(prev => ({...prev, ...response.data}));
-            alert("Resume uploaded successfully!");
-        }
+        setUserMeta((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            resume: response.data.resume
+          }
+        })
+        alert("Resume uploaded successfully!");
+
     } catch (error: any) {
         console.error("Upload error:", error);
         if (error.response) {

@@ -1,34 +1,48 @@
 import express from "express";
 import multer from "multer";
-import path from "path";
+import { dirname, join, extname } from 'path';
+import { fileURLToPath } from 'url';
+import { existsSync, mkdirSync } from 'fs';
+import { diskStorage } from 'multer';
+
 
 import * as usersController from "../controllers/users-controller.js";
 import authenticateToken from "../middleware/AuthToken.js";
-// Import the centralized db connection instead of creating a new one
-import db from "../db/connection.js";
+
 
 const router = express.Router();
 
-// Remove this line - don't create a new Knex instance here
-// const knex = initKnex(configuration);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const uploadDir = join(__dirname, 'uploads');
+const resumeDir = join(uploadDir, 'resumes');
+
+if (!existsSync(uploadDir)) {
+  mkdirSync(uploadDir);
+}
+if (!existsSync(resumeDir)) {
+  mkdirSync(resumeDir)
+}
 
 // multer for file uploads
-const storage = multer.diskStorage({
+const storage = diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads"); // physical directory
+    cb(null, resumeDir); // physical directory
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + extname(file.originalname));
+  }
 });
 const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
-    if (file.mimetype === "application/pdf") {
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(null, false);
-      return cb(new Error("PDF files only please"));
+      cb(new Error('Only PDF and Word documents are allowed'));
     }
   },
   limits: {
