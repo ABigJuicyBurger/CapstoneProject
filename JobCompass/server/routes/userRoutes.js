@@ -15,7 +15,7 @@ const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const uploadDir = join(__dirname, 'uploads');
+const uploadDir = join(__dirname, '..', 'uploads'); // Go up one level from routes
 const resumeDir = join(uploadDir, 'resumes');
 
 console.log('Upload directory:', uploadDir);

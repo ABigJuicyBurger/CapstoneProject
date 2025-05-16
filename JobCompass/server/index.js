@@ -30,6 +30,12 @@ const __dirname = dirname(__filename);
 console.log('Server root:', __dirname);
 console.log('Uploads path:', join(__dirname, 'uploads'));
 
+// to handle uploads
+app.use("/uploads", express.static(join(__dirname, 'uploads'), {
+  setHeaders: (res, path, stat) => {
+    console.log('Serving file:', path);
+  }}));
+
 
 // Middleware
 app.use(express.json());
@@ -47,11 +53,7 @@ app.use("/jobs", jobsRoutes);
 // Get user info
 app.use("/user", userRoutes);
 
-// to handle uploads
-app.use("/uploads", express.static(join(__dirname, 'uploads'), {
-  setHeaders: (res, path, stat) => {
-    console.log('Serving file:', path);
-  }}));
+
 
 app.use("/resumeAI", aiRoutes)
 
@@ -66,7 +68,12 @@ app.use((_req, res) => {
 
 app.use((err, req, res, next) => {
   console.error('Error:', err);
-  res.status(500).json({ message: 'Internal server error' });
+  console.error('Stack:', err.stack);
+  res.status(500).json({ 
+    message: 'Internal server error', 
+    error: err.message,
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  });
 });
 
 // Start server
