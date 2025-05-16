@@ -22,7 +22,7 @@ const environment = process.env.NODE_ENV || "development";
 
 // Create Express app
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
