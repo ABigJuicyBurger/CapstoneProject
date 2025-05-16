@@ -59,7 +59,7 @@ function ProfilePage({ user, loggedIn }: ProfilePageProps) {
     };
 
     fetchUserMeta();
-  }, [loggedIn, navigate]);
+  }, [loggedIn, navigate, API_URL]);
 
   const handleSaveBio = async () => {
     try {
