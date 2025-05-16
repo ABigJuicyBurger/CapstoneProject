@@ -18,6 +18,10 @@ import aiRoutes from "./routes/aiRoutes.js"
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
+if (!PORT) {
+  console.error('PORT environment variable is required');
+  process.exit(1);
+}
 
 
 // Test database connection and schema
@@ -40,13 +44,7 @@ db.raw("SELECT 1")
     console.error("Database error:", err);
     process.exit(1); // Exit with error if database connection fails
   })
-  .then(() => {
-    // Start server only after database check
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  });
-
+ 
 // Get environment
 const environment = process.env.NODE_ENV || "development";
 
