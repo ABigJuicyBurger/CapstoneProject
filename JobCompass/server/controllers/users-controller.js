@@ -139,7 +139,11 @@ const getMetaInfo = async (req, res) => {
 const updateMetaInfo = async (req, res) => {
   try {
     const { bio, resume, savedjobs } = req.body;
-    const userId = req.user.userId;
+    const userId = req.body.userId || req.user.userId;
+
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
 
     // Get current user meta to check existing resume
     const userMeta = await db("user_meta")

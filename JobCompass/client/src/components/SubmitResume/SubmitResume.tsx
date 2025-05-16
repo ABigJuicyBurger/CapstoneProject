@@ -25,6 +25,7 @@ const SubmitResume = ({
     const API_URL = import.meta.env.VITE_BACKEND_URL;
     const token = localStorage.getItem("token");
 
+
     if (!selectedFile) {
         alert("Please select a file first!");
         return;
@@ -43,9 +44,9 @@ const SubmitResume = ({
         return;
     }
 
-    formData.append("resume", selectedFile, selectedFile.name);
-
     try {
+      formData.append("resume", selectedFile, selectedFile.name);
+
         const response = await axios.put(
             `${API_URL}/user/meta`,
             formData,
