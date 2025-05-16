@@ -15,7 +15,7 @@ function HomePage(): JSX.Element {
       </main>
       <footer className="homePage__footer">
         <p>
-          Made by{" "}
+          &copy; {new Date().getFullYear()} Made by{" "}
           <a href="https://github.com/ABigJuicyBurger/JobCompass">
             ABigJuicyBurger
           </a>
