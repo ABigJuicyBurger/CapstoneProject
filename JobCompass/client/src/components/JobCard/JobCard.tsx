@@ -3,9 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { format } from "date-fns";
 import axios from "axios";
 import { JSX } from "react/jsx-runtime"; // needed to find JSX namespace for TS
-import ReactMarkdown from 'react-markdown';
-
-
+import ReactMarkdown from "react-markdown";
 
 import JobNote from "../JobNote/JobNote.tsx";
 
@@ -33,7 +31,10 @@ function JobCard({
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [userSavedJobs, setUserSavedJobs] = useState<string[]>([]);
   const [aiChecker, setAiChecker] = useState<boolean>(false);
-  const [aiAnalysis, setAiAnalysis] = useState<{score: string, analysis: string}|null>(null);
+  const [aiAnalysis, setAiAnalysis] = useState<{
+    score: string;
+    analysis: string;
+  } | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [resumeText, setResumeText] = useState("");
   const MAX_LENGTH = 150;
@@ -45,10 +46,7 @@ function JobCard({
     // void means it just completes operation
     // this function is a promise that returns nothing
     try {
-      console.log(
-        "Attempting to fetch from:",
-        `${backendURL}/jobs/${id}`
-      );
+      console.log("Attempting to fetch from:", `${backendURL}/jobs/${id}`);
       const jobResponse = await axios.get(`${backendURL}/jobs/${id}`);
       setJob(jobResponse.data);
     } catch (err: any) {
@@ -215,59 +213,69 @@ function JobCard({
 
   const AIAnalyzer = () => {
     setAiChecker(!aiChecker);
-
-  }
+  };
 
   const handleAnalyzeResume = async () => {
     if (!job?.title || !job.description) return;
     setIsAnalyzing(true);
 
     const token = localStorage.getItem("token");
-      if (!token) {
-        alert("Please log in to analyze your resume");
+    if (!token) {
+      alert("Please log in to analyze your resume");
+      setIsAnalyzing(false);
+
+      return;
+    } // Skip if not logged in
+
+    try {
+      // get user resume
+      const resumeResponse = await axios.get(`${backendURL}/user/meta`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!resumeResponse.data.resume) {
+        alert("Please upload a resume to analyze");
         setIsAnalyzing(false);
-
         return;
-      }; // Skip if not logged in
+      }
 
-      try {
-        // get user resume
-        const resumeResponse = await axios.get(`${backendURL}/user/meta`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (!resumeResponse.data.resume) {
-          alert("Please upload a resume to analyze");
-          setIsAnalyzing(false);
-          return;
-        }
+      const resumeText = resumeResponse.data.resume;
+      console.log(resumeText);
+      console.log("Sending resume path to server:", resumeText);
 
-        const resumeText = resumeResponse.data.resume;
-        console.log(resumeText);
-        console.log('Sending resume path to server:', resumeText);
-
-        const response = await axios.post(`${backendURL}/resumeAI`, {
+      const response = await axios.post(
+        `${backendURL}/resumeAI`,
+        {
           jobDescription: job.description,
           resumePath: resumeText,
-        },      {
+        },
+        {
           headers: {
-              'Content-Type': 'application/json',
-          } 
-      });
-        console.log(response)
-        console.log(response.data)
-        setAiAnalysis(response.data);
-        setIsAnalyzing(false);
-      } catch (error) {
-        console.error("Error analyzing resume:", error);
-        setIsAnalyzing(false);
-      }
-  }
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      console.log(response.data);
+      setAiAnalysis(response.data);
+      setIsAnalyzing(false);
+    } catch (error) {
+      console.error("Error analyzing resume:", error);
+      setIsAnalyzing(false);
+    }
+  };
 
   if (!job) {
     return <h1>Loading Job...</h1>;
   }
+
+  const parsedAIResponse =
+    typeof aiAnalysis === "object" && aiAnalysis?.analysis
+      ? aiAnalysis?.analysis
+      : JSON.stringify(aiAnalysis);
+
+  console.log(parsedAIResponse);
 
   return (
     <>
@@ -315,7 +323,7 @@ function JobCard({
               >
                 Apply
               </button>
-              <button onClick={(() => AIAnalyzer())}>
+              <button onClick={() => AIAnalyzer()}>
                 {aiChecker ? "Return to job" : "AI Analyzer"}
               </button>
               {saveMessage && (
@@ -325,87 +333,84 @@ function JobCard({
           </div>
           {aiChecker ? (
             <div className="jobCard__ai-analysis_section">
-              <h2 className="jobCard__ai-analysis_section__heading">AI Checker</h2>
-              
-             <button
-          onClick={() => handleAnalyzeResume()}
-          disabled={isAnalyzing}
-          className="analyze-button"
-        >
-          {isAnalyzing ? "Analyzing..." : "Analyze Resume"}
-        </button>
-        
-        {aiAnalysis && (
-          <div className="jobCard__analysis-results">
-               <ReactMarkdown>
-            {typeof aiAnalysis === 'object' && aiAnalysis.analysis 
-                ? aiAnalysis.analysis 
-                : JSON.stringify(aiAnalysis)}
-        </ReactMarkdown>
-        </div>
-        )}
-              </div>
-           
+              <h2 className="jobCard__ai-analysis_section__heading">
+                AI Checker
+              </h2>
+
+              <button
+                onClick={() => handleAnalyzeResume()}
+                disabled={isAnalyzing}
+                className="analyze-button"
+              >
+                {isAnalyzing ? "Analyzing..." : "Analyze Resume"}
+              </button>
+
+              {aiAnalysis && (
+                <div className="jobCard__analysis-results">
+                  <ReactMarkdown>{parsedAIResponse}</ReactMarkdown>
+                </div>
+              )}
+            </div>
           ) : (
             <>
-            <div className="jobCard__details">
-              <h2 className="jobCard__details__heading">Job Details</h2>
-              <div className="jobCard__details__type">
-                <section className="jobCard__details__type__section">
-                  <h3 className="jobCard__details__type-title">Job Type</h3>
-                <p className="jobCard__details__type-text">{job.type}</p>
-              </section>
-              <section className="jobCard__details__salary__section">
-                <h3 className="jobCard__details__salary-title">Salary</h3>
-                <p className="jobCard__details__salary-text">
-                  {job.salary_range}
-                </p>
-              </section>
-              <section className="jobCard__details__date__section">
-                <h4 className="jobCard__details__date-title">Date</h4>
-                <p className="jobCard__details__date-text">
-                  {format(new Date(job.created_at), "MMMM d, yyyy")}
-                </p>
-              </section>
-            </div>
-          </div>
-          <div className="jobCard__skills">
-            <h3 className="jobCard__skills__title">Skills</h3>
-            <div className="jobCard__skills__list">
-              <ul className="jobCard__skills__items">
-                {job.skills.map((skill, index) => (
-                  <li className="jobCard__skills__item" key={index}>
-                    {skill}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className="jobCard__description">
-            <h3 className="jobCard__description__title">Job Description</h3>
-            <div
-              className="jobCard__description__text"
-              style={{ whiteSpace: "pre-line" }}
-            >
-              {expandedText
-                ? job.description
-                 : `${job.description.substring(0, MAX_LENGTH)}...`}
-            </div>
-            <button
-              className="jobCard__description__button"
-              onClick={() => setExpandedText(!expandedText)}
-            >
-              {expandedText ? "Show Less" : "Read More"}
-            </button>
-            <h3 className="jobCard__description__title">Requirements</h3>
-            <div
-              className="jobCard__description__requirements"
-              style={{ whiteSpace: "pre-line" }}
-            >
-              {job.requirements}
-            </div>
-          </div>
-          </>
+              <div className="jobCard__details">
+                <h2 className="jobCard__details__heading">Job Details</h2>
+                <div className="jobCard__details__type">
+                  <section className="jobCard__details__type__section">
+                    <h3 className="jobCard__details__type-title">Job Type</h3>
+                    <p className="jobCard__details__type-text">{job.type}</p>
+                  </section>
+                  <section className="jobCard__details__salary__section">
+                    <h3 className="jobCard__details__salary-title">Salary</h3>
+                    <p className="jobCard__details__salary-text">
+                      {job.salary_range}
+                    </p>
+                  </section>
+                  <section className="jobCard__details__date__section">
+                    <h4 className="jobCard__details__date-title">Date</h4>
+                    <p className="jobCard__details__date-text">
+                      {format(new Date(job.created_at), "MMMM d, yyyy")}
+                    </p>
+                  </section>
+                </div>
+              </div>
+              <div className="jobCard__skills">
+                <h3 className="jobCard__skills__title">Skills</h3>
+                <div className="jobCard__skills__list">
+                  <ul className="jobCard__skills__items">
+                    {job.skills.map((skill, index) => (
+                      <li className="jobCard__skills__item" key={index}>
+                        {skill}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="jobCard__description">
+                <h3 className="jobCard__description__title">Job Description</h3>
+                <div
+                  className="jobCard__description__text"
+                  style={{ whiteSpace: "pre-line" }}
+                >
+                  {expandedText
+                    ? job.description
+                    : `${job.description.substring(0, MAX_LENGTH)}...`}
+                </div>
+                <button
+                  className="jobCard__description__button"
+                  onClick={() => setExpandedText(!expandedText)}
+                >
+                  {expandedText ? "Show Less" : "Read More"}
+                </button>
+                <h3 className="jobCard__description__title">Requirements</h3>
+                <div
+                  className="jobCard__description__requirements"
+                  style={{ whiteSpace: "pre-line" }}
+                >
+                  {job.requirements}
+                </div>
+              </div>
+            </>
           )}
         </div>
       )}

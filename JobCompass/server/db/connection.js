@@ -15,6 +15,7 @@ db.raw("SELECT 1")
   })
   .catch((err) => {
     console.error("Database connection error:", err);
+    throw err; // Re-throw to fail the connection
   });
 
 export default db;
