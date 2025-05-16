@@ -52,6 +52,7 @@
   }
   
   &--success {
+    z-index: 1;
     .notification__icon {
       color: #4caf50;
     }

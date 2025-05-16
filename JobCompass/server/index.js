@@ -47,6 +47,8 @@ app.use(
   })
 );
 
+app.options('*', cors()); // Handle preflight requests
+
 // Get all jobs or individual job
 app.use("/jobs", jobsRoutes);
 
