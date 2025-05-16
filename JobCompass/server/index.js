@@ -17,6 +17,33 @@ import aiRoutes from "./routes/aiRoutes.js"
 // Load environment variables
 dotenv.config();
 
+// Test database connection and schema
+db.raw("SELECT 1")
+  .then(() => {
+    console.log("Database connection successful");
+    
+    // Check if user_meta table exists
+    return db.schema.hasTable("user_meta");
+  })
+  .then(exists => {
+    console.log("User_meta table exists:", exists);
+    if (!exists) {
+      console.log("User_meta table does not exist!");
+      // Force migrations
+      return require('knex')(db).migrate.latest();
+    }
+  })
+  .catch(err => {
+    console.error("Database error:", err);
+    process.exit(1); // Exit with error if database connection fails
+  })
+  .then(() => {
+    // Start server only after database check
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  });
+
 // Get environment
 const environment = process.env.NODE_ENV || "development";
 
