@@ -78,13 +78,15 @@ const JobMap = ({
 
       if (isNaN(lat) || isNaN(lng)) {
         // Create a simple hash from job ID to generate consistent offsets
-        const hash = job.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+        const hash = job.id
+          .split("")
+          .reduce((acc, char) => acc + char.charCodeAt(0), 0);
         const offset = 0.01 + (hash % 100) * 0.001; // Small offset (0.01 to 0.11 degrees)
-        
+
         lat = 51.0447 + (hash % 2 === 0 ? offset : -offset);
         lng = -114.0719 + (hash % 2 === 0 ? offset : -offset);
       }
-      
+
       // Calculate if this marker should show text based on zoom level and density
       let showText = false;
 
@@ -104,8 +106,7 @@ const JobMap = ({
         // For high density at medium zoom, keep most as mini markers
       }
 
-      return { ...job, showText, latitude: lat,
-        longitude: lng };
+      return { ...job, showText, latitude: lat, longitude: lng };
     });
   }, [jobs, currentZoom]);
 
@@ -148,12 +149,10 @@ const JobMap = ({
                   const salary_range = formatSalary(job.salary_range);
 
                   const isHovered = hoveredMarkers[job.id] || false;
-                  
-                
 
-                  console.log('Marker position:', {
+                  console.log("Marker position:", {
                     id: job.id,
-                    position: { lat: job.latitude, lng: job.longitude }
+                    position: { lat: job.latitude, lng: job.longitude },
                   });
 
                   return (

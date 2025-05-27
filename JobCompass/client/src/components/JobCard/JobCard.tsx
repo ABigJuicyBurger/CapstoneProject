@@ -191,6 +191,9 @@ function JobCard({
         if (error.response && error.response.status === 401) {
           localStorage.removeItem("token"); // Clear invalid token
           setSaveMessage("Please log in to save jobs");
+        } else if (error.response?.status === 403) {
+          localStorage.removeItem("token");
+          sessionStorage.removeItem("guestUser");
         } else {
           setSaveMessage("Failed to save job");
         }

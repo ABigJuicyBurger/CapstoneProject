@@ -92,6 +92,16 @@ function App(): JSX.Element {
       } catch (error: any) {
         console.error(error.response.data.message);
         setError("Error getting user data");
+        if (error.response?.status === 403) {
+          localStorage.removeItem("token");
+          setLoggedIn(false);
+          sessionStorage.removeItem("guestUser");
+          showNotification("Successfully logged out", "success");
+
+          createGuest();
+          navigate("/");
+          setUser({});
+        }
       }
     };
 

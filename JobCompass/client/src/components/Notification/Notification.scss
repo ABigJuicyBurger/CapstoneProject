@@ -4,15 +4,15 @@
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 1000;
   max-width: 400px;
   transform: translateX(120%);
   transition: transform 0.3s ease-in-out;
-  
+  z-index: 10;
+
   &--visible {
     transform: translateX(0);
   }
-  
+
   &__content {
     display: flex;
     align-items: center;
@@ -21,20 +21,20 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     background-color: white;
   }
-  
+
   &__icon {
     margin-right: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  
+
   &__message {
     flex: 1;
     margin: 0;
     font-size: 1rem;
   }
-  
+
   &__close {
     background: none;
     border: none;
@@ -45,38 +45,38 @@
     justify-content: center;
     opacity: 0.6;
     transition: opacity 0.2s;
-    
+
     &:hover {
       opacity: 1;
     }
   }
-  
+
   &--success {
-    z-index: 1;
+    z-index: 10;
     .notification__icon {
       color: #4caf50;
     }
-    
+
     .notification__content {
       border-left: 4px solid #4caf50;
     }
   }
-  
+
   &--error {
     .notification__icon {
       color: #f44336;
     }
-    
+
     .notification__content {
       border-left: 4px solid #f44336;
     }
   }
-  
+
   &--info {
     .notification__icon {
       color: $primary-color;
     }
-    
+
     .notification__content {
       border-left: 4px solid $primary-color;
     }
