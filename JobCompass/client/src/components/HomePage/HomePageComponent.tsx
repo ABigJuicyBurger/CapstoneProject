@@ -12,6 +12,9 @@ function HomePage(): JSX.Element {
         <Link className="heroPage__guest-cta" to={"/jobs"}>
           Visit Map
         </Link>
+        <video className="heroPage__demo" autoPlay loop muted controls>
+          <source className="video" src="/assets/demo.mp4" type="video/mp4" />
+        </video>
       </main>
       <footer className="homePage__footer">
         <p>
