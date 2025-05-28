@@ -9,6 +9,11 @@ function HomePage(): JSX.Element {
       <main className="heroPage">
         <h1 className="heroPage__title">JobCompass</h1>
         <h2 className="heroPage__text">Let's Help You Find Your Next Job</h2>
+        <h2 className="heroPage__text">
+          Site is down for maintenance; in the meantime check out the demo video
+          below on how it works!
+        </h2>
+
         <Link className="heroPage__guest-cta" to={"/jobs"}>
           Visit Map
         </Link>
